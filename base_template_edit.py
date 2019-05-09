@@ -28,16 +28,16 @@ for page in pages_var:
 	lmt += 1
 	if lmt < startat:
 		print("Skipping page %s" % page.name)
+		continue
+	text = page.text()
+	wikitext = mwparserfromhell.parse(text)
+	for template in wikitext.filter_templates():
+		if template.name.matches('TEMPLATEYOUCAREABOUT'):
+			# TODO
+	
+	newtext = str(wikitext)
+	if text != newtext:
+		print('Saving page %s...' % page.name)
+		page.save(newtext, summary=summary)
 	else:
-		text = page.text()
-		wikitext = mwparserfromhell.parse(text)
-		for template in wikitext.filter_templates():
-			if template.name.matches('TEMPLATEYOUCAREABOUT'):
-				# TODO
-		
-		newtext = str(wikitext)
-		if text != newtext:
-			print('Saving page %s...' % page.name)
-			page.save(newtext, summary=summary)
-		else:
-			print('Skipping page %s...' % page.name)
+		print('Skipping page %s...' % page.name)
