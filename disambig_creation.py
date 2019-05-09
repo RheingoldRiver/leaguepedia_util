@@ -3,8 +3,8 @@ from log_into_wiki import *
 
 #################################################################################################
 
-original_name = 'Fearless'
-irl_name = 'Álvaro Menéndez'
+original_name = 'Comeback'
+irl_name = 'Ha Seung-chan'
 new_name = '{} ({})'.format(original_name, irl_name)
 init_move = True
 blank_edit = False
@@ -21,7 +21,7 @@ scoreboard_templates = ["MatchRecap/Player", "MatchRecapS4/Player",
 					   "Scoreboard/Player"]
 stat_templates = ["IPS", "CareerPlayerStats", "MatchHistoryPlayer"]
 player_line_templates = ["LCKPlayerLine", "LCSPlayerLine"]
-roster_change_templates = ["RosterChangeLine", "RosterRumorLine2"]
+roster_change_templates = ["RosterChangeLine", "RosterRumorLine2", "RosterRumorLineStay", "RosterRumorLineNot"]
 summary = "Disambiguating {} to {}".format(original_name, new_name)
 
 css_style = "{\n    color:orange!important;\n    font-weight:bold;\n}"

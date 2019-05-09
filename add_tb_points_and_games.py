@@ -11,7 +11,7 @@ startat = -1
 #################################
 
 #pagename = 'LPL/2019 Season/Spring Season'
-pointstype = 'bo2' # bo3points, bo2, bo3pointsopl
+pointstype = 'bo1' # bo3points, bo2, bo3pointsopl
 
 remove_params = ['round','start','end','hide', 'nosemantics']
 tb_names = ['tb', 'tiebreakers', 'tiebreaker']
