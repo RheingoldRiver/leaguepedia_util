@@ -3,8 +3,8 @@ from log_into_wiki import *
 
 #################################################################################################
 
-original_name = 'Comeback'
-irl_name = 'Ha Seung-chan'
+original_name = 'Hatred'
+irl_name = 'Zherluck Tolentino'
 new_name = '{} ({})'.format(original_name, irl_name)
 init_move = True
 blank_edit = False

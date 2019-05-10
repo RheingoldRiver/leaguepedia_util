@@ -24,7 +24,7 @@ print(startat)
 STREAM_NAMES = ['Twitch', 'YouTube', 'Azubu', 'Hitbox', 'Afreeca', 'Douyu', 'Twitch.tv'
 				'CubeTV', 'Mobcrush', 'Youtube Gaming', 'OPENREC', 'Facebook Gaming', 'NimoTV', 'Naver']
 
-SECTION_NAMES = ['Streams', 'View Games']
+SECTION_NAMES = ['Streams', 'View Games', 'Video Channels']
 
 re_find = r'\{\{flag\|\s*(\w+)\s*\}\}\s*\[([^\s]*) (.+?)\]'
 re_repl_no_display = r'{{stream|url=\2|lang=\1}}'
