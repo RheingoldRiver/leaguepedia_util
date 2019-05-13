@@ -7,7 +7,7 @@ summary = 'Replace TeamRoster/Button with new' # Set summary
 limit = -1
 startat_page = None
 print(startat_page)
-startat_page = 'ESL Benelux 5on5 Opening Cup'
+#startat_page = 'ESL Benelux 5on5 Opening Cup'
 this_template = site.pages['Template:TeamRoster/Button'] # Set template
 pages = this_template.embeddedin()
 
