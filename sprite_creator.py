@@ -41,6 +41,7 @@ class Sprite(object):
 			self.create_new()
 			self.sheet.paste(old_sheet, (0,0))
 		box = (self.current_x, self.current_y)
+		img = img.resize((self.item_width, self.item_height), Image.ANTIALIAS)
 		self.sheet.paste(img, box)
 	
 	def increment_current_location(self):
