@@ -1,4 +1,5 @@
 from PIL import Image
+import urllib.request, re
 import math, os
 
 class Sprite(object):
@@ -25,7 +26,17 @@ class Sprite(object):
 			self.create_new()
 		else:
 			self.sheet = Image.open(self.filename)
-		
+	
+	def open_from_url(self, site, size=None):
+		pattern = r'.*src\=\"(.+?)\".*'
+		size = '|' + str(size) + 'px' if size else ''
+		to_parse_text = '[[File:{}|link=%s]]'.format(self.filename, size)
+		result = site.api('parse', title = 'Main Page', text = to_parse_text, disablelimitreport = 1)
+		parse_result_text = result['parse']['text']['*']
+		print(parse_result_text)
+		url = re.match(pattern, parse_result_text)[1]
+		self.sheet = urllib.request.urlopen(url).read()
+	
 	def create_new(self):
 		self.sheet = Image.new('RGBA', (self.sheet_width, self.sheet_height))
 	
