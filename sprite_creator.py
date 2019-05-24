@@ -54,5 +54,10 @@ class Sprite(object):
 		self.current_x = self.current_col * (self.item_width + self.gap)
 		self.current_y = self.current_row * (self.item_height + self.gap)
 	
+	def get_slice(self, location):
+		self.update_current_location(location)
+		crop_rectangle = (self.current_x, self.current_y, self.current_x + self.item_width, self.current_y + self.item_height)
+		return self.sheet.crop(crop_rectangle)
+	
 	def save(self):
 		self.sheet.save(self.filename)
