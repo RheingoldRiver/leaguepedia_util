@@ -83,6 +83,8 @@ for page in pages:
 					utils.updateParams(template)
 				elif template.name.matches('PicksAndBansS7') or template.name.matches('PicksAndBans'):
 					utils.fixPB(site, template)
+				elif template.name.matches('Listplayer/Current/End'):
+					template.add(1, '')
 			except Exception as e:
 				errors.append(e)
 		newtext = str(wikitext)

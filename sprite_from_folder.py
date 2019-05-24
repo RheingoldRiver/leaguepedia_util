@@ -2,13 +2,13 @@ import urllib.request, time, sprite_creator, io, os
 from log_into_wiki import *
 
 SUFFIX = ''
-SPRITE_NAME = 'Mastery'
+SPRITE_NAME = 'Champion'
 IMAGE_DIR = SPRITE_NAME + ' Images'
 DATA_FILE_LOCATION = SPRITE_NAME + 'Sprite' + SUFFIX + '.txt'
-IMAGE_WIDTH = 30
-IMAGE_HEIGHT = 30
+IMAGE_WIDTH = 60
+IMAGE_HEIGHT = 60
 IMAGE_GAP = 2
-IMAGES_ACROSS = 16
+IMAGES_ACROSS = 15
 
 SPRITE_FILE_NAME = SPRITE_NAME + 'Sprite' + SUFFIX
 

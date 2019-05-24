@@ -26,7 +26,7 @@ for page in pages_var:
 	if lmt == limit:
 		break
 	lmt += 1
-	if lmt < startat or 'Scoreboards' in page.name:
+	if lmt < startat:
 		print("Skipping page %s" % page.name)
 	else:
 		if 'Picks and Bans' in page.name:

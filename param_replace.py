@@ -1,11 +1,11 @@
 from log_into_wiki import *
 import mwparserfromhell
 
-site = login('me', 'lol')  # Set wiki
+site = login('bot', 'lol')  # Set wiki
 
-template_name = 'MVPStandings'
-orig_param = 'mvptype'
-new_param = 'queryfrom'
+template_name = 'OverallChampionStats'
+orig_param = 'concept'
+new_param = 'tournament'
 
 summary = 'Param replacement: {0} -> {1}'.format(orig_param, new_param) # Set summary
 
