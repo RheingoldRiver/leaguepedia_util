@@ -56,11 +56,18 @@ def check_links(template, key1, key2, sep, name, link):
 			template.add(key2,sep.join(tbl2), before=key1)
 			template.add(key1, val1, before=key2)
 
-def open_image_from_file(site, filename, size=None):
+def get_filename_url_to_open(site, filename, size=None):
 	pattern = r'.*src\=\"(.+?)\".*'
 	size = '|' + str(size) + 'px' if size else ''
 	to_parse_text = '[[File:{}|link=%s]]'.format(filename, size)
 	result = site.api('parse', title='Main Page', text=to_parse_text, disablelimitreport=1)
 	parse_result_text = result['parse']['text']['*']
 	url = re.match(pattern, parse_result_text)[1]
+	return url
+
+def open_file_url(url):
 	return Image.open(io.BytesIO(urllib.request.urlopen(url).read()))
+
+def open_image_from_filename(site, filename, size=None):
+	url = get_filename_url_to_open(site, filename, size=None)
+	return open_file_url(url)

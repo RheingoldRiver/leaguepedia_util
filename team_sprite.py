@@ -4,6 +4,7 @@ from team_sprite_entry import *
 site = login('me','lol') # Set wiki
 summary = 'Update team sprite according to high-use pages' # Set summary
 
+IMAGE_DIR = 'Test Images/'
 SPRITE_NAME = 'Team'
 IMAGE_WIDTH = 60
 IMAGE_HEIGHT = 25
@@ -15,7 +16,7 @@ SPRITE_DATA_PAGE = site.pages['Module:%sSprite' % SPRITE_NAME]
 HIGH_USE_PAGE_LIST = site.pages['Maintenance:High-Use Pages'].text().split(',')
 
 spritesheet = sprite_creator.Sprite(IMAGE_WIDTH, IMAGE_HEIGHT, IMAGES_ACROSS, IMAGE_GAP, SPRITE_FILE_NAME)
-spritesheet.open_from_image(open_image_from_file(site, SPRITE_FILE_NAME_FULL))
+spritesheet.open_from_image(open_image_from_filename(site, SPRITE_FILE_NAME_FULL))
 
 split_text = '\tids = {\n'
 end_text = '\n\t},\n}'
@@ -30,20 +31,31 @@ limit = -1
 lmt = 0
 for title in HIGH_USE_PAGE_LIST:
 	sprite_data.add_activity_from_wiki_page(site, title)
-	for team, pos in sprite_data.to_add.items():
+	for team, this_sprite in sprite_data.to_add.items():
 		lmt += 1
 		if lmt == limit:
 			break
 		print(team)
 		try:
-			img = open_image_from_file(site, team + 'logo std.png')
-			spritesheet.add_image_at_location(img, pos)
+			url = get_filename_url_to_open(site, team + 'logo std.png')
+			unversioned_url = re.sub(r'\?.*', '', url)
+			if unversioned_url in sprite_data.urls_used:
+				this_sprite.force_inactive()
+			else:
+				sprite_data.urls_used.append(unversioned_url)
+				this_sprite.set_file(unversioned_url)
+				im = open_file_url(url)
+				im.save(IMAGE_DIR + this_sprite.link + '.png')
+				spritesheet.add_image_at_location(im, this_sprite.pos)
+				spritesheet.save()
 		except Exception as e:
+			this_sprite.force_inactive()
+			print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
 			continue
 
-# for sprite in sprite_data.get_inactive_list():
-# 	spritesheet.destroy(sprite.pos)
-# 	sprite.destroy()
+for sprite in sprite_data.get_inactive_list():
+	spritesheet.destroy(sprite.pos)
+	sprite.destroy()
 
 spritesheet.save()
 
