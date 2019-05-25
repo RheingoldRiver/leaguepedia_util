@@ -47,14 +47,19 @@ class Sprite(object):
 	
 	def add_image(self, img):
 		if self.current_row == self.items_down:
+			self.add_row()
+		box = (self.current_x, self.current_y)
+		img = img.resize((self.item_width, self.item_height), Image.ANTIALIAS)
+		self.sheet.paste(img, box)
+	
+	def add_row(self):
+		_, height = self.sheet.size
+		if self.current_y + self.item_height == height:
 			self.items_down += 1
 			old_sheet = self.sheet
 			self.sheet_height = self.sheet_height + self.gap + self.item_height
 			self.create_new()
 			self.sheet.paste(old_sheet, (0,0))
-		box = (self.current_x, self.current_y)
-		img = img.resize((self.item_width, self.item_height), Image.ANTIALIAS)
-		self.sheet.paste(img, box)
 	
 	def add_image_at_location(self, img, location):
 		self.update_current_location(location)

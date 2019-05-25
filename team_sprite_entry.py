@@ -30,6 +30,7 @@ class TeamSpriteEntry(object):
 				self.date = math.floor(time.time())
 			else:
 				self.date = re.search(r'date = (\d+)', line)[1].strip()
+			self.file = re.search(r'file = "(.+?)"', line)[1].strip()
 			#print(self.pos)
 			#print('re result ' + re.search(r'pos = ([0-9]+)', line)[1].strip())
 			assert(re.search(r'pos = ([0-9]+)', line)[1].strip() == str(self.pos + 1))
@@ -44,6 +45,8 @@ class TeamSpriteEntry(object):
 		# active will mean used in the past 24 hours
 		#print('checking activity %s' % self.link)
 		if self.inactive:
+			return False
+		if self.is_empty():
 			return False
 		return math.floor(time.time()) - int(self.date) < 60 * 60 * 24
 	
@@ -66,13 +69,13 @@ class SpriteSheet(object):
 		self.sprites_by_pos = []
 		self.sprites_by_link = {}
 		self.to_add = {}
-		self.next_empty_node = None
 		self.made_changes = False
 		self.urls_used = []
 		for i, line in enumerate(file.split('\n')):
 			sprite = TeamSpriteEntry(i, line=line)
 			self.sprites_by_pos.append(sprite)
 			self.sprites_by_link[sprite.link] = sprite
+			self.urls_used.append(sprite.file)
 	
 	def add_activity_from_wiki_page(self, site, page_name):
 		to_parse_text = '{{:%s}}' % page_name
@@ -91,12 +94,18 @@ class SpriteSheet(object):
 			if key in self.sprites_by_link:
 				self.sprites_by_link[key].set_active()
 			elif key in self.to_add:
+				print('bunnies')
 				pass
 			else:
+				print(key + ' key')
 				self.made_changes = True
+				print(self.find_next_empty_node())
 				next_sprite = TeamSpriteEntry(self.find_next_empty_node(), link=key, date=math.floor(time.time()))
 				self.to_add[key] = next_sprite
-				self.sprites_by_pos.append(next_sprite)
+				if next_sprite.pos < len(self.sprites_by_pos):
+					self.sprites_by_pos[next_sprite.pos] = next_sprite
+				else:
+					self.sprites_by_pos.append(next_sprite)
 				self.sprites_by_link[key] = next_sprite
 	
 	def get_inactive_list(self):

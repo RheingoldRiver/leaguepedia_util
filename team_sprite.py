@@ -18,6 +18,8 @@ HIGH_USE_PAGE_LIST = site.pages['Maintenance:High-Use Pages'].text().split(',')
 spritesheet = sprite_creator.Sprite(IMAGE_WIDTH, IMAGE_HEIGHT, IMAGES_ACROSS, IMAGE_GAP, SPRITE_FILE_NAME)
 spritesheet.open_from_image(open_image_from_filename(site, SPRITE_FILE_NAME_FULL))
 
+spritesheet.save()
+
 split_text = '\tids = {\n'
 end_text = '\n\t},\n}'
 
@@ -43,24 +45,27 @@ for title in HIGH_USE_PAGE_LIST:
 				this_sprite.force_inactive()
 			else:
 				sprite_data.urls_used.append(unversioned_url)
-				this_sprite.set_file(unversioned_url)
 				im = open_file_url(url)
-				im.save(IMAGE_DIR + this_sprite.link + '.png')
 				spritesheet.add_image_at_location(im, this_sprite.pos)
-				spritesheet.save()
+				this_sprite.set_file(unversioned_url)
 		except Exception as e:
 			this_sprite.force_inactive()
+			print(e)
 			print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
 			continue
 
-for sprite in sprite_data.get_inactive_list():
-	spritesheet.destroy(sprite.pos)
-	sprite.destroy()
+	for sprite in sprite_data.get_inactive_list():
+		spritesheet.destroy(sprite.pos)
+		sprite.destroy()
 
 spritesheet.save()
 
 new_sprite_text = sprite_file_table[0] + split_text + sprite_data.print_output() + end_text
 
 if new_sprite_text != sprite_file_text:
-	site.upload(open(SPRITE_FILE_NAME_FULL, "rb"), SPRITE_FILE_NAME_FULL, summary, ignore = True)
-	SPRITE_DATA_PAGE.save(new_sprite_text, summary = summary)
+	try:
+		site.upload(open(SPRITE_FILE_NAME_FULL, "rb"), SPRITE_FILE_NAME_FULL, summary, ignore = True)
+		SPRITE_DATA_PAGE.save(new_sprite_text, summary = summary)
+		print('saved!')
+	except mwclient.errors.APIError:
+		print('no changes made')
