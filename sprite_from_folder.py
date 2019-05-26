@@ -2,7 +2,7 @@ import urllib.request, time, sprite_creator, io, os
 from log_into_wiki import *
 
 SUFFIX = ''
-SPRITE_NAME = 'Mastery'
+SPRITE_NAME = 'League'
 IMAGE_DIR = SPRITE_NAME + ' Images'
 DATA_FILE_LOCATION = SPRITE_NAME + 'Sprite' + SUFFIX + '.txt'
 IMAGE_WIDTH = 25

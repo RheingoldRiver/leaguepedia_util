@@ -6,7 +6,7 @@ to_blank_edit = ['Project:Top Schedule', 'Project:Matches Section/Matches',
 				 'Project:Matches Section/Results']
 
 for name in to_blank_edit:
-	p = site.pages(name)
+	p = site.pages[name]
 	p.save(p.text(), summary='blank editing')
 
 

@@ -1,5 +1,6 @@
 import mwclient, re, urllib.request, io
-from PIL import Image
+from PIL import Image, ImageFile
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 def login(user, wiki):
 	if user == 'me':

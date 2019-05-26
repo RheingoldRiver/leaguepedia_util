@@ -1,4 +1,5 @@
-from PIL import Image
+from PIL import Image, ImageFile
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 import math, os
 
 class Sprite(object):
