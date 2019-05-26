@@ -41,7 +41,7 @@ lines = [
 for pos, fname in enumerate(os.listdir(IMAGE_DIR)):
 	name = fname.replace('.png','')
 	sprite.add_next_image_from_file(IMAGE_DIR + '/' + fname)
-	lines.append('\t\t["{}"] = {{ pos = {}, section = 1 }},'.format(name, pos + 2))
+	lines.append('\t\t["{}"] = {{ pos = {}, section = 1 }},'.format(name.replace('_', ' '), pos + 2))
 
 lines.append('\t\t["{}"] = {{ pos = {}, section = 1 }},'.format('unknown', '1'))
 
