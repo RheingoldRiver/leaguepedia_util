@@ -1,3 +1,5 @@
+# weekly is a lie, this runs twice-daily
+
 import mwparserfromhell, datetime
 import weekly_utils as utils
 import scrape_runes, luacache_refresh

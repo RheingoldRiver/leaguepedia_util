@@ -2,9 +2,13 @@ from log_into_wiki import *
 
 site = login('me','lol')
 
-p = site.pages['Project:Top Schedule']
+to_blank_edit = ['Project:Top Schedule', 'Project:Matches Section/Matches',
+				 'Project:Matches Section/Results']
 
-p.save(p.text(),summary = 'blank editing')
+for name in to_blank_edit:
+	p = site.pages(name)
+	p.save(p.text(), summary='blank editing')
+
 
 result = site.api('expandtemplates', format='json',
 				prop = 'wikitext',

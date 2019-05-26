@@ -2,13 +2,13 @@ import urllib.request, time, sprite_creator, io, os
 from log_into_wiki import *
 
 SUFFIX = ''
-SPRITE_NAME = 'Team'
+SPRITE_NAME = 'Mastery'
 IMAGE_DIR = SPRITE_NAME + ' Images'
 DATA_FILE_LOCATION = SPRITE_NAME + 'Sprite' + SUFFIX + '.txt'
-IMAGE_WIDTH = 60
+IMAGE_WIDTH = 25
 IMAGE_HEIGHT = 25
 IMAGE_GAP = 2
-IMAGES_ACROSS = 10
+IMAGES_ACROSS = 17
 
 SPRITE_FILE_NAME = SPRITE_NAME + 'Sprite' + SUFFIX
 
@@ -43,10 +43,12 @@ for pos, fname in enumerate(os.listdir(IMAGE_DIR)):
 	sprite.add_next_image_from_file(IMAGE_DIR + '/' + fname)
 	lines.append('\t\t["{}"] = {{ pos = {}, section = 1 }},'.format(name, pos + 2))
 
+lines.append('\t\t["{}"] = {{ pos = {}, section = 1 }},'.format('unknown', '1'))
+
 lines.append('	},')
 lines.append('}')
 
-with open(DATA_FILE_LOCATION, 'w') as f:
+with open(DATA_FILE_LOCATION, 'w', encoding="utf-8") as f:
 	f.write('\n'.join(lines))
 
 sprite.save()

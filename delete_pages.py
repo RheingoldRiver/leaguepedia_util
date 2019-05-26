@@ -1,19 +1,16 @@
 from log_into_wiki import *
 limit = -1
-login('me')
+site = login('bot', 'lol')
 
-with open('pages.txt', encoding="utf-8") as f:
-	pages = f.readlines()
-pages = [page.strip() for page in pages]
+pages = site.allpages(namespace=108)
 
 lmt = 0
-for title in pages:
+for page in pages:
 	if lmt == limit:
 		break
 	lmt += 1
-	print('Deleting %s...' % title)
 	site.api('delete',
-			 title = title,
+			 title = page.name,
 			 token = site.get_token('delete'),
-			 reason = "Deleting files (equazcion's request)"
+			 reason = "oops i forgot to change the summary lol bye concepts"
 			 )

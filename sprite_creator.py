@@ -54,7 +54,7 @@ class Sprite(object):
 	
 	def add_row(self):
 		_, height = self.sheet.size
-		if self.current_y + self.item_height == height:
+		if self.current_y > height:
 			self.items_down += 1
 			old_sheet = self.sheet
 			self.sheet_height = self.sheet_height + self.gap + self.item_height
