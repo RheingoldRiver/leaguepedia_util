@@ -40,7 +40,7 @@ pages_for_runes = []
 for revision in revisions['query']['recentchanges']:
 	title = revision['title']
 	# Patrol user namespace edits (not user talk)
-	if revision['ns'] == 2 and 'unpatrolled' in revision:
+	if (revision['ns'] == 2 or revision['ns'] == 10014) and 'unpatrolled' in revision:
 		site.api('patrol', format = 'json',
 				 revid = revision['revid'],
 				 token = patrol_token
@@ -61,6 +61,10 @@ for page in pages:
 	elif page.startswith('Module:Bracket/') and not (page.endswith('doc') or page.endswith('Wiki')):
 		newpage = site.pages['Tooltip:' + page]
 		newpage.save('{{BracketTooltip}}', summary='Automated error fixing (Python)',tags='daily_errorfix')
+	elif page.endswith('/i18n') and page.startswith('Module'):
+		newpage = site.pages[page + '/doc']
+		if newpage.text() == '':
+			newpage.save('{{i18ndoc}}',tags='daily_errorfix')
 	else:
 		text = p.text()
 		wikitext = mwparserfromhell.parse(text)

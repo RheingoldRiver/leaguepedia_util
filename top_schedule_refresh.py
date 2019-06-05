@@ -3,7 +3,7 @@ from log_into_wiki import *
 site = login('me','lol')
 
 to_blank_edit = ['Project:Top Schedule', 'Project:Matches Section/Matches',
-				 'Project:Matches Section/Results']
+				 'Project:Matches Section/Results', 'Project:Korizon Standings']
 
 for name in to_blank_edit:
 	p = site.pages[name]

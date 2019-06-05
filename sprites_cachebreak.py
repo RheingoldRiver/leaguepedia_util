@@ -7,7 +7,7 @@ url_re_start = r'.*(\/.\/..\/)'
 url_re_end = r'(\?version=\w*)\".*'
 css_page_list = ['MediaWiki:Common.css', 'MediaWiki:Mobile.css']
 
-category_result = site.api('query', list = 'categorymembers', cmtitle = 'Category:Sprite Images')
+category_result = site.api('query', list = 'categorymembers', cmtitle = 'Category:Sprite Images', cmlimit = 50)
 file_name_list = [_['title'] for _ in category_result['query']['categorymembers']]
 
 parse_text_list = ['[[%s|link=]]' % _ for _ in file_name_list]

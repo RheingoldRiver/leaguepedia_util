@@ -4,7 +4,7 @@ limit = -1
 
 site = login('bot', 'lol')
 
-LOC = 'League Images'
+LOC = 'Sprites/' + 'League Images'
 
 with open('pages.txt', encoding="utf-8") as f:
 	pages = f.readlines()
