@@ -3,28 +3,24 @@ from log_into_wiki import *
 
 #################################################################################################
 
-original_name = 'Wind'
-irl_name = 'Lee Chi Wa'
+original_name = 'Police'
+irl_name = 'Park Hyeong-gi'
 new_name = '{} ({})'.format(original_name, irl_name)
-init_move = True
+init_move = False
 blank_edit = False
 limit = -1
 timeout_limit = 30
 
 listplayer_templates = ["listplayer", "listplayer/Current"]
 roster_templates = ["ExtendedRosterLine", "ExtendedRosterLine/MultipleRoles"]
-scoreboard_templates = ["MatchRecap/Player", "MatchRecapS4/Player",
-					   "MatchRecapS5/Player", "MatchRecapS6/Player",
-					   "MatchRecapS7/Player", "MatchRecapS8/Player",
-					   "MatchRecapS6NoSMW/Player", "MatchRecapS7NoKeystones/Player",
-					   "MatchRecapNoItems/Player", "MatchRecap/Player",
-					   "Scoreboard/Player"]
+scoreboard_templates = ["MatchRecapS8/Player","Scoreboard/Player"]
 stat_templates = ["IPS", "CareerPlayerStats", "MatchHistoryPlayer"]
 player_line_templates = ["LCKPlayerLine", "LCSPlayerLine"]
-roster_change_templates = ["RosterChangeLine", "RosterRumorLine2", "RosterRumorLineStay", "RosterRumorLineNot"]
+roster_change_templates = ["RosterChangeLine", "RosterRumorLine2",
+						   "RosterRumorLineStay", "RosterRumorLineNot", "RosterRumorLine"]
 summary = "Disambiguating {} to {}".format(original_name, new_name)
 
-css_style = "{\n    color:orange!important;\n    font-weight:bold;\n}"
+css_style = " {\n    color:orange!important;\n    font-weight:bold;\n}"
 
 orig_name_lc = original_name[0].lower() + original_name[1:]
 new_name_lc = new_name[0].lower() + new_name[1:]
@@ -104,7 +100,9 @@ def process_page(page):
 	text = page.text()
 	origtext = text
 	# do links first because it's easier to just edit them as a string
-	if not text.lower().startswith('#redirect'):
+	if text.lower().startswith('#redirect') and page.name.lower() == original_name.lower():
+		pass
+	else:
 		text = text.replace("[[" + original_name + "]]", "[[" + new_name + "|" + original_name + "]]")
 	wikitext = mwparserfromhell.parse(text)
 	for template in wikitext.filter_templates():
@@ -131,7 +129,7 @@ def process_template(template):
 	if tl_matches(['bl'], field=1) and not template.has(2):
 		template.add(1, new_name)
 		template.add(2, original_name)
-	
+
 	elif tl_matches(listplayer_templates, field=1) and not template.has("link"):
 		template.add("link", new_name, before=1)
 	
@@ -172,6 +170,12 @@ def process_template(template):
 			if template.get("mvp").value.strip() == original_name:
 				template.add("mvplink", new_name, before="mvp")
 		check_links(template, 'with', 'withlinks', ',', original_name, new_name)
+	
+	elif tl_matches(['SeasonAward']):
+		if template.has(1):
+			if template.get(1).value.strip() == original_name:
+				template.add('link', new_name)
+		check_links(template, 'eligibleplayers', 'eligiblelinks', ',', original_name, new_name)
 	
 	elif tl_matches(["PortalCurrentRosters"]):
 		for pos in ['t', 'j', 'm', 'a', 's']:
