@@ -3,8 +3,8 @@ from log_into_wiki import *
 
 #################################################################################################
 
-original_name = 'Hatred'
-irl_name = 'Zherluck Tolentino'
+original_name = 'Wind'
+irl_name = 'Lee Chi Wa'
 new_name = '{} ({})'.format(original_name, irl_name)
 init_move = True
 blank_edit = False
@@ -104,7 +104,8 @@ def process_page(page):
 	text = page.text()
 	origtext = text
 	# do links first because it's easier to just edit them as a string
-	text = text.replace("[[" + original_name + "]]", "[[" + new_name + "|" + original_name + "]]")
+	if not text.lower().startswith('#redirect'):
+		text = text.replace("[[" + original_name + "]]", "[[" + new_name + "|" + original_name + "]]")
 	wikitext = mwparserfromhell.parse(text)
 	for template in wikitext.filter_templates():
 		process_template(template)
@@ -118,42 +119,41 @@ def process_page(page):
 		print("No changes, skipping")
 
 def process_template(template):
-	if template.name.matches('bl') and template.get(1).value.strip() == original_name and not template.has(2):
+	
+	def tl_matches(arr, field=None):
+		if field:
+			has_field = False
+			if template.has(field):
+				has_field = template.get(field).value.strip() == original_name
+			return [_ for _ in arr if template.name.matches(_)] and  has_field
+		return [_ for _ in arr if template.name.matches(_)]
+	
+	if tl_matches(['bl'], field=1) and not template.has(2):
 		template.add(1, new_name)
 		template.add(2, original_name)
 	
-	elif template.name.strip() in listplayer_templates and template.get(
-					1).value.strip() == original_name and not template.has("link"):
+	elif tl_matches(listplayer_templates, field=1) and not template.has("link"):
 		template.add("link", new_name, before=1)
 	
-	elif template.name.strip() in roster_templates \
-					and template.has("player") \
-					and template.get("player").value.strip() == original_name \
-					and not template.has("link"):
+	elif tl_matches(roster_templates, field='player') and not template.has('link'):
 		template.add("link", new_name, before="name")
 	
-	elif template.name.matches('TeamRoster'):
-		j = 1
-		jstr = str(j)
-		while template.has("player" + jstr):
-			if template.get("player" + jstr).value.strip() == original_name and not template.has("link" + jstr):
-				template.add("link" + jstr, new_name, before="flag" + jstr)
-			j = j + 1
-			jstr = str(j)
-	
-	elif template.name.strip() in scoreboard_templates and template.get("name").value.strip() == original_name:
+	elif tl_matches(scoreboard_templates, field='name'):
 		template.add("link", new_name, before="kills")
 	
-	elif template.name.strip() in roster_change_templates and template.get("player").value.strip() == original_name:
+	elif tl_matches(roster_change_templates, field='player'):
 		template.add("player", new_name + "{{!}}" + original_name)
 	
-	elif [_ for _ in player_line_templates if template.name.matches(_)] and template.get(1).value.strip() == original_name:
-		template.add(2, new_name)
-	
-	elif template.name.matches("Player") and template.get(1).strip() == original_name:
+	elif tl_matches(['TeamRoster/Line', 'RosterLineOld'], field='player'):
 		template.add('link', new_name)
 	
-	elif template.name.matches("RSCR/Line"):
+	elif tl_matches(player_line_templates, field=1):
+		template.add(2, new_name)
+	
+	elif tl_matches(['Player'], field=1):
+		template.add('link', new_name)
+	
+	elif tl_matches(["RSCR/Line"]):
 		if template.has("p1"):
 			if template.get("p1").strip() == original_name:
 				template.add("p1", new_name + "{{!}}" + original_name)
@@ -161,22 +161,19 @@ def process_template(template):
 			if template.get("p2").strip() == original_name:
 				template.add("p2", new_name + "{{!}}" + original_name)
 				
-	elif template.name.matches("MatchDetails/Series"):
-		if template.has("mvp"):
-			if template.get("mvp").strip() == original_name:
-				template.add("mvplink", new_name, before="mvp")
-	elif template.name.matches("PentakillLine"):
-		if template.has(6):
-			if template.get(6).value.strip() == original_name:
-				template.add("playerlink", new_name, before=6)
+	elif tl_matches(["MatchDetails/Series"], field='mvp'):
+		template.add("mvplink", new_name, before="mvp")
+		
+	elif tl_matches(["PentakillLine"], field=6):
+		template.add("playerlink", new_name, before=6)
 	
-	elif template.name.matches("MatchSchedule") or template.name.matches("MatchSchedule/Game"):
+	elif tl_matches(["MatchSchedule","MatchSchedule/Game"]):
 		if template.has("mvp"):
 			if template.get("mvp").value.strip() == original_name:
 				template.add("mvplink", new_name, before="mvp")
 		check_links(template, 'with', 'withlinks', ',', original_name, new_name)
 	
-	elif template.name.matches("PortalCurrentRosters"):
+	elif tl_matches(["PortalCurrentRosters"]):
 		for pos in ['t', 'j', 'm', 'a', 's']:
 			for period in ['old', 'new']:
 				arg_name = pos + '_' + period
