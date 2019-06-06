@@ -6,7 +6,7 @@ from log_into_wiki import *
 original_name = 'Police'
 irl_name = 'Park Hyeong-gi'
 new_name = '{} ({})'.format(original_name, irl_name)
-init_move = False
+init_move = True
 blank_edit = False
 limit = -1
 timeout_limit = 30
