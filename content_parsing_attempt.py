@@ -15,8 +15,8 @@ pages = this_template.embeddedin()
 
 months = r'(January|February|March|April|May|June|July|August|September|October|November|December)'
 attrib = r'(with|from|by)'
-regex = r"^\* " + months + r" (\d+), \[(.+?) ([^\]]*)\] ''" + attrib + r" (.+?) on (.*)''$"
-no_author = r"^\* " + months + r" (\d+), \[(.+?) ([^\]]*)\] ''" + attrib + r" (.+?)''$"
+regex = r"^\* ?" + months + r" (\d+), \[(.+?) ([^\]]*)\] ''" + attrib + r" (.+?) on (.*)''$"
+no_author = r"^\* ?" + months + r" (\d+), \[(.+?) ([^\]]*)\] ''" + attrib + r" (.+?)''$"
 
 passed_startat = False if startat_page else True
 lmt = 0
@@ -58,7 +58,7 @@ for page in pages:
 		break
 	if startat_page and page.name == startat_page:
 		passed_startat = True
-	if not passed_startat or '2019' not in page.name:
+	if not passed_startat or ('2019' not in page.name and '2018' not in page.name):
 		#print("Skipping page %s" % page.name)
 		continue
 	lmt += 1

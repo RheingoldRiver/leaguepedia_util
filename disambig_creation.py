@@ -3,8 +3,8 @@ from log_into_wiki import *
 
 #################################################################################################
 
-original_name = 'Police'
-irl_name = 'Park Hyeong-gi'
+original_name = 'Destroy'
+irl_name = 'Nguyễn Anh Tinh'
 new_name = '{} ({})'.format(original_name, irl_name)
 init_move = True
 blank_edit = False

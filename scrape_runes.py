@@ -1,7 +1,7 @@
 import re, json, urllib.request, urllib.error, math, copy
 
 def get_rune_dict():
-	with urllib.request.urlopen('http://ddragon.leagueoflegends.com/cdn/9.3.1/data/en_US/runesReforged.json') as url:
+	with urllib.request.urlopen('http://ddragon.leagueoflegends.com/cdn/9.10.1/data/en_US/runesReforged.json') as url:
 		data = json.loads(url.read().decode())
 	rune_dict = {
 		5008 : 'Adaptive Force',
@@ -26,7 +26,7 @@ def get_rune_dict():
 
 def get_champ_dict():
 	champ_dict = {}
-	with urllib.request.urlopen('http://ddragon.leagueoflegends.com/cdn/9.3.1/data/en_US/champion.json') as url:
+	with urllib.request.urlopen('http://ddragon.leagueoflegends.com/cdn/9.10.1/data/en_US/champion.json') as url:
 		champ_list = json.loads(url.read().decode())
 	for champ in champ_list['data']:
 		n = int(champ_list['data'][champ]['key'])
