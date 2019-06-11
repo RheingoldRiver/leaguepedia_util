@@ -7,13 +7,11 @@ summary = 'Remove redundant parameters from templates'  # Set summary
 limit = -1
 startat_page = None
 print(startat_page)
-# startat_page = 'asdf'
+#startat_page = 'SirNukesAlot/Statistics'
 
 this_templates = [
-	'MatchHistoryPlayer',
-	'MatchHistoryTeam',
-	'CareerPlayerStats',
-	'PlayerYearStats',
+	#'CareerPlayerStats',
+	#'PlayerYearStats',
 	'YearTeamStats'
 ]
 

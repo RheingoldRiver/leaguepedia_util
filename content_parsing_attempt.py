@@ -21,10 +21,12 @@ no_author = r"^\* ?" + months + r" (\d+), \[(.+?) ([^\]]*)\] ''" + attrib + r" (
 passed_startat = False if startat_page else True
 lmt = 0
 
+#pages = [site.pages["NA LCS/2018 Season/Spring Season/Media"]]
+
 def process_line(line):
 	match = re.match(regex, line)
 	if match:
-		t = mwparserfromhell.nodes.template.Template('ContentLineOld')
+		t = mwparserfromhell.nodes.template.Template('ExternalContent/Line')
 		t.add('url', match[3])
 		t.add('title', [match[4]])
 		t.add(page_type, page.name.replace('/Media', ''))
@@ -39,7 +41,7 @@ def process_line(line):
 		return t
 	match = re.match(no_author, line)
 	if match:
-		t = mwparserfromhell.nodes.template.Template('ContentLineOld')
+		t = mwparserfromhell.nodes.template.Template('ExternalContent/Line')
 		t.add('url', match[3])
 		t.add('title', [match[4]])
 		t.add(page_type, page.name.replace('/Media',''))
@@ -58,7 +60,7 @@ for page in pages:
 		break
 	if startat_page and page.name == startat_page:
 		passed_startat = True
-	if not passed_startat or ('2019' not in page.name and '2018' not in page.name):
+	if not passed_startat: # or ('2019' not in page.name and '2018' not in page.name):
 		#print("Skipping page %s" % page.name)
 		continue
 	lmt += 1
@@ -69,7 +71,7 @@ for page in pages:
 	text = this_page.text()
 	wikitext = mwparserfromhell.parse(text)
 	for template in wikitext.filter_templates():
-		if template.name.matches('TDRight') or template.name.matches('TabsDynamic'):
+		if tl_matches(template, ['TD','TDRight','TabsDynamic']):
 			i = 1
 			while template.has('content' + str(i)):
 				content = template.get('content' + str(i)).value.strip()

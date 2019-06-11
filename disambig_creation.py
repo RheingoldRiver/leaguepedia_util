@@ -117,13 +117,12 @@ def process_page(page):
 		print("No changes, skipping")
 
 def process_template(template):
-	
 	def tl_matches(arr, field=None):
 		if field:
 			has_field = False
 			if template.has(field):
 				has_field = template.get(field).value.strip() == original_name
-			return [_ for _ in arr if template.name.matches(_)] and  has_field
+			return [_ for _ in arr if template.name.matches(_)] and has_field
 		return [_ for _ in arr if template.name.matches(_)]
 	
 	if tl_matches(['bl'], field=1) and not template.has(2):
