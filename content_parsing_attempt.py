@@ -1,20 +1,25 @@
 from log_into_wiki import *
 import mwparserfromhell, re
 
-site = login('me', 'lol')  # Set wiki
+site = login('bot', 'lol')  # Set wiki
 summary = 'Attempting to parse old content as templates'  # Set summary
 
-page_type = 'tournament' # tournament, players, teams
+page_type = 'players' # tournament, players, teams
 
 limit = -1
 startat_page = None
 print(startat_page)
 # startat_page = 'asdf'
-this_template = site.pages['Template:Infobox Tournament']  # Set template
+template_by_type = {
+	'players' : 'Player',
+	'teams' : 'Team',
+	'tournament' : 'Tournament'
+}
+this_template = site.pages['Template:Infobox ' + template_by_type[page_type]]  # Set template
 pages = this_template.embeddedin()
 
 months = r'(January|February|March|April|May|June|July|August|September|October|November|December)'
-attrib = r'(with|from|by)'
+attrib = r'(with|from|by|From|By|With)'
 regex = r"^\* ?" + months + r" (\d+), \[(.+?) ([^\]]*)\] ''" + attrib + r" (.+?) on (.*)''$"
 no_author = r"^\* ?" + months + r" (\d+), \[(.+?) ([^\]]*)\] ''" + attrib + r" (.+?)''$"
 
