@@ -19,37 +19,16 @@ this_template = site.pages['Template:Infobox ' + template_by_type[page_type]]  #
 pages = this_template.embeddedin()
 
 months = r'(January|February|March|April|May|June|July|August|September|October|November|December)'
+date = r" (\d+)(?:st|th|rd|nd)?, (?:\d\d\d\d, )?"
 attrib_sep = r" (?:\([\dms]+\) )? ?(?: *\- *)?''"
 attrib = r'(with|from|by|From|By|With)'
-regex = r"^\* ?" + months + r" (\d+), (?:\d\d\d\d, )?\[(.+?) ([^\]]*)\]" + attrib_sep + attrib + r" (.+?) on (.*)''$"
-no_author = r"^\* ?" + months + r" (\d+), (?:\d\d\d\d, )?\[(.+?) ([^\]]*)\]" + attrib_sep + attrib + r" (.+?)''$"
+regex = r"^\* ?" + months + date + r"\[(.+?) ([^\]]*)\]" + attrib_sep + attrib + r" (.+?) on (.*)''$"
+no_author = r"^\* ?" + months + date + r"\[(.+?) ([^\]]*)\]" + attrib_sep + attrib + r" (.+?)''$"
 
 passed_startat = False if startat_page else True
 lmt = 0
 
-pages = [site.pages["NA_LCS/2015_Season/Summer_Season"],
-site.pages["NA_LCS/2017_Season/Summer_Season"],
-site.pages["NA_LCS/2017_Season/Spring_Season"],
-site.pages["2016_Mid-Season_Invitational"],
-site.pages["NA_LCS/2016_Season/Summer_Season"],
-site.pages["NA_LCS/2016_Season/Spring_Season"],
-site.pages["NA_LCS/2016_Season/Spring_Playoffs"],
-site.pages["EU_LCS/2017_Season/Summer_Season"],
-site.pages["EU_LCS/2017_Season/Spring_Season"],
-site.pages["EU_LCS/2016_Season/Spring_Season"],
-site.pages["LPL/2016_Season/Spring_Season"],
-site.pages["2015_Mid-Season_Invitational"],
-site.pages["LCK/2017_Season/Spring_Season"],
-site.pages["LCK/2017_Season/Summer_Season"],
-site.pages["LCK/2016_Season/Summer_Season"],
-site.pages["LCK/2016_Season/Spring_Season"],
-site.pages["IEM_Season_IX_-_World_Championship"],
-site.pages["2014_Season_World_Championship"],
-site.pages["NA_LCS/2018_Season/Spring_Season/Media"],
-site.pages["PG_Nationals/2018_Season/Summer_Season"],
-site.pages["PG_Nationals/2018_Season/Spring_Season"],
-site.pages["CLS/2018_Season/Opening_Season"],
-site.pages["LCK/2018_Season/Spring_Season"]]
+#pages = [ site.pages["2017 Season World Championship/Main Event"] ]
 
 def process_line(line):
 	match = re.match(regex, line)

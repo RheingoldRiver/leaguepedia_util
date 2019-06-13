@@ -5,12 +5,12 @@ from dateutil import parser
 site = login('bot', 'lol')  # Set wiki
 summary = 'Attempting to migrate content to data ns'  # Set summary
 
-page_type = 'players' # players or teams
+page_type = 'teams' # players or teams
 
 limit = -1
 startat_page = None
 print(startat_page)
-startat_page = 'SofM'
+#startat_page = 'SofM'
 template_types = {
 	"players" : 'Player',
 	"teams" : 'Team'
