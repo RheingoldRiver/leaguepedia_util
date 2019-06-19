@@ -16,29 +16,11 @@ tabs_templates = ['TDRight', 'TabsDynamic', 'TD']
 years = ['2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019']
 months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'September', 'October', 'November', 'December']
 
-pages = [site.pages["NA_LCS/2015_Season/Summer_Season"],
-site.pages["NA_LCS/2017_Season/Summer_Season"],
-site.pages["NA_LCS/2017_Season/Spring_Season"],
-site.pages["2016_Mid-Season_Invitational"],
-site.pages["NA_LCS/2016_Season/Summer_Season"],
-site.pages["NA_LCS/2016_Season/Spring_Season"],
-site.pages["NA_LCS/2016_Season/Spring_Playoffs"],
-site.pages["EU_LCS/2017_Season/Summer_Season"],
-site.pages["EU_LCS/2017_Season/Spring_Season"],
-site.pages["EU_LCS/2016_Season/Spring_Season"],
-site.pages["LPL/2016_Season/Spring_Season"],
-site.pages["2015_Mid-Season_Invitational"],
-site.pages["LCK/2017_Season/Spring_Season"],
-site.pages["LCK/2017_Season/Summer_Season"],
-site.pages["LCK/2016_Season/Summer_Season"],
-site.pages["LCK/2016_Season/Spring_Season"],
-site.pages["IEM_Season_IX_-_World_Championship"],
-site.pages["2014_Season_World_Championship"],
-site.pages["NA_LCS/2018_Season/Spring_Season/Media"],
-site.pages["PG_Nationals/2018_Season/Summer_Season"],
-site.pages["PG_Nationals/2018_Season/Spring_Season"],
-site.pages["CLS/2018_Season/Opening_Season"],
-site.pages["LCK/2018_Season/Spring_Season"]]
+pages = [
+
+site.pages['LMS/2018 Season/Spring Season']
+
+]
 
 passed_startat = False if startat_page else True
 lmt = 0
@@ -64,6 +46,7 @@ for page in pages:
 	print('Beginning page %s' % page.name)
 	wikitext = mwparserfromhell.parse(text)
 	for template in wikitext.filter_templates(recursive=False):
+		print(template.name)
 		if tl_matches(template, tabs_templates):
 			i = 1
 			while template.has('name' + str(i)) and template.has('content' + str(i)):

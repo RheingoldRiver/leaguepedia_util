@@ -9,7 +9,7 @@ page_type = 'tournament' # tournament, players, teams
 limit = -1
 startat_page = None
 print(startat_page)
-# startat_page = 'asdf'
+#startat_page = 'YellOwStaR'
 template_by_type = {
 	'players' : 'Player',
 	'teams' : 'Team',
@@ -28,7 +28,7 @@ no_author = r"^\* ?" + months + date + r"\[(.+?) ([^\]]*)\]" + attrib_sep + attr
 passed_startat = False if startat_page else True
 lmt = 0
 
-#pages = [ site.pages["2017 Season World Championship/Main Event"] ]
+pages = [ site.pages["LCS/2019 Season/Spring Season/Media"] ]
 
 def process_line(line):
 	match = re.match(regex, line)
@@ -68,22 +68,25 @@ for page in pages:
 	if startat_page and page.name == startat_page:
 		passed_startat = True
 	if not passed_startat: # or ('2019' not in page.name and '2018' not in page.name):
-		#print("Skipping page %s" % page.name)
+		print("Skipping page %s" % page.name)
 		continue
 	lmt += 1
 	this_page = page
 	if page_type == 'tournament':
 		if site.pages[page.name + '/Media'].text() != '':
 			this_page = site.pages[page.name + '/Media']
+	print('beginning page %s' % page.name)
 	text = this_page.text()
 	wikitext = mwparserfromhell.parse(text, skip_style_tags=True)
 	for template in wikitext.filter_templates(recursive=False):
 		if tl_matches(template, ['TD','TDRight','TabsDynamic']):
+			print(template.name)
 			i = 1
 			while template.has('content' + str(i)):
 				content = template.get('content' + str(i)).value.strip()
 				lines = content.split('\n')
 				for j, line in enumerate(lines):
+					print(line)
 					tl = process_line(line)
 					if tl:
 						lines[j] = str(tl)

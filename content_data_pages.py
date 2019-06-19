@@ -16,6 +16,8 @@ for y in [2020]:
 	list_of_sundays = ['|' + str(y) + '=']
 	for d in allsundays(y):
 		list_of_sundays.append('* [[Data:ExternalContent/{}|{}]]'.format(d.strftime('%Y-%m-%d'), str(d.strftime('%b %d'))))
+		
+		# START SAVING DATA PAGES - COMMENT THIS BLOCK TO DO NAVBOX ONLY
 		p = site.pages['Data:ExternalContent/' + str(d)]
 		if p.text() != '':
 			continue
@@ -30,6 +32,8 @@ for y in [2020]:
 		lines.append('{{ExternalContent/End}}')
 		print('\n'.join(lines))
 		p.save('\n'.join(lines), summary=summary)
+		# END SAVING DATA PAGES - COMMENT THIS BLOCK TO DO NAVBOX ONLY
+	
 	list_of_sundays.append('}}\n{{Endflatlist}}')
 	template_page = site.pages['Template:External Content Navbox']
 	wikitext = mwparserfromhell.parse(template_page.text())
