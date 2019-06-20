@@ -3,8 +3,8 @@ from log_into_wiki import *
 
 #################################################################################################
 
-original_name = 'Destroy'
-irl_name = 'Nguyễn Anh Tinh'
+original_name = 'Sun'
+irl_name = 'Joshua Cook'
 new_name = '{} ({})'.format(original_name, irl_name)
 init_move = True
 blank_edit = False
@@ -147,16 +147,8 @@ def process_template(template):
 	elif tl_matches(player_line_templates, field=1):
 		template.add(2, new_name)
 	
-	elif tl_matches(['Player'], field=1):
+	elif tl_matches(['Player', 'RSRR/Player'], field=1):
 		template.add('link', new_name)
-	
-	elif tl_matches(["RSCR/Line"]):
-		if template.has("p1"):
-			if template.get("p1").strip() == original_name:
-				template.add("p1", new_name + "{{!}}" + original_name)
-		if template.has("p2"):
-			if template.get("p2").strip() == original_name:
-				template.add("p2", new_name + "{{!}}" + original_name)
 				
 	elif tl_matches(["MatchDetails/Series"], field='mvp'):
 		template.add("mvplink", new_name, before="mvp")

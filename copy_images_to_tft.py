@@ -9,7 +9,7 @@ with open('pages.txt', encoding="utf-8") as f:
 	pages = f.readlines()
 
 for page in pages:
-	page = page.strip()
+	page = page.strip() + '.png'
 	url = get_filename_url_to_open(site, page)
 	img = urllib.request.urlopen(url).read()
-	tft.upload(img, page, '[[Category:Champion Ability Images]]')
+	tft.upload(img, page, '[[Category:Item Images]]')

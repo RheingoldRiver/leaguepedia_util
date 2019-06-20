@@ -7,7 +7,7 @@ summary = 'Add CCMT data to Infobox using CM_ prefix for params and LeagueIconKe
 limit = -1
 startat_page = None
 print(startat_page)
-startat_page = '2014 EU Challenger Series/Spring/Series 2'
+#startat_page = '2014 EU Challenger Series/Spring/Series 2'
 
 param_list=['StandardName','TournamentLevel','IsQualifier','IsPlayoffs','IsOfficial','Year','League','OverviewPage']
 
