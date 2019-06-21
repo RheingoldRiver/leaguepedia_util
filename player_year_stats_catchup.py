@@ -24,9 +24,9 @@ for page in pages:
 	lmt += 1
 	text = page.text()
 	wikitext = mwparserfromhell.parse(text)
-	res = site.api('cargoquery', tables="ScoreboardPlayer=SP,CCMTournaments=CCMT",
-				   join_on="SP.OverviewPage=CCMT.OverviewPage",
-				   fields="CCMT.Year=Year",where='SP.Link="%s"' % page.name,group_by="CCMT.Year")
+	res = site.api('cargoquery', tables="ScoreboardPlayer=SP,Tournaments",
+				   join_on="SP.OverviewPage=Tournaments.OverviewPage",
+				   fields="Tournaments.Year=Year",where='SP.Link="%s"' % page.name,group_by="Tournaments.Year")
 	for item in res['cargoquery']:
 		if 'Year' in item['title'] and item['title']['Year'] != '':
 			year_page = page.name + '/Statistics/' + item['title']['Year']
