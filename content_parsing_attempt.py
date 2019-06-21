@@ -22,13 +22,29 @@ months = r'(January|February|March|April|May|June|July|August|September|October|
 date = r" (\d+)(?:st|th|rd|nd)?, (?:\d\d\d\d, )?"
 attrib_sep = r" (?:\([\dms]+\) )? ?(?: *\- *)?''"
 attrib = r'(with|from|by|From|By|With)'
-regex = r"^\* ?" + months + date + r"\[(.+?) ([^\]]*)\]" + attrib_sep + attrib + r" (.+?) on (.*)''$"
-no_author = r"^\* ?" + months + date + r"\[(.+?) ([^\]]*)\]" + attrib_sep + attrib + r" (.+?)''$"
+regex = r"^\* ?" + months + date + r"\[(.+?) ([^\]]*)\]" + attrib_sep + attrib + r" (.+?) on (.*)'' *$"
+no_author = r"^\* ?" + months + date + r"\[(.+?) ([^\]]*)\]" + attrib_sep + attrib + r" (.+?)'' *$"
+translator = r"^\* ?" + months + date + r"\[(.+?) ([^\]]*)\]" + attrib_sep + '(translated by)' + r" (.+?) on (.*)'' *$"
 
 passed_startat = False if startat_page else True
 lmt = 0
 
-pages = [ site.pages["LCS/2019 Season/Spring Season/Media"] ]
+pages = [
+# site.pages["LLA/2019_Season/Opening_Season/Media"],
+# site.pages["LCK/2016_Season/Summer_Season"],
+# site.pages["IEM_Season_IX_-_World_Championship"],
+# site.pages["LCK/2017_Season/Spring_Season"],
+# site.pages["2015_Mid-Season_Invitational"],
+# site.pages["LCK/2019_Season/Spring_Season/Media"],
+# site.pages["LEC/2019_Season/Spring_Playoffs/Media"],
+# site.pages["LLN/2018_Season/Opening_Season"],
+# site.pages["2017_Season_World_Championship/Main_Event/Media"],
+# site.pages["2015_Season_World_Championship/Media"],
+# site.pages["LCK/2018_Season/Summer_Season"],
+# site.pages["PG_Nationals/2018_Season/Summer_Season"],
+# site.pages["EU_LCS/2018_Season/Summer_Season/Media"],
+site.pages["2015 Season World Championship/Media"]
+]
 
 def process_line(line):
 	match = re.match(regex, line)
@@ -60,6 +76,21 @@ def process_line(line):
 			t.add('isvideo', 'yes')
 		lines[j] = str(t)
 		return t
+	match = re.match(translator, line)
+	if match:
+		t = mwparserfromhell.nodes.template.Template('ExternalContent/Line')
+		t.add('url', match[3])
+		t.add('title', [match[4]])
+		t.add(page_type, page.name.replace('/Media', ''))
+		t.add('publication', match[7])
+		t.add('translator', match[6])
+		if match[5] == 'with':
+			t.add('type', 'interview')
+		t.add('date', match[1] + ' ' + match[2])
+		if 'youtube' in match[3] or 'youtu.be' in match[3]:
+			t.add('isvideo', 'yes')
+		lines[j] = str(t)
+		return t
 	return None
 
 for page in pages:
@@ -80,13 +111,11 @@ for page in pages:
 	wikitext = mwparserfromhell.parse(text, skip_style_tags=True)
 	for template in wikitext.filter_templates(recursive=False):
 		if tl_matches(template, ['TD','TDRight','TabsDynamic']):
-			print(template.name)
 			i = 1
 			while template.has('content' + str(i)):
 				content = template.get('content' + str(i)).value.strip()
 				lines = content.split('\n')
 				for j, line in enumerate(lines):
-					print(line)
 					tl = process_line(line)
 					if tl:
 						lines[j] = str(tl)

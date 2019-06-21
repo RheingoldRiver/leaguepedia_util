@@ -17,9 +17,21 @@ years = ['2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019']
 months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'September', 'October', 'November', 'December']
 
 pages = [
-
-site.pages['LMS/2018 Season/Spring Season']
-
+site.pages["2015 Season World Championship/Media"]
+# site.pages["LLA/2019_Season/Opening_Season/Media"],
+# site.pages["LCK/2016_Season/Summer_Season"],
+# site.pages["IEM_Season_IX_-_World_Championship"],
+# site.pages["LCK/2017_Season/Spring_Season"],
+# site.pages["2015_Mid-Season_Invitational"],
+# site.pages["LCK/2019_Season/Spring_Season/Media"],
+# site.pages["LEC/2019_Season/Spring_Playoffs/Media"],
+# site.pages["LLN/2018_Season/Opening_Season"],
+# site.pages["2017_Season_World_Championship/Main_Event/Media"],
+# site.pages["2015_Season_World_Championship/Media"],
+# site.pages["LCK/2018_Season/Summer_Season"],
+# site.pages["PG_Nationals/2018_Season/Summer_Season"],
+# site.pages["EU_LCS/2018_Season/Summer_Season/Media"],
+# site.pages["LCS/2019_Season/Spring_Season/Media"]
 ]
 
 passed_startat = False if startat_page else True
@@ -78,8 +90,8 @@ for page in pages:
 								continue
 							sep = '{{{{ExternalContent/Date|y={}|m={}|d={}}}}}\n'.format(
 								date.year,
-								date.month,
-								date.day
+								date.strftime('%m'),
+								date.strftime('%d')
 							)
 							print(sep)
 							data_text_tbl = data_text.split(sep)
