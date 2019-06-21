@@ -163,3 +163,15 @@ def fixPB(site, template):
 		result_parsed = [x for x in result_tbl if x.lower() not in pb_exceptions]
 		if len(result_parsed) != len(set(result_parsed)):
 			template.add('has' + datatype + 'error','Yes')
+
+def set_initial_order(wikitext):
+	i = 0
+	for template in wikitext.filter_templates():
+		if template.name.matches('MatchSchedule/Start'):
+			i = 0
+			continue
+		if template.name.matches('MatchSchedule'):
+			i += 1
+			if template.has('initialorder'):
+				continue
+			template.add('initialorder', str(i))

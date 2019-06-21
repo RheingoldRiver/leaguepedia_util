@@ -1,31 +1,14 @@
 from log_into_wiki import *
+import weekly_utils as utils
 import mwparserfromhell
 
-site = login('bot', 'lol')  # Set wiki
+site = login('me', 'lol')  # Set wiki
 summary = 'remove all extra mhp params/text'  # Set summary
 
-limit = -1
-startat_page = None
-print(startat_page)
-startat_page = 'Cop/Match History'
-this_template = site.pages['Template:MatchHistoryPlayer']  # Set template
-pages = this_template.embeddedin()
+page = site.pages['Data:2012 MLG Pro Circuit/Fall/Championship']
 
-passed_startat = False if startat_page else True
-lmt = 0
-for page in pages:
-	if lmt == limit:
-		break
-	if startat_page and page.name == startat_page:
-		passed_startat = True
-	if not passed_startat:
-		print("Skipping page %s" % page.name)
-		continue
-	lmt += 1
-	text = page.text()
-	newtext = '{{PlayerTabsHeader}}\n{{MatchHistoryPlayer}}'
-	if text != newtext:
-		print('Saving page %s...' % page.name)
-		page.save(newtext, summary=summary)
-	else:
-		print('Skipping page %s...' % page.name)
+wikitext = mwparserfromhell.parse(page.text())
+
+utils.set_initial_order(wikitext)
+
+page.save(str(wikitext))

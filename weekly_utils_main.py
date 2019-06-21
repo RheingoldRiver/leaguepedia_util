@@ -93,6 +93,8 @@ for page in pages:
 					template.add(1, '')
 			except Exception as e:
 				errors.append(e)
+		if p.namespace == 10008: # Data namespace
+			utils.set_initial_order(wikitext)
 		newtext = str(wikitext)
 		if text != newtext:
 			print('Saving page %s...' % page)
