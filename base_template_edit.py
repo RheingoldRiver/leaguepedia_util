@@ -11,6 +11,9 @@ print(startat_page)
 this_template = site.pages['Template:TEMPLATE'] # Set template
 pages = this_template.embeddedin()
 
+# with open('pages.txt', encoding="utf-8") as f:
+# 	pages = f.readlines()
+
 passed_startat = False if startat_page else True
 lmt = 0
 for page in pages:

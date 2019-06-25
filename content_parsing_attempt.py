@@ -4,7 +4,7 @@ import mwparserfromhell, re
 site = login('me', 'lol')  # Set wiki
 summary = 'Attempting to parse old content as templates'  # Set summary
 
-page_type = 'tournament' # tournament, players, teams
+page_type = 'teams' # tournament, players, teams
 
 limit = -1
 startat_page = None
@@ -19,8 +19,8 @@ this_template = site.pages['Template:Infobox ' + template_by_type[page_type]]  #
 pages = this_template.embeddedin()
 
 months = r'(January|February|March|April|May|June|July|August|September|October|November|December)'
-date = r" (\d+)(?:st|th|rd|nd)?, (?:\d\d\d\d, )?"
-attrib_sep = r" (?:\([\dms]+\) )? ?(?: *\- *)?''"
+date = r" (\d+)(?:st|th|rd|nd)?[.,]? ?(?:\d\d\d\d, )?"
+attrib_sep = r" ?(?:\([\dms]+\) )? ?(?: *\- *)?''"
 attrib = r'(with|from|by|From|By|With)'
 regex = r"^\* ?" + months + date + r"\[(.+?) ([^\]]*)\]" + attrib_sep + attrib + r" (.+?) on (.*)'' *$"
 no_author = r"^\* ?" + months + date + r"\[(.+?) ([^\]]*)\]" + attrib_sep + attrib + r" (.+?)'' *$"
@@ -29,22 +29,23 @@ translator = r"^\* ?" + months + date + r"\[(.+?) ([^\]]*)\]" + attrib_sep + '(t
 passed_startat = False if startat_page else True
 lmt = 0
 
-pages = [
-# site.pages["LLA/2019_Season/Opening_Season/Media"],
+# pages = [
+# site.pages["LCK/2018_Season/Summer_Season"],
+# site.pages["LCS/2019_Season/Spring_Season/Media"],
+# site.pages["2015_Mid-Season_Invitational"],
+# site.pages["2016_Season_World_Championship/Media"],
+# site.pages["EU_LCS/2017_Season/Spring_Season"],
+# site.pages["EU_LCS/2018_Season/Summer_Season/Media"],
 # site.pages["LCK/2016_Season/Summer_Season"],
 # site.pages["IEM_Season_IX_-_World_Championship"],
-# site.pages["LCK/2017_Season/Spring_Season"],
-# site.pages["2015_Mid-Season_Invitational"],
 # site.pages["LCK/2019_Season/Spring_Season/Media"],
-# site.pages["LEC/2019_Season/Spring_Playoffs/Media"],
 # site.pages["LLN/2018_Season/Opening_Season"],
 # site.pages["2017_Season_World_Championship/Main_Event/Media"],
-# site.pages["2015_Season_World_Championship/Media"],
-# site.pages["LCK/2018_Season/Summer_Season"],
-# site.pages["PG_Nationals/2018_Season/Summer_Season"],
-# site.pages["EU_LCS/2018_Season/Summer_Season/Media"],
-site.pages["2015 Season World Championship/Media"]
-]
+# site.pages["2018_Season_World_Championship/Media"],
+# site.pages["LCK/2017_Season/Spring_Season"],
+# site.pages["LLA/2019_Season/Opening_Season/Media"],
+# site.pages["Magyar_Nemzeti_E-sport_Bajnokság/Regular_Season"]
+# ]
 
 def process_line(line):
 	match = re.match(regex, line)

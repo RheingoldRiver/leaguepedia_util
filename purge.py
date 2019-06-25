@@ -5,33 +5,27 @@ site = login('bot', 'lol')  # Set wiki
 summary = 'Forcing blank edit'  # Set summary
 
 limit = -1
-startat_page = 'Homme'
-this_template = site.pages['Template:Infobox Player']  # Set template
-pages = this_template.embeddedin()
+startat_page = None
+print(startat_page)
+# startat_page = 'Duji'
+# this_template = site.pages['Template:Infobox Player']  # Set template
+# pages = this_template.embeddedin()
 
-pages_var = list(pages)
+pages = site.categories['Pages with broken file links']
 
-pages_array = [p.name for p in pages_var]
-
-try:
-	startat = pages_array.index(startat_page)
-except NameError as e:
-	startat = -1
-except ValueError as e:
-	startat = -1
-print(startat)
-
+passed_startat = False if startat_page else True
 lmt = 0
-for page in pages_var:
+for page in pages:
 	if lmt == limit:
 		break
-	lmt += 1
-	if lmt < startat:
+	if startat_page and page.name == startat_page:
+		passed_startat = True
+	if not passed_startat:
 		print("Skipping page %s" % page.name)
-	else:
-		text = page.text()
-		print('Purging page %s...' % page.name)
-		site.api('purge', format='json',
-				 titles = page.name,
-				 forcelinkupdate = '1'
+		continue
+	text = page.text()
+	print('Purging page %s...' % page.name)
+	site.api('purge', format='json',
+			 titles = page.name,
+			 forcelinkupdate = '1'
 				 )

@@ -10,7 +10,7 @@ page_type = 'players' # players or teams
 limit = -1
 startat_page = None
 print(startat_page)
-#startat_page = 'Unicorns Of Love'
+startat_page = 'CoreJJ'
 template_types = {
 	"players" : 'Player',
 	"teams" : 'Team'

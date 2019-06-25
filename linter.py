@@ -11,6 +11,8 @@ startat_page = '2014 LNL Spring Qualifiers/Hong Kong and Macau'
 this_template = site.pages['Template:Infobox Tournament']  # Set template
 pages = this_template.embeddedin()
 
+pages = [site.pages['Lega Prima/Season 1']]
+
 passed_startat = False if startat_page else True
 lmt = 0
 for page in pages:

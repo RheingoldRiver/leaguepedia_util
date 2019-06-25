@@ -17,7 +17,8 @@ years = ['2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019']
 months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'September', 'October', 'November', 'December']
 
 pages = [
-site.pages["2015 Season World Championship/Media"]
+site.pages["User:RheingoldRiver/content/2015"],
+# site.pages["Magyar Nemzeti E-sport Bajnokság/Regular Season"],
 # site.pages["LLA/2019_Season/Opening_Season/Media"],
 # site.pages["LCK/2016_Season/Summer_Season"],
 # site.pages["IEM_Season_IX_-_World_Championship"],
@@ -30,7 +31,7 @@ site.pages["2015 Season World Championship/Media"]
 # site.pages["2015_Season_World_Championship/Media"],
 # site.pages["LCK/2018_Season/Summer_Season"],
 # site.pages["PG_Nationals/2018_Season/Summer_Season"],
-# site.pages["EU_LCS/2018_Season/Summer_Season/Media"],
+site.pages["EU_LCS/2018_Season/Summer_Season/Media"],
 # site.pages["LCS/2019_Season/Spring_Season/Media"]
 ]
 

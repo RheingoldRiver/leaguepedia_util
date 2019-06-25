@@ -3,7 +3,7 @@ import mwparserfromhell
 
 site = login('bot', 'lol')  # Set wiki
 
-template_name = 'OverallChampionStats'
+template_name = 'PicksAndBans'
 orig_param = 'concept'
 new_param = 'tournament'
 
