@@ -28,7 +28,7 @@ for page in pages:
 	text = page.text()
 	wikitext = mwparserfromhell.parse(text)
 	for template in wikitext.filter_templates():
-		if template.name.matches('TEMPLATEYOUCAREABOUT'):
+		if tl_matches(template, ['TEMPLATEYOUCAREABOUT']):
 			# TODO
 	
 	newtext = str(wikitext)
