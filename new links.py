@@ -1,20 +1,20 @@
 from log_into_wiki import *
-import mwparserfromhell
+import mwparserfromhell, re
 
 site = login('me', 'lol')  # Set wiki
-summary = 'Attempting to redo how we do links wew'  # Set summary
+summary = 'Attempting to redo how we do links 2.0'  # Set summary
 
 limit = -1
 startat_page = None
 print(startat_page)
-startat_page = 'Data:LCK/2018 Season/Summer Playoffs'
+#startat_page = 'Data:LCK/2018 Season/Summer Playoffs'
 this_template = site.pages['Template:MatchSchedule']  # Set template
 pages = this_template.embeddedin()
 
 # with open('pages.txt', encoding="utf-8") as f:
 # 	pages = f.readlines()
 
-#pages = [site.pages['Data:LCK/2018 Season/Spring Season/2']]
+#pages = [site.pages['Data:Challengers Korea/2019 Season/Spring Season']]
 
 params = ['with', 'mvp', 'color', 'pbp']
 
@@ -28,12 +28,15 @@ def links_to_display(template, param):
 		suffix = 'links'
 	display_str = template.get(param).value.strip()
 	link_str = template.get(param + suffix).value.strip()
-	display = display_str.split(',')
-	link = link_str.split(',')
+	displays = display_str.split(',')
+	links = link_str.split(',')
 	new = []
-	for i, v in enumerate(display):
-		if i < len(link):
-			new.append(link[i])
+	for i, v in enumerate(displays):
+		if i < len(links) and links[i] != '':
+			uc_display = v[0].upper() + v[1:]
+			regex = r'^' + re.escape(uc_display)
+			link = re.sub(regex, v, links[i])
+			new.append(link)
 			continue
 		new.append(v)
 	template.add(param, ','.join(new))

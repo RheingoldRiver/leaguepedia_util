@@ -8,10 +8,10 @@ limit = -1
 startat_page = None
 print(startat_page)
 # startat_page = 'Duji'
-# this_template = site.pages['Template:Infobox Player']  # Set template
-# pages = this_template.embeddedin()
+this_template = site.pages['Template:MVPStandings']  # Set template
+pages = this_template.embeddedin()
 
-pages = site.categories['Pages with broken file links']
+# pages = site.categories['Pages with broken file links']
 
 passed_startat = False if startat_page else True
 lmt = 0
