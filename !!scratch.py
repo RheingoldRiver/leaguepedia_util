@@ -2,13 +2,13 @@ from log_into_wiki import *
 import mwparserfromhell
 
 site = login('me', 'lol')  # Set wiki
-summary = 'remove underscores'  # Set summary
+summary = 'remove {{!}}'  # Set summary
 
 limit = -1
 startat_page = None
 print(startat_page)
 # startat_page = 'asdf'
-this_template = site.pages['Template:MatchSchedule']  # Set template
+this_template = site.pages['Template:ExternalContent/Line']  # Set template
 pages = this_template.embeddedin()
 
 # with open('pages.txt', encoding="utf-8") as f:
@@ -26,15 +26,18 @@ for page in pages:
 	if not passed_startat:
 		print("Skipping page %s" % page.name)
 		continue
+	if page.namespace == 0:
+		continue
 	lmt += 1
 	text = page.text()
 	wikitext = mwparserfromhell.parse(text)
 	for template in wikitext.filter_templates():
-		if tl_matches(template, ['MatchSchedule', 'MatchSchedule/Game']):
-			for param in params:
-				if template.has(param):
-					if '_' in template.get(param).value.strip():
-						template.add(param, template.get(param).value.strip().replace('_',' '))
+		if tl_matches(template, ['ExternalContent/Line']):
+			if template.has('players'):
+				player = template.get('players').value.strip()
+				if '{{!}}' in player:
+					link = re.search(r'(.*){', player)[1]
+					template.add('players', link)
 	
 	newtext = str(wikitext)
 	if text != newtext:
