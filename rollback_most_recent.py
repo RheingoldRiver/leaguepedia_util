@@ -1,12 +1,12 @@
 from log_into_wiki import *
 limit = -1
 
-site = login('bot', 'lol')
+site = login('bot', 'cod-esports')
 
-revisions = 1 # numver of revisions to roll back
+revisions = 2 # numver of revisions to roll back
 comment = None # require the comment on the edit you're rolling back to be this
 print(comment)
-comment = "Attempting to redo how we do links wew"
+comment = "fixing toggle"
 
 with open('pages.txt', encoding="utf-8") as f:
 	pages = f.readlines()

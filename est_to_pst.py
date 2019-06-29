@@ -1,7 +1,7 @@
 from log_into_wiki import *
 import mwparserfromhell, dateutil.parser, pytz
 
-site = login('me', 'cod-esports')  # Set wiki
+site = login('me', 'smite-esports')  # Set wiki
 summary = 'EST -> PST'  # Set summary
 
 limit = -1

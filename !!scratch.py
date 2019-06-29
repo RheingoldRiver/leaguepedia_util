@@ -1,20 +1,18 @@
 from log_into_wiki import *
 import mwparserfromhell
 
-site = login('me', 'lol')  # Set wiki
-summary = 'remove {{!}}'  # Set summary
+site = login('bot', 'fortnite-esports')  # Set wiki
+summary = 'add |teamsize in IT'  # Set summary
 
 limit = -1
 startat_page = None
 print(startat_page)
-# startat_page = 'asdf'
-this_template = site.pages['Template:ExternalContent/Line']  # Set template
+startat_page = 'Fortnite World Cup 2019/NAE/Week 5'
+this_template = site.pages['Template:TournamentResultsLineSolo']  # Set template
 pages = this_template.embeddedin()
 
 # with open('pages.txt', encoding="utf-8") as f:
 # 	pages = f.readlines()
-
-params = ['mvp', 'with', 'pbp', 'color']
 
 passed_startat = False if startat_page else True
 lmt = 0
@@ -26,18 +24,12 @@ for page in pages:
 	if not passed_startat:
 		print("Skipping page %s" % page.name)
 		continue
-	if page.namespace == 0:
-		continue
 	lmt += 1
 	text = page.text()
 	wikitext = mwparserfromhell.parse(text)
 	for template in wikitext.filter_templates():
-		if tl_matches(template, ['ExternalContent/Line']):
-			if template.has('players'):
-				player = template.get('players').value.strip()
-				if '{{!}}' in player:
-					link = re.search(r'(.*){', player)[1]
-					template.add('players', link)
+		if tl_matches(template, ['Infobox Tournament']):
+			template.add('teamsize', 1)
 	
 	newtext = str(wikitext)
 	if text != newtext:
