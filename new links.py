@@ -1,14 +1,14 @@
 from log_into_wiki import *
 import mwparserfromhell, re
 
-site = login('me', 'lol')  # Set wiki
-summary = 'Attempting to redo how we do links 2.0'  # Set summary
+site = login('me', 'fortnite-esports')  # Set wiki
+summary = 'Changing links/display to be just 1 field, with link only'  # Set summary
 
 limit = -1
 startat_page = None
 print(startat_page)
 #startat_page = 'Data:LCK/2018 Season/Summer Playoffs'
-this_template = site.pages['Template:MatchSchedule']  # Set template
+this_template = site.pages['Template:Infobox Tournament']  # Set template
 pages = this_template.embeddedin()
 
 # with open('pages.txt', encoding="utf-8") as f:
@@ -16,7 +16,7 @@ pages = this_template.embeddedin()
 
 #pages = [site.pages['Data:Challengers Korea/2019 Season/Spring Season']]
 
-params = ['with', 'mvp', 'color', 'pbp']
+params = ['player','player1']
 
 def links_to_display(template, param):
 	if not template.has(param):
@@ -56,7 +56,7 @@ for page in pages:
 	text = page.text()
 	wikitext = mwparserfromhell.parse(text)
 	for template in wikitext.filter_templates():
-		if tl_matches(template, ['MatchSchedule', 'MatchSchedule/Game']):
+		if tl_matches(template, ['TournamentResultsLineDuos', 'TournamentResultsLineSolo']):
 			for param in params:
 				links_to_display(template, param)
 	
