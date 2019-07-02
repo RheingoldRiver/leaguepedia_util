@@ -20,7 +20,7 @@ def make_lookup(overview):
 	for template in mwparserfromhell.parse(data_text).filter_templates():
 		if tl_matches(template, ['TournamentResults/Line']):
 			if template.has('team') and template.has('place'):
-				ret[template.get('team').value.strip()] = template.get('place').value.strip()
+				ret[template.get('team').value.strip().lower()] = template.get('place').value.strip()
 	return ret
 
 passed_startat = False if startat_page else True
@@ -40,7 +40,7 @@ for page in pages:
 	for template in wikitext.filter_templates():
 		if tl_matches(template, ['TeamRoster']):
 			if template.has('team'):
-				team = template.get('team').value.strip()
+				team = template.get('team').value.strip().lower()
 				if team in lookup:
 					template.add('place', lookup[team])
 	
