@@ -3,9 +3,9 @@ from log_into_wiki import *
 
 #################################################################################################
 
-original_name = 'Steal'
-irl_name = 'Mun Geon-yeong'
-new_name = '{} ({})'.format(original_name, irl_name)
+original_name = 'Starky'
+irl_name = "Juan Carlos Cano"
+new_name = '{} ({})'.format(original_name, irl_name.strip())
 init_move = True
 blank_edit = False
 limit = -1
@@ -116,6 +116,20 @@ def process_page(page):
 	else:
 		print("No changes, skipping")
 
+def check_list(template, param, sep = ','):
+	if not template.has(param):
+		return
+	text_initial = template.get(param).value.strip()
+	tbl = text_initial.split(sep)
+	made_changes = False
+	for i, val in enumerate(tbl):
+		if val.strip() == original_name:
+			made_changes = True
+			tbl[i] = new_name
+	if made_changes:
+		template.add(param, sep.join(tbl))
+	
+
 def process_template(template):
 	def tl_matches(arr, field=None):
 		if field:
@@ -159,14 +173,22 @@ def process_template(template):
 	elif tl_matches(["MatchSchedule","MatchSchedule/Game"]):
 		if template.has("mvp"):
 			if template.get("mvp").value.strip() == original_name:
-				template.add("mvplink", new_name, before="mvp")
-		check_links(template, 'with', 'withlinks', ',', original_name, new_name)
+				template.add("mvp", new_name)
+		check_list(template, 'with')
+		check_list(template, 'pbp')
+		check_list(template, 'color')
+	
+	elif tl_matches(['ExternalContent/Line']):
+		check_list(template, 'players')
 	
 	elif tl_matches(['SeasonAward']):
 		if template.has(1):
 			if template.get(1).value.strip() == original_name:
 				template.add('link', new_name)
 		check_links(template, 'eligibleplayers', 'eligiblelinks', ',', original_name, new_name)
+	
+	elif tl_matches(['PlayerImageMetadata'], field="playerlink"):
+		template.add('playerlink', new_name)
 	
 	elif tl_matches(["PortalCurrentRosters"]):
 		for pos in ['t', 'j', 'm', 'a', 's']:
