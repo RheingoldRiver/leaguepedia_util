@@ -65,8 +65,7 @@ def check_page(site, page_name):
 	if text != new_text:
 		hash_location.save(new_text)
 
-if __name__ == '__main__':
-	site = login('me', 'lol')
+def check_recent_revisions(site):
 	then_time = datetime.datetime.utcnow() - datetime.timedelta(minutes=20)
 	then = then_time.isoformat()
 	now = datetime.datetime.utcnow().isoformat()
@@ -84,4 +83,8 @@ if __name__ == '__main__':
 		if revision['title'].startswith('Data:'):
 			titles.append(revision['title'])
 	for title in titles:
-		check_page(login('me', 'lol'), title)
+		check_page(site, title)
+
+if __name__ == '__main__':
+	site = login('me', 'lol')
+	check_recent_revisions(site)

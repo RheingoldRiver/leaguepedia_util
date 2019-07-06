@@ -14,6 +14,13 @@ def login(user, wiki):
 		site.login('RiverIsABot@Python', password)
 		return site
 
+def log_into_fandom(user, wiki):
+	if user == 'me':
+		password = open('password_fandom.txt').read().strip()
+		site = mwclient.Site('%s.fandom.com' % wiki, path='/')
+		site.login('RheingoldRiver', password)
+		return site
+
 def report_errors(report_page, page, errors):
 	text = report_page.text()
 	error_text = '\n* '.join([e.args[0] for e in errors])

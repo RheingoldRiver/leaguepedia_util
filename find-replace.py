@@ -1,8 +1,8 @@
 from log_into_wiki import *
 import mwparserfromhell
 
-find = '_toggle_'
-replace = ' _toggle_'
+find = 'prettytable'
+replace = ' wikitable'
 
 site = login('me', 'fortnite-esports')  # Set wiki
 summary = 'Find-Replace: {} -> {}'.format(find, replace)  # Set summary
@@ -20,6 +20,7 @@ with open('pages.txt', encoding="utf-8") as f:
 passed_startat = False if startat_page else True
 lmt = 0
 for page in pages:
+	page = page.strip()
 	old_text = site.pages[page].text()
 	new_text = old_text.replace(find, replace)
 	site.pages[page].save(new_text, summary = summary)

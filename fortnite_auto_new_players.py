@@ -11,7 +11,7 @@ result = site.api('cargoquery',
 				  where = 'RL._value IS NOT NULL AND PR._pageName IS NULL AND TR.PRPoints > "0"',
 				  fields = 'RL._value=name',
 				  group_by = 'RL._value',
-				  limit = 'max',
+				  limit = 'max'
 				  )
 default_text = site.pages['Help:Player Template'].text()
 default_text = default_text.replace('<noinclude>','').replace('</noinclude>','').strip()
