@@ -13,7 +13,13 @@ def get_append_hash(hash, res):
 	return str(tl)
 
 def verify_hash(template, team1, team2):
-	return template.get('team1').value.strip() == team1 and template.get('team2').value.strip() == team2
+	team1_old = template.get('team1').value.strip()
+	team2_old = template.get('team2').value.strip()
+	if team1_old != 'TBD' and team1_old != team1:
+		return False
+	if team2_old != 'TBD' and team2_old != team2:
+		return False
+	return True
 
 def get_hash_template(ms_hash, wikitext):
 	for template in wikitext.filter_templates():
@@ -57,10 +63,12 @@ def check_page(site, page_name):
 			errors.append(get_error_text(data, page_name, hash_template))
 			hash_template.add('team1', data['Team1'])
 			hash_template.add('team2', data['Team2'])
-		else:
-			continue
+		else: # There could be a TBD that we need to replace
+			hash_template.add('team1', data['Team1'])
+			hash_template.add('team2', data['Team2'])
 	write_errors(site, errors)
-	hashes_to_add.insert(0, str(wikitext))
+	if str(wikitext) != '':
+		hashes_to_add.insert(0, str(wikitext))
 	new_text = '\n'.join(hashes_to_add)
 	if text != new_text:
 		hash_location.save(new_text)
