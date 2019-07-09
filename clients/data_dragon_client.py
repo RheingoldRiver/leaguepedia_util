@@ -17,10 +17,18 @@ class DataDragonClient:
             print('API Request to Datadragon URL: ' + url + ' - Failed for error:')
             print(err)
         return res.json()
+    
+    def getChampionData(self, patch):
+        self.patch = patch if patch != 'latest' else self.getLatestPatch()
+        return self.getData('https://ddragon.leagueoflegends.com/cdn/{}/data/en_US/champion.json'.format(self.patch))
+
+    def getLatestPatch(self):
+        return self.getData('https://ddragon.leagueoflegends.com/api/versions.json')[0]
+        
 
 # Some boilerplate if we ever want to run classes like this straight from command line.
 # python <filename>.py
 if __name__ == '__main__':
     data_dragon_client = DataDragonClient()
-    res = data_dragon_client.getData('https://ddragon.leagueoflegends.com/cdn/9.13.1/data/en_US/champion.json')
+    res = data_dragon_client.getChampionData('latest')
     print(res)

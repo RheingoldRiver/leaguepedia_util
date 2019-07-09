@@ -13,10 +13,9 @@ wiki = wiki_helper.WikiHelper()
 pages = wiki.getPagesByTemplate(site, 'Template:Infobox Champion')
 
 # Get all Champ data from DataDragon API
-API_VERSION='9.13.1'
-DDUrl = 'https://ddragon.leagueoflegends.com/cdn/' + API_VERSION + '/data/en_US/champion.json'
+API_VERSION='latest'
 client = data_dragon_client.DataDragonClient()
-data = client.getData(DDUrl)
+data = client.getChampionData(API_VERSION)
 champ_list = data['data']
 
 # Actual logic - This is straight up JANK
@@ -42,9 +41,6 @@ for page in pages:
 	# Get the page text
 	text = page.text()
 	wikitext = mwparserfromhell.parse(text)
-	
-	with open("3-output.txt", "w") as text_file:
-		print(f"{wikitext}", file=text_file)
 
 	for template in wikitext.filter_templates():
 		if template.name.matches('Infobox Champion'):
