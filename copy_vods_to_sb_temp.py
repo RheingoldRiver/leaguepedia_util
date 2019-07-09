@@ -4,7 +4,7 @@ import mwparserfromhell
 ##############################################
 ##############################################
 tournament = 'LCS 2019 Spring' # this should redirect to the tournament
-data_page_number = 2
+data_page_number = 2 # 1, 2, 3, etc
 sb_page_name = 'LCS/2019 Season/Spring Season/Scoreboards/Week 9'
 ##############################################
 ##############################################
