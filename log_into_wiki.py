@@ -5,13 +5,15 @@ ImageFile.LOAD_TRUNCATED_IMAGES = True
 def login(user, wiki, timeout = 30):
 	if user == 'me':
 		password = open('password.txt').read().strip()
+		username = open('username.txt').read().strip()
 		site = mwclient.Site('%s.gamepedia.com' % wiki, path='/', retry_timeout=timeout)
-		site.login('RheingoldRiver@Python', password)
+		site.login(username, password)
 		return site
 	elif user == 'bot':
 		password = open('password2.txt').read().strip()
+		username = open('username2.txt').read().strip()
 		site = mwclient.Site('%s.gamepedia.com' % wiki, path='/', retry_timeout=timeout)
-		site.login('RiverIsABot@Python', password)
+		site.login(username, password)
 		return site
 
 def log_into_fandom(user, wiki):

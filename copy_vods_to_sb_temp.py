@@ -41,6 +41,7 @@ for template in sb_wikitext.filter_templates():
 						if tl.has(vod):
 							add_vod(template, tl, vod)
 							break
+					break
 if str(sb_wikitext) != sb_text:
 	print('Changes made, saving...')
 	sb_page.save(str(sb_wikitext), summary = summary)
