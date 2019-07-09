@@ -10,7 +10,7 @@ page_type = 'players' # players or teams
 limit = -1
 startat_page = None
 print(startat_page)
-startat_page = 'CoreJJ'
+#startat_page = 'CoreJJ'
 template_types = {
 	"players" : 'Player',
 	"teams" : 'Team'
@@ -31,6 +31,18 @@ def add_player_to_line(data_tl, name):
 		return
 	page_type_val = data_tl.get(page_type).value.strip()
 	data_tl.add(page_type, page_type_val + ',' + page.name)
+
+def add_new_line(param_tl, data_page, data_text, date):
+	sep = '{{{{ExternalContent/Date|y={}|m={}|d={}}}}}\n'.format(
+		date.year,
+		date.strftime('%m'),
+		date.strftime('%d')
+	)
+	print(sep)
+	data_text_tbl = data_text.split(sep)
+	data_text_new = data_text_tbl[0] + sep + str(param_tl) + '\n' + data_text_tbl[1]
+	data_page.save(data_text_new, summary=summary)
+	param_tl.add('finished', 'yes')
 
 passed_startat = False if startat_page else True
 lmt = 0
@@ -82,17 +94,19 @@ for page in pages:
 							data_page = site.pages[data_page_name]
 							data_text = data_page.text()
 							if param_tl.get('url').value.strip() not in data_text:
-								continue
-							data_wikitext = mwparserfromhell.parse(data_text)
-							for data_tl in data_wikitext.filter_templates():
-								if not data_tl.has('url'):
-									continue
-								if data_tl.get('url').value.strip() != url:
-									continue
-								print(data_page_name)
-								add_player_to_line(data_tl, page.name)
-							data_page.save(str(data_wikitext), summary = summary)
-							param_tl.add('finished', 'yes')
+								add_new_line(param_tl, data_page, data_text, date)
+							else:
+								data_wikitext = mwparserfromhell.parse(data_text)
+								for data_tl in data_wikitext.filter_templates():
+									if not data_tl.has('url'):
+										continue
+									if data_tl.get('url').value.strip() != url:
+										continue
+									in_data_page = True
+									print(data_page_name)
+									add_player_to_line(data_tl, page.name)
+								data_page.save(str(data_wikitext), summary = summary)
+								param_tl.add('finished', 'yes')
 				template.add('content' + str(i), str(param_wikitext))
 				i = i + 1
 	newtext = str(wikitext)

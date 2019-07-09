@@ -174,4 +174,4 @@ def set_initial_order(wikitext):
 			i += 1
 			if template.has('initialorder'):
 				continue
-			template.add('initialorder', str(i))
+			template.add('initialorder', str(i), before = 'team1')

@@ -1,14 +1,14 @@
 from log_into_wiki import *
 import mwparserfromhell
 
-site = login('me', 'fortnite-esports')  # Set wiki
-summary = 'Listplayer/Current/End needs an empty first arg'  # Set summary
+site = login('bot', 'lol')  # Set wiki
+summary = 'Move initialorder before team1'  # Set summary
 
 limit = -1
 startat_page = None
 print(startat_page)
-# startat_page = 'asdf'
-this_template = site.pages['Template:listplayer/Current/End']  # Set template
+startat_page = 'Data:LCS/2019 Season/Summer Season'
+this_template = site.pages['Template:MatchSchedule']  # Set template
 pages = this_template.embeddedin()
 
 # with open('pages.txt', encoding="utf-8") as f:
@@ -28,8 +28,11 @@ for page in pages:
 	text = page.text()
 	wikitext = mwparserfromhell.parse(text)
 	for template in wikitext.filter_templates():
-		if tl_matches(template, ['listplayer/Current/End']):
-			template.add(1,' ')
+		if tl_matches(template, ['MatchSchedule']):
+			if template.has('initialorder'):
+				o = template.get('initialorder').value.strip()
+				template.remove('initialorder')
+				template.add('initialorder', o, before = 'team1')
 	
 	newtext = str(wikitext)
 	if text != newtext:
