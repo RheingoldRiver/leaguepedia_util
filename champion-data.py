@@ -2,61 +2,84 @@ from log_into_wiki import login
 import mwparserfromhell
 from clients import data_dragon_client
 from helpers import wiki_helper
+from mappers import champion_data_mapper
 
 from pprint import pprint
 
-# Login to the Wiki
-site = login('bot','lol') # Set wiki
+def updateTemplate(template, currentChampion):
+	# We don't care about crit or crit scaling
+	del currentChampion['stats']['crit']
+	del currentChampion['stats']['critperlevel']
+	# Stats 
+	for stat, value in currentChampion['stats'].items():
+		template.add(champion_data_mapper.datamapper['stats'][stat], str(value))
 
-# Get pages for respective template
-wiki = wiki_helper.WikiHelper()
-pages = wiki.getPagesByTemplate(site, 'Template:Infobox Champion')
+	# Tags ()
+	template.add(champion_data_mapper.datamapper['tags'][0], currentChampion['tags'][0])
+	if len(currentChampion['tags']) == 2:
+		template.add(champion_data_mapper.datamapper['tags'][1], currentChampion['tags'][1])
 
-# Get all Champ data from DataDragon API
-API_VERSION='latest'
-client = data_dragon_client.DataDragonClient()
-data = client.getChampionData(API_VERSION)
-champ_list = data['data']
+	# Title
+	template.add(champion_data_mapper.datamapper['title'], currentChampion['title'])
 
-# Actual logic - This is straight up JANK
-# Rito's api nests the name (we have as page title) inside an outer name which is different + we don't know
-# Therefore we loop over every champ, checking inner name => O(n)^2 (i.e shit)
+	# Partype (Resource)
+	template.add(champion_data_mapper.datamapper['partype'], currentChampion['partype'])
 
-# For every champion page we have on the wiki
-for page in pages:
-	# Find the respective champion from the Rito DataDragon API results
-	for champion in champ_list:
-		isFound = False
-		name = champ_list[champion]['name']
-		if page.name == name:
-			currentChampion = champ_list[champion]
-			isFound = True
-			break
+def main():
+	# Login to the Wiki
+	site = login('bot','lol') # Set wiki
 
-	# If Champion was not found
-	if isFound is False:
-		print('champion not found!')
-		raise Exception('Champion from page not found in Riot API. {} Not found.'.format(page.name))
+	# Get pages for respective template
+	wiki = wiki_helper.WikiHelper()
+	pages = wiki.getPagesByTemplate(site, 'Template:Infobox Champion')
 
-	# Get the page text
-	text = page.text()
-	wikitext = mwparserfromhell.parse(text)
+	# Get all Champ data from DataDragon API
+	API_VERSION='latest'
+	client = data_dragon_client.DataDragonClient()
+	data = client.getChampionData(API_VERSION)
+	champ_list = data['data']
 
-	for template in wikitext.filter_templates():
-		if template.name.matches('Infobox Champion'):
+	# Actual logic - This is straight up JANK
+	# 'Better' solution (more efficient but kinda more clutter) is to use hidden variables 
+	# In the infobox
 
-			pprint(vars(template))
-			print(template.get('be').value)
-			
-			# updateInfoBoxChampion(template)
-	newtext = str(wikitext)
+	# For every champion page we have on the wiki
+	for page in pages:
+		# Find the respective champion from the Rito DataDragon API results
+		for champion in champ_list:
+			isFound = False
+			name = champ_list[champion]['name']
+			if page.name == name:
+				currentChampion = champ_list[champion]
+				isFound = True
+				break
 
-	# if text != newtext & page.name == 'Sona':
-	# 	print('Saving page %s...' % page.name)
-	# 	summary = 'Test Edit' # Set summary
-	# 	page.save(newtext, summary=summary)
-	# else:
-	# 	print('Skipping page %s...' % page.name)
+		# If Champion was not found
+		if isFound is False:
+			print('How did you get here?')
+			raise Exception('Champion from page not found in Riot API. {} Not found.'.format(page.name))
 
-	break
+		# Get the page text
+		text = page.text()
+		wikitext = mwparserfromhell.parse(text)
 
+		for template in wikitext.filter_templates():
+			if template.name.matches('Infobox Champion'):
+				updateTemplate(template, currentChampion)
+				
+		newtext = str(wikitext)
+		
+		if text != newtext:
+			with open('1-output.txt', 'a') as the_file:
+				the_file.write(text)
+
+			with open('2-output.txt', 'a') as the_file_2:
+				the_file_2.write(newtext)
+
+			# print('Saving page %s...' % page.name)
+		# 	summary = 'Test Edit' # Set summary
+		# 	page.save(newtext, summary=summary)
+		# else:
+		# 	print('Skipping page %s...' % page.name)
+
+main()
