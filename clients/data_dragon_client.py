@@ -16,6 +16,7 @@ class DataDragonClient:
             print('Generic error handling for Request Library.')
             print('API Request to Datadragon URL: ' + url + ' - Failed for error:')
             print(err)
+            raise (requests.exceptions.RequestException)
         return res.json()
     
     def getChampionData(self, patch):
