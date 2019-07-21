@@ -1,6 +1,6 @@
 from log_into_wiki import *
 limit = -1
-site = login('me','fortnite-esports')
+site = login('bot','lol')
 t = site.pages["Template:Item Page"]
 
 pages = t.embeddedin()

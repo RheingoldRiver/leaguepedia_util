@@ -1,9 +1,9 @@
 from log_into_wiki import *
 import mwparserfromhell
 
-site = login('bot', 'lol')  # Set wiki
+site = login('bot', 'teamfighttactics')  # Set wiki
 
-template_name = 'PicksAndBans'
+template_name = 'Infobox Item'
 orig_param = 'concept'
 new_param = 'tournament'
 

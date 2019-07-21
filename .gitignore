@@ -1,0 +1,4 @@
+*
+!*.py
+!/old_and_temp_scratch/
+!.gitignore

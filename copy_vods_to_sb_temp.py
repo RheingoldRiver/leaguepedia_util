@@ -3,16 +3,16 @@ import mwparserfromhell
 
 ##############################################
 ##############################################
-tournament = 'LCS 2019 Spring' # this should redirect to the tournament
-data_page_number = 2 # 1, 2, 3, etc
-sb_page_name = 'LCS/2019 Season/Spring Season/Scoreboards/Week 9'
+tournament = 'División de Honor/2019 Season/Closing Season' # this should redirect to the tournament
+data_page_number = 1 # 1, 2, 3, etc
+sb_page_name = 'División de Honor/2019 Season/Closing Season/Scoreboards/Week 6'
 ##############################################
 ##############################################
 
 site = login('me', 'lol')  # Set wiki
 summary = 'Auto-add vods to SB'  # Set summary
 
-vod_params = ['vodpb', 'vodstart']
+vod_params = ['vodpb', 'vodstart', 'vod']
 
 def add_vod(template, tl, arg):
 	template.add('vodlink', tl.get(arg).value.strip())
@@ -23,6 +23,7 @@ def data_suffix(n):
 	return '/' + str(n)
 
 overview_page = site.pages[tournament].redirects_to()
+overview_page = overview_page if overview_page else site.pages[tournament]
 data_page = site.pages['Data:' + overview_page.name + data_suffix(data_page_number)]
 data_text = data_page.text()
 data_wikitext = mwparserfromhell.parse(data_text)
@@ -38,7 +39,8 @@ for template in sb_wikitext.filter_templates():
 			if tl.has('mh'):
 				if match_id in tl.get('mh').value.strip():
 					for vod in vod_params:
-						if tl.has(vod):
+						if tl.has(vod) and tl.get(vod).value.strip() != '':
+							print('has: %s' % vod)
 							add_vod(template, tl, vod)
 							break
 					break

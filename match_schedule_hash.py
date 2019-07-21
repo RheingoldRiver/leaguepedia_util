@@ -44,7 +44,7 @@ def write_errors(site, errors):
 
 def check_page(site, page_name):
 	response = site.api('cargoquery', tables = 'MatchSchedule',
-					  fields = 'InitialN_MatchInTab=Order, Team1, Team2, Tab',
+					  fields = 'InitialN_MatchInTab=Order, Team1, Team2, Tab, InitialPageAndTab',
 					  where = '_pageName="%s"' % page_name
 					  )
 	result = response['cargoquery']
@@ -55,7 +55,10 @@ def check_page(site, page_name):
 	errors = []
 	for res in result:
 		data = res['title']
-		ms_hash = data['Tab'] + '_' + data['Order']
+		if data['InitialPageAndTab'] != '':
+			ms_hash = data['InitialPageAndTab'].split('_')[1] + '_' + data['Order']
+		else:
+			ms_hash = data['Tab'] + '_' + data['Order']
 		hash_template = get_hash_template(ms_hash, wikitext)
 		if not hash_template:
 			hashes_to_add.append(get_append_hash(ms_hash, data))
