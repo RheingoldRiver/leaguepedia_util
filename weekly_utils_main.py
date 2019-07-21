@@ -56,15 +56,9 @@ for page in pages:
 		break
 	lmt+=1
 	p = site.pages[page]
+	utils.make_doc_pages(site, p)
 	if '/Edit Conflict/' in page and p.namespace == 2 and p.text() != '':
 		p.delete(reason='Deleting old edit conflict')
-	elif page.startswith('Module:Bracket/') and not (page.endswith('doc') or page.endswith('Wiki')):
-		newpage = site.pages['Tooltip:' + page]
-		newpage.save('{{BracketTooltip}}', summary='Automated error fixing (Python)',tags='daily_errorfix')
-	elif page.endswith('/i18n') and page.startswith('Module'):
-		newpage = site.pages[page + '/doc']
-		if newpage.text() == '':
-			newpage.save('{{i18ndoc}}',tags='daily_errorfix')
 	else:
 		text = p.text()
 		wikitext = mwparserfromhell.parse(text)

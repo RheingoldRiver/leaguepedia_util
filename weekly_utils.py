@@ -175,3 +175,38 @@ def set_initial_order(wikitext):
 			if template.has('initialorder'):
 				continue
 			template.add('initialorder', str(i), before = 'team1')
+
+DOC_PAGES_TO_MAKE = [
+	{
+		'matches': r'^Module:Bracket/',
+		'notmatches': r'(doc|Wiki)$',
+		'pages': {
+			'Tooltip:Module:{}' : '{{BracketTooltip}}',
+			'Module:{}/doc' : '{{BracketDoc}}'
+		}
+	},
+	{
+		'matches': r'^Module:.*/i18n$',
+		'pages': {
+			'Module:{}/doc': '{{i18ndoc}}'
+		}
+	},
+	{
+		'matches': r'^Module:CargoDeclare/',
+		'pages': {
+			'Module:{}/doc': '{{CargodocModule}}'
+		}
+	}
+]
+
+def make_doc_pages(site, p):
+	for case in DOC_PAGES_TO_MAKE:
+		if 'matches' in case.keys():
+			if not re.findall(case['matches'], p.name):
+				continue
+		if 'notmatches' in case.keys():
+			if re.findall(case['notmatches'], p.name):
+				continue
+		for i, (k, v) in enumerate(case['pages'].items()):
+			site.pages[k.format(p.page_title)].save(v, summary='Automated error fixing (Python)',
+									   tags='daily_errorfix')

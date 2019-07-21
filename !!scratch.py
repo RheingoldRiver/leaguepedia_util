@@ -1,23 +1,7 @@
 from log_into_wiki import *
-limit = -1
-site = login('bot','lol')
+import weekly_utils as utils
 
-response = site.api('cargoquery', tables = 'PlayerLeagueHistory', fields='_pageName=Page',
-					group_by = '_pageName', limit='max'
-					)
-pages = []
-for r in response['cargoquery']:
-	pages.append(r['title']['Page'])
-print(pages)
+site = login('me', 'lol')  # Set wiki
 
-lmt = 0
-#for p in c:
-#for p in pages:
-for page in pages:
-	if lmt == limit:
-		break
-	p = site.pages[page]
-	lmt += 1
-	print(p.name)
-	text = p.text()
-	p.save(text,'blank editing')
+
+utils.make_doc_pages(site, site.pages['Module:Bracket/2SE'])
