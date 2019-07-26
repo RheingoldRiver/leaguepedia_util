@@ -2,13 +2,13 @@ from log_into_wiki import *
 import mwparserfromhell
 limit = -1
 
-site = login('me', 'fortnite-esports')
+site = login('bot', 'fortnite-esports')
 summary = 'Automatically create player pages for Power Rankings'
 
 result = site.api('cargoquery',
-				  tables = 'TournamentResults=TR,TournamentResults__RosterLinks=RL,PlayerRedirects=PR',
-				  join_on = 'TR._ID=RL._rowID,RL._value=PR.AllName',
-				  where = 'PR._pageName IS NULL AND RL._value IS NOT NULL AND TR.PRPoints > "0"',
+				  tables = 'TournamentResults=TR,TournamentResults__RosterLinks=RL,_pageData=PD',
+				  join_on = 'TR._ID=RL._rowID,RL._value=PD._pageName',
+				  where = 'PD._pageName IS NULL AND RL._value IS NOT NULL AND TR.PRPoints > "0"',
 				  fields = 'RL._value=name',
 				  group_by = 'RL._value',
 				  limit = 'max'

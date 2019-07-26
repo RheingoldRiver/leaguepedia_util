@@ -187,12 +187,14 @@ DOC_PAGES_TO_MAKE = [
 	},
 	{
 		'matches': r'^Module:.*/i18n$',
+		'notmatches': r'doc$',
 		'pages': {
 			'Module:{}/doc': '{{i18ndoc}}'
 		}
 	},
 	{
 		'matches': r'^Module:CargoDeclare/',
+		'notmatches': r'doc$',
 		'pages': {
 			'Module:{}/doc': '{{CargodocModule}}'
 		}

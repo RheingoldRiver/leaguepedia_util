@@ -55,7 +55,11 @@ for page in pages:
 	if lmt == limit:
 		break
 	lmt+=1
-	p = site.pages[page]
+	try:
+		p = site.pages[page]
+	except KeyError:
+		print(page)
+		continue
 	utils.make_doc_pages(site, p)
 	if '/Edit Conflict/' in page and p.namespace == 2 and p.text() != '':
 		p.delete(reason='Deleting old edit conflict')
