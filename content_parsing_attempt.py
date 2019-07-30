@@ -1,7 +1,7 @@
 from log_into_wiki import *
 import mwparserfromhell, re
 
-site = login('me', 'lol')  # Set wiki
+site = login('bot', 'lol')  # Set wiki
 summary = 'Attempting to parse old content as templates'  # Set summary
 
 page_type = 'teams' # tournament, players, teams
@@ -18,10 +18,10 @@ template_by_type = {
 this_template = site.pages['Template:Infobox ' + template_by_type[page_type]]  # Set template
 pages = this_template.embeddedin()
 
-months = r'(January|February|March|April|May|June|July|August|September|October|November|December)'
-date = r" (\d+)(?:st|th|rd|nd)?[.,]? ?(?:\d\d\d\d, )?"
+months = r'(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\.?'
+date = r" *(\d+)(?:st|th|rd|nd)?[.,]? ?(?:\d\d\d\d,? ?)?(?: *\- *)?"
 attrib_sep = r" ?(?:\([\dms]+\) )? ?(?: *\- *)?''"
-attrib = r'(with|from|by|From|By|With)'
+attrib = r'(?: *\- *)?(with|from|by|From|By|With)'
 regex = r"^\* ?" + months + date + r"\[(.+?) ([^\]]*)\]" + attrib_sep + attrib + r" (.+?) on (.*)'' *$"
 no_author = r"^\* ?" + months + date + r"\[(.+?) ([^\]]*)\]" + attrib_sep + attrib + r" (.+?)'' *$"
 translator = r"^\* ?" + months + date + r"\[(.+?) ([^\]]*)\]" + attrib_sep + '(translated by)' + r" (.+?) on (.*)'' *$"
@@ -29,23 +29,9 @@ translator = r"^\* ?" + months + date + r"\[(.+?) ([^\]]*)\]" + attrib_sep + '(t
 passed_startat = False if startat_page else True
 lmt = 0
 
-# pages = [
-# site.pages["LCK/2018_Season/Summer_Season"],
-# site.pages["LCS/2019_Season/Spring_Season/Media"],
-# site.pages["2015_Mid-Season_Invitational"],
-# site.pages["2016_Season_World_Championship/Media"],
-# site.pages["EU_LCS/2017_Season/Spring_Season"],
-# site.pages["EU_LCS/2018_Season/Summer_Season/Media"],
-# site.pages["LCK/2016_Season/Summer_Season"],
-# site.pages["IEM_Season_IX_-_World_Championship"],
-# site.pages["LCK/2019_Season/Spring_Season/Media"],
-# site.pages["LLN/2018_Season/Opening_Season"],
-# site.pages["2017_Season_World_Championship/Main_Event/Media"],
-# site.pages["2018_Season_World_Championship/Media"],
-# site.pages["LCK/2017_Season/Spring_Season"],
-# site.pages["LLA/2019_Season/Opening_Season/Media"],
-# site.pages["Magyar_Nemzeti_E-sport_Bajnokság/Regular_Season"]
-# ]
+pages = [
+site.pages["Tbq"]
+]
 
 def process_line(line):
 	match = re.match(regex, line)
@@ -111,7 +97,7 @@ for page in pages:
 	text = this_page.text()
 	wikitext = mwparserfromhell.parse(text, skip_style_tags=True)
 	for template in wikitext.filter_templates(recursive=False):
-		if tl_matches(template, ['TD','TDRight','TabsDynamic']):
+		if tl_matches(template, ['TD','TDRight','TabsDynamic', 'TDR']):
 			i = 1
 			while template.has('content' + str(i)):
 				content = template.get('content' + str(i)).value.strip()

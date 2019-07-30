@@ -1,7 +1,7 @@
 from log_into_wiki import *
 import mwparserfromhell
 
-site = login('bot', 'fortnite-esports')  # Set wiki
+site = login('me', 'cod-esports')  # Set wiki
 summary = 'Add CCMT data to Infobox using CM_ prefix for params and LeagueIconKey'  # Set summary
 
 limit = -1
