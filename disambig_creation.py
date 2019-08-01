@@ -64,25 +64,6 @@ def edit_concept(concept):
 	if newtext != text:
 		concept.save(newtext, summary=summary, tags="bot_disambig")
 
-def save_css_page():
-	print('Starting css page...')
-	csspage = site.pages["MediaWiki:Gadget-highlightDisambigs.css"]
-	csstext = csspage.text()
-	if '"' + original_name + '"' not in csstext:
-		# use re in case a human edited the page and didn't use exactly the expected styling
-		# remove the style from the string
-		s = csstext.split('{')[0]
-		# split string to capture the page titles
-		tbl = re.split('a\\[title="\s*(.+?)\s*\"\\],?\s*', s)
-		tbl.append(original_name)
-		tblSorted = sorted(tbl)
-		# re-add style
-		tblSorted2 = ['a[title="{}"]'.format(s) for s in tblSorted if s.strip(", ") != ""]
-		# concatenage back into a string
-		csstext = ', '.join(tblSorted2) + css_style
-		print("Saving css page...")
-		csspage.save(csstext, summary=summary, tags="bot_disambig")
-
 def edit_subpage(subpage):
 	text = subpage.text()
 	wikitext = mwparserfromhell.parse(text)
@@ -210,7 +191,6 @@ thispage = site.pages[original_name]
 newpage = site.pages[new_name]
 
 if init_move:
-	save_css_page()
 	move_page(thispage)
 	subpages = site.allpages(prefix=original_name + "/")
 	for subpage in subpages:
