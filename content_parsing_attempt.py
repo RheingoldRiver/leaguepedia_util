@@ -4,7 +4,7 @@ import mwparserfromhell, re
 site = login('bot', 'lol')  # Set wiki
 summary = 'Attempting to parse old content as templates'  # Set summary
 
-page_type = 'teams' # tournament, players, teams
+page_type = 'players' # tournament, players, teams
 
 limit = -1
 startat_page = None
@@ -30,7 +30,7 @@ passed_startat = False if startat_page else True
 lmt = 0
 
 pages = [
-site.pages["Tbq"]
+site.pages["Wraith"]
 ]
 
 def process_line(line):
