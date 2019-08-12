@@ -1,14 +1,14 @@
 from log_into_wiki import *
 
 year = '2019'
-tournament = 'LDL 2019 Summer'
+tournament = 'LPL 2019 Summer'
 #########################################
 # modify only above this line
 #########################################
 TEXT = """{{PlayerTabsHeader}}
 {{PlayerYearStats}}"""
 
-SUMMARY = "Autopopulating year player states from tournament %s" % tournament
+SUMMARY = "Autopopulating year player stats from tournament %s" % tournament
 
 site = login('me', 'lol')  # Set wiki
 summary = 'Bot Edit'  # Set summary
@@ -19,6 +19,7 @@ pagelist = site.cargo_pagelist('Link', page_pattern="%s/Statistics/" + year,
 							   tables = 'ScoreboardPlayer',
 							   where = 'OverviewPage="%s"' % overview_page,
 							   fields = 'Link',
+							   group_by = 'Link',
 							   limit = 'max'
 							   )
 for page in pagelist:
