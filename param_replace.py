@@ -1,10 +1,10 @@
 from log_into_wiki import *
 import mwparserfromhell
 
-site = login('bot', 'teamfighttactics')  # Set wiki
+site = login('bot', 'lol')  # Set wiki
 
-template_name = 'Infobox Item'
-orig_param = 'concept'
+template_name = 'Scoreboard/Season 4/Ultimate Bravery'
+orig_param = 'cs'
 new_param = 'tournament'
 
 summary = 'Param replacement: {0} -> {1}'.format(orig_param, new_param) # Set summary

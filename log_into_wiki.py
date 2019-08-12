@@ -1,4 +1,4 @@
-import mwclient, re, urllib.request, io
+import extended_site, re, urllib.request, io
 from PIL import Image, ImageFile
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
@@ -6,20 +6,20 @@ def login(user, wiki, timeout = 30):
 	if user == 'me':
 		password = open('password.txt').read().strip()
 		username = open('username.txt').read().strip()
-		site = mwclient.Site('%s.gamepedia.com' % wiki, path='/', retry_timeout=timeout)
+		site = extended_site.ExtendedSite('%s.gamepedia.com' % wiki, path='/', retry_timeout=timeout)
 		site.login(username, password)
 		return site
 	elif user == 'bot':
 		password = open('password2.txt').read().strip()
 		username = open('username2.txt').read().strip()
-		site = mwclient.Site('%s.gamepedia.com' % wiki, path='/', retry_timeout=timeout)
+		site = extended_site.ExtendedSite('%s.gamepedia.com' % wiki, path='/', retry_timeout=timeout)
 		site.login(username, password)
 		return site
 
 def log_into_fandom(user, wiki):
 	if user == 'me':
 		password = open('password_fandom.txt').read().strip()
-		site = mwclient.Site('%s.fandom.com' % wiki, path='/')
+		site = extended_site.ExtendedSite('%s.fandom.com' % wiki, path='/')
 		site.login('RheingoldRiver', password)
 		return site
 

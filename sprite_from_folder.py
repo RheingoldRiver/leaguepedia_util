@@ -2,13 +2,13 @@ import urllib.request, time, sprite_creator, io, os
 from log_into_wiki import *
 
 SUFFIX = ''
-SPRITE_NAME = 'God'
-IMAGE_DIR = SPRITE_NAME + ' Images'
+SPRITE_NAME = 'SmiteRole'
+IMAGE_DIR = 'Sprites/' + SPRITE_NAME + ' Images'
 DATA_FILE_LOCATION = 'Sprites/' + SPRITE_NAME + 'Sprite' + SUFFIX + '.txt'
 IMAGE_WIDTH = 25
 IMAGE_HEIGHT = 25
 IMAGE_GAP = 2
-IMAGES_ACROSS = 6
+IMAGES_ACROSS = 4
 
 SPRITE_FILE_NAME = 'Sprites/' + SPRITE_NAME + 'Sprite' + SUFFIX
 
