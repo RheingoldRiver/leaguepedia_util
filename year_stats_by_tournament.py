@@ -16,12 +16,13 @@ summary = 'Bot Edit'  # Set summary
 overview_page = site.pages[tournament].redirects_to().name
 
 pagelist = site.cargo_pagelist('Link', page_pattern="%s/Statistics/" + year,
-							   tables = 'ScoreboardPlayer',
-							   where = 'OverviewPage="%s"' % overview_page,
-							   fields = 'Link',
-							   group_by = 'Link',
-							   limit = 'max'
-							   )
+	tables = 'ScoreboardPlayer',
+	where = 'OverviewPage="%s"' % overview_page,
+	fields = 'Link',
+	group_by = 'Link',
+	limit = 'max'
+)
+
 for page in pagelist:
 	if not page.exists:
 		print('Saving page %s...' % page.name)

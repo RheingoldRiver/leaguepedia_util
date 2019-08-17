@@ -1,17 +1,24 @@
-from log_into_wiki import *
+import os
 
-site = login('wow', 'me')
+p = "S:\Documents\Wikis\Pronunciation\Danish_players\Kaelegrisen"
 
-response = site.api('cargoquery',
-					fields = '_pageName=Page,_categories=Categories'
-					# TODO
-					)
+parent = os.path.normpath(p)
 
-for result in response['cargoquery']:
-	cat = result['title']['Page']
-	for page in site.categories[cat.replace('Category:','')]:
-		text = page.text()
-		# TODO
-		page.save(text)
-	cat_page = site.pages[cat]
-	cat_page.move(new_name_here)
+folders = []
+
+for r, d, f in os.walk(parent):
+	for folder in d:
+		folders.append(os.path.join(parent, folder))
+
+files = []
+new_names = []
+
+for folder in folders:
+	for r, d, f in os.walk(folder):
+		for file in f:
+			if 'Danish' in file:
+				files.append(os.path.join(folder, file))
+				new_names.append(file)
+
+for i, file in enumerate(files):
+	os.rename(file, os.path.join(parent, new_names[i]))
