@@ -1,24 +1,43 @@
-import os
+from log_into_wiki import *
+import mwparserfromhell
 
-p = "S:\Documents\Wikis\Pronunciation\Danish_players\Kaelegrisen"
+site = login('bot', 'lol')  # Set wiki
+summary = 'Remove notab from playoffs pages'  # Set summary
 
-parent = os.path.normpath(p)
+limit = -1
+startat_page = None
+print(startat_page)
+# startat_page = 'asdf'
+this_template = site.pages['Template:MatchRecap/Button']  # Set template
+pages = this_template.embeddedin()
 
-folders = []
+# with open('pages.txt', encoding="utf-8") as f:
+# 	pages = f.readlines()
 
-for r, d, f in os.walk(parent):
-	for folder in d:
-		folders.append(os.path.join(parent, folder))
-
-files = []
-new_names = []
-
-for folder in folders:
-	for r, d, f in os.walk(folder):
-		for file in f:
-			if 'Danish' in file:
-				files.append(os.path.join(folder, file))
-				new_names.append(file)
-
-for i, file in enumerate(files):
-	os.rename(file, os.path.join(parent, new_names[i]))
+passed_startat = False if startat_page else True
+lmt = 0
+for page in pages:
+	if lmt == limit:
+		break
+	if startat_page and page.name == startat_page:
+		passed_startat = True
+	if not '/Playoffs' in page.name:
+		print("Skipping page %s" % page.name)
+		continue
+	if not passed_startat:
+		print("Skipping page %s" % page.name)
+		continue
+	lmt += 1
+	text = page.text()
+	wikitext = mwparserfromhell.parse(text)
+	for template in wikitext.filter_templates():
+		if tl_matches(template, ['MatchRecap/Button']):
+			if template.has('notab'):
+				template.remove('notab')
+	
+	newtext = str(wikitext)
+	if text != newtext:
+		print('Saving page %s...' % page.name)
+		page.save(newtext, summary=summary)
+	else:
+		print('Skipping page %s...' % page.name)

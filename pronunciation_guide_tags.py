@@ -1,16 +1,16 @@
 from log_into_wiki import *
 import mwparserfromhell
 
-site = login('me', 'lol')  # Set wiki
+site = login('bot', 'lol')  # Set wiki
 summary = 'Bot Edit'  # Set summary
 
-this_name = 'Grindelwald'
-this_user = 'Thanos4life'
+this_name = 'Daedalus'
+this_user = 'Benvarmeren'
 
 limit = -1
 startat_page = None
 print(startat_page)
-# startat_page = 'asdf'
+# startat_page = 'File:ElogudenDanish.mp4'
 this_template = site.pages['Template:PlayerPronunciationFile']  # Set template
 pages = this_template.embeddedin()
 
@@ -34,6 +34,8 @@ for page in pages:
 		if tl_matches(template, ['PlayerPronunciationFile']):
 			if template.get('recordedby').value.strip() == this_name:
 				template.add('user', this_user)
+				template.add('language', 'Danish')
+				template.add('native', 'Yes')
 	
 	newtext = str(wikitext)
 	if text != newtext:

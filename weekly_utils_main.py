@@ -28,23 +28,15 @@ revisions = site.api('query', format='json',
 					 rcend=last_timestamp,
 					 rcprop='title|ids|patrolled',
 					 rclimit='max',
-					 #rctoponly=0, # commented bc we need all revisions to patrol user pages
+					 rctoponly=1, # commented bc we need all revisions to patrol user pages
 					 rcdir = 'older'
 					 )
-
-patrol_token = site.get_token('patrol')
 
 pages = []
 pages_for_runes = []
 
 for revision in revisions['query']['recentchanges']:
 	title = revision['title']
-	# Patrol user namespace edits (not user talk)
-	if (revision['ns'] == 2 or revision['ns'] == 10014) and 'unpatrolled' in revision:
-		site.api('patrol', format = 'json',
-				 revid = revision['revid'],
-				 token = patrol_token
-				 )
 	if title not in pages:
 		pages.append(title)
 		if title.startswith('Data:'):
