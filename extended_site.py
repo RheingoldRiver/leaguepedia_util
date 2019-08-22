@@ -8,21 +8,31 @@ class ExtendedSite(mwclient.Site):
 			ret.append(item['title'])
 		return ret
 	
-	def cargo_pagelist(self, fieldname, page_pattern = "%s", **kwargs):
-		response = self.api('cargoquery', **kwargs)
-		ret = []
+	def cargo_pagelist(self, fields=None, limit="max", page_pattern = "%s", **kwargs):
+		field = fields.split('=')[1] if '=' in fields else fields
+		group_by = fields.split('=')[0]
+		response = self.api('cargoquery',
+			fields=fields,
+			group_by=group_by,
+			limit=limit,
+			**kwargs
+		)
+		pages = []
 		for item in response['cargoquery']:
-			page = page_pattern % item['title'][fieldname]
-			ret.append(self.pages[page])
-		return ret
+			page = page_pattern % item['title'][field]
+			if page in pages:
+				continue
+			pages.append(page)
+			yield(self.pages[page])
 	
-	def recentchanges_by_interval(self, interval, offset=0, **kwargs):
+	def recentchanges_by_interval(self, interval, offset=0, prop='title|ids', **kwargs):
 		now = datetime.datetime.utcnow() - datetime.timedelta(minutes=offset)
 		then = now - datetime.timedelta(minutes=interval)
 		result = self.recentchanges(
 			start=now.isoformat(),
 			end=then.isoformat(),
 			limit='max',
+			prop=prop,
 			**kwargs
 		)
 		return result
