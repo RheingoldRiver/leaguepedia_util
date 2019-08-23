@@ -24,5 +24,5 @@ for player in ExtendedPage.extend_pages(players):
 	player.touch(check_existence=True)
 
 # purge PR pages
-for page in site.allpages(namespace=10006):
+for page in site.pages['Template:PRWiki'].embeddedin():
 	page.purge()
