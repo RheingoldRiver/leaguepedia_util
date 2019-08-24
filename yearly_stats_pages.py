@@ -1,7 +1,7 @@
-import log_into_wiki
+from extended_site import GamepediaSite
 from extended_page import ExtendedPage
 
-site = log_into_wiki.login('bot', 'lol')
+site = GamepediaSite('me', 'lol')
 
 create_text = """{{PlayerTabsHeader}}
 {{PlayerYearStats}}"""

@@ -44,3 +44,12 @@ class ExtendedSite(mwclient.Site):
 			# revid == 0 if the page was deleted, so it can't be deleted
 			if f(revision) and revision['revid'] != 0 and 'unpatrolled' in revision:
 				self.api('patrol', revid = revision['revid'], token = patrol_token)
+
+class GamepediaSite(ExtendedSite):
+	def __init__(self, user, wiki):
+		super().__init__('%s.gamepedia.com' % wiki, path='/')
+		pwd_file = 'password2.txt' if user == 'bot' else 'password.txt'
+		user_file = 'username2.txt' if user == 'bot' else 'username.txt'
+		pwd = open(pwd_file).read().strip()
+		username = open(user_file).read().strip()
+		self.login(username, pwd)
