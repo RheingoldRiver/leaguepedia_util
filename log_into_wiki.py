@@ -1,5 +1,5 @@
 import re, urllib.request, io
-from .esports_site import EsportsSite
+from esports_site import EsportsSite
 from PIL import Image, ImageFile
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 

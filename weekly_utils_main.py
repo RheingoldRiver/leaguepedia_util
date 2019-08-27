@@ -2,9 +2,8 @@
 
 import mwparserfromhell, datetime
 import weekly_utils as utils
-from .esports_site import EsportsSite
+from esports_site import EsportsSite
 import scrape_runes, luacache_refresh
-from log_into_wiki import *
 from template_list import *
 
 site = EsportsSite('me','lol')

@@ -1,4 +1,4 @@
-from .extended_site import GamepediaSite
+from extended_site import GamepediaSite
 
 class EsportsSite(GamepediaSite):
 	def standard_name_redirects(self):
