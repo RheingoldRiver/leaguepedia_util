@@ -1,20 +1,10 @@
-import extended_site, re, urllib.request, io
+import re, urllib.request, io
+from .esports_site import EsportsSite
 from PIL import Image, ImageFile
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 def login(user, wiki, timeout = 30):
-	if user == 'me':
-		password = open('password.txt').read().strip()
-		username = open('username.txt').read().strip()
-		site = extended_site.ExtendedSite('%s.gamepedia.com' % wiki, path='/', retry_timeout=timeout)
-		site.login(username, password)
-		return site
-	elif user == 'bot':
-		password = open('password2.txt').read().strip()
-		username = open('username2.txt').read().strip()
-		site = extended_site.ExtendedSite('%s.gamepedia.com' % wiki, path='/', retry_timeout=timeout)
-		site.login(username, password)
-		return site
+		return EsportsSite(user, wiki)
 
 def log_into_fandom(user, wiki):
 	if user == 'me':

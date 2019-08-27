@@ -2,11 +2,12 @@
 
 import mwparserfromhell, datetime
 import weekly_utils as utils
+from .esports_site import EsportsSite
 import scrape_runes, luacache_refresh
 from log_into_wiki import *
 from template_list import *
 
-site = login('me','lol')
+site = EsportsSite('me','lol')
 
 limit = -1
 
@@ -93,6 +94,9 @@ for page in pages:
 			report_page = site.pages['User talk:RheingoldRiver']
 			report_errors(report_page, page, errors)
 luacache_refresh.teamnames(site)
+
+site.standard_name_redirects()
+
 success_page = site.pages['User:RheingoldRiver/Maint Log']
 text = success_page.text()
 text = text + '\nScript finished maint successfully: ' + now_timestamp
