@@ -5,7 +5,7 @@ from dateutil import parser
 site = login('bot', 'lol')  # Set wiki
 summary = 'Attempting to migrate content to data ns'  # Set summary
 
-page_type = 'players' # players or teams
+page_type = 'teams' # players or teams
 
 limit = -1
 startat_page = None
@@ -22,9 +22,11 @@ tabs_templates = ['TDRight', 'TabsDynamic', 'TD']
 years = ['2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019']
 months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'September', 'October', 'November', 'December']
 
-pages = [
-site.pages["Wraith"]
-]
+# pages = [
+# site.pages["Wraith"]
+# ]
+
+pages = site.pages['Template:ExternalContent/Line'].embeddedin(namespace=0)
 
 def add_player_to_line(data_tl, name):
 	if not data_tl.has(page_type):
@@ -65,8 +67,11 @@ for page in pages:
 	year = None
 	print('Beginning page %s' % page.name)
 	wikitext = mwparserfromhell.parse(text)
+	is_right_type = False
 	for template in wikitext.filter_templates(recursive=False):
-		if tl_matches(template, tabs_templates):
+		if template.name.matches('Infobox ' + template_types[page_type]):
+			is_right_type = True
+		if tl_matches(template, tabs_templates) and is_right_type:
 			i = 1
 			while template.has('name' + str(i)) and template.has('content' + str(i)):
 				param_text = template.get('content' + str(i)).value.strip()

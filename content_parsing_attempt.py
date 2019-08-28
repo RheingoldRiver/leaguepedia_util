@@ -4,7 +4,7 @@ import mwparserfromhell, re
 site = login('bot', 'lol')  # Set wiki
 summary = 'Attempting to parse old content as templates'  # Set summary
 
-page_type = 'players' # tournament, players, teams
+page_type = 'teams' # tournament, players, teams
 
 limit = -1
 startat_page = None
@@ -29,9 +29,7 @@ translator = r"^\* ?" + months + date + r"\[(.+?) ([^\]]*)\]" + attrib_sep + '(t
 passed_startat = False if startat_page else True
 lmt = 0
 
-pages = [
-site.pages["Wraith"]
-]
+pages = site.pages['Template:ExternalContent/Line'].embeddedin(namespace=0)
 
 def process_line(line):
 	match = re.match(regex, line)
@@ -96,8 +94,11 @@ for page in pages:
 	print('beginning page %s' % page.name)
 	text = this_page.text()
 	wikitext = mwparserfromhell.parse(text, skip_style_tags=True)
+	is_right_type = False
 	for template in wikitext.filter_templates(recursive=False):
-		if tl_matches(template, ['TD','TDRight','TabsDynamic', 'TDR']):
+		if template.name.matches('Infobox ' + template_by_type[page_type]):
+			is_right_type = True
+		if tl_matches(template, ['TD','TDRight','TabsDynamic', 'TDR']) and is_right_type:
 			i = 1
 			while template.has('content' + str(i)):
 				content = template.get('content' + str(i)).value.strip()
