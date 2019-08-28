@@ -3,9 +3,22 @@ from datetime import date, timedelta
 import mwparserfromhell
 
 site = EsportsSite('bot', 'lol')  # Set wiki
-template_prefix = 'NewsData'
-data_prefix = 'News'
-navbox_template = 'NewsData'
+
+lookup = {
+	"news" : { "template_prefix" : "NewsData",
+			   "data_prefix" : "News",
+			   "navbox_template" : "NewsData" },
+	"ec" : { "template_prefix" : "ExternalContent",
+			 "data_prefix" : "ExternalContent",
+			 "navbox_template" : "External Content"
+			 }
+}
+
+this = "news"
+
+template_prefix = lookup[this]["template_prefix"]
+data_prefix = lookup[this]["data_prefix"]
+navbox_template = lookup[this]["navbox_template"]
 summary = 'Initializing %s Pages' % template_prefix # Set summary
 
 def allsundays(year):
@@ -44,12 +57,13 @@ for year in range(2009,2020):
 	wikitext = mwparserfromhell.parse(template_page.text())
 	for template in wikitext.filter_templates():
 		if template.name.matches('Navbox'):
-			text = str(template.get('list1').value)
-			if year_switch in text:
+			text = str(template.get('list1').value.strip())
+			list_text = template.get('list2').value.strip()
+			if year_switch in list_text:
 				break
 			text = text.replace('{{Endflatlist}}',
 								'* [[Data:{}/{}|{}]]\n{{{{Endflatlist}}}}'.format(data_prefix, str(year), str(year)))
 			template.add('list1', text)
-			list_text = template.get('list2').value
 			list_text = list_text.replace('}}\n{{Endflatlist}}', '\n'.join(list_of_sundays))
+			template.add('list2', list_text)
 	template_page.save(str(wikitext))
