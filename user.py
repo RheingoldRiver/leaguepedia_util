@@ -50,3 +50,6 @@ class User(object):
 		rights = '|'.join(self.rights)
 		new_site.post('userrights', user=self.name,
 					  add=rights, token=new_site.get_token('userrights'))
+		
+	def remove_all_rights(self):
+		self.remove_rights(self.groups)
