@@ -1,45 +1,15 @@
-from log_into_wiki import *
-import mwparserfromhell
+from user import User
+from esports_site import EsportsSite
 
-site = login('bot', 'lol')  # Set wiki
-summary = 'Remove unneded ExternalContent/End'  # Set summary
+games = ['halo', 'smite', 'vg', 'rl', 'pubg', 'fortnite', 'apexlegends', 'fifa', 'gears', 'nba2k', 'paladins', 'siege',
+         'default-loadout', 'commons', 'teamfighttactics']
 
-limit = -1
-startat_page = None
-print(startat_page)
-# startat_page = 'asdf'
-this_template = site.pages['Template:ExternalContent/End']  # Set template
-pages = this_template.embeddedin()
+site = EsportsSite('me', 'lol')
 
-# with open('pages.txt', encoding="utf-8") as f:
-# 	pages = f.readlines()
+user = User(site, 'Ispoonz')
 
-passed_startat = False if startat_page else True
-lmt = 0
-for page in pages:
-	if lmt == limit:
-		break
-	if startat_page and page.name == startat_page:
-		passed_startat = True
-	if not passed_startat:
-		print("Skipping page %s" % page.name)
-		continue
-	lmt += 1
-	text = page.text()
-	wikitext = mwparserfromhell.parse(text)
-	is_next = False
-	for template in wikitext.filter_templates():
-		if tl_matches(template, ['ExternalContent/Start']):
-			is_next = True
-			continue
-		if is_next and tl_matches(template, ['ExternalContent/End']):
-			wikitext.remove(template)
-			break
-		is_next = False
-	
-	newtext = str(wikitext)
-	if text != newtext:
-		print('Saving page %s...' % page.name)
-		page.save(newtext, summary=summary)
-	else:
-		print('Skipping page %s...' % page.name)
+for game in games:
+    if game != 'teamfighttactics':
+        game = game + '-esports'
+    new_site = EsportsSite('me', game)
+    user.clone_rights(new_site)
