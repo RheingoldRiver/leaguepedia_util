@@ -27,7 +27,7 @@ navbox_text = """{{Navbox
 
 }}<noinclude>[[Category:Navboxes]]</noinclude>"""
 
-site = EsportsSite('bot', 'lol')  # Set wiki
+site = EsportsSite('bot', 'cod-esports')  # Set wiki
 
 lookup = {
 	"news" : { "template_prefix" : "NewsData",
@@ -51,21 +51,29 @@ def allsundays(year):
 		yield d
 		d += timedelta(days = 7)
 
-def make_data_pages(years, this):
+def make_data_pages(years, this, startat_page = None):
+	passed_startat = True
+	if startat_page:
+		passed_startat = False
 	template_prefix = lookup[this]["template_prefix"]
 	data_prefix = lookup[this]["data_prefix"]
 	navbox_template = lookup[this]["navbox_template"]
 	summary = 'Initializing %s Pages' % template_prefix  # Set summary
 	for year in years:
-		site.pages['Data:{}/{}'.format(data_prefix, year)].save('{{NewsDataOverview}}', summary=summary)
+		site.pages['Data:{}/{}'.format(data_prefix, year)].save('{{%sOverview}}' % template_prefix, summary=summary)
 		year_switch = '|' + str(year) + '='
 		list_of_sundays = [year_switch]
 		for d in allsundays(year):
 			list_of_sundays.append('* [[Data:{}/{}|{}]]'.format(data_prefix, d.strftime('%Y-%m-%d'), str(d.strftime('%b %d'))))
 			
 			# START SAVING DATA PAGES - COMMENT THIS BLOCK TO DO NAVBOX ONLY
-			p = site.pages['Data:{}/{}'.format(data_prefix, str(d))]
-			if p.text() != '':
+			page_name = 'Data:{}/{}'.format(data_prefix, str(d))
+			if page_name == startat_page:
+				passed_startat = True
+			if not passed_startat:
+				continue
+			p = site.pages[page_name]
+			if p.exists:
 				continue
 			lines = [ '{{%s/Start}}' % template_prefix ]
 			weekday_index = d
@@ -108,6 +116,6 @@ def make_templates(this):
 	site.pages['Template:%s/Start' % template_prefix].save(start_text % template_prefix, summary=summary)
 
 if __name__ == "__main__":
-	this = 'rc'
-	make_templates(this)
-	make_data_pages(range(2009,2021), this)
+	this = 'ec'
+	# make_templates(this)
+	make_data_pages(range(2009,2021), this, startat_page='Data:ExternalContent/2019-11-03')

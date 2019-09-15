@@ -1,9 +1,10 @@
 from user import User
 from esports_site import EsportsSite
 
-site = EsportsSite('me', 'lol')
-
-user = User(site, 'Ispoonz')
+site = EsportsSite('me', 'halo')
 
 for new_site in site.other_sites():
-    user.clone_rights(new_site)
+    user = User(new_site, 'Ispoonz')
+    print(user.groups)
+    user.add_rights(['sysop'])
+    print(user.groups)

@@ -5,7 +5,7 @@ ALL_ESPORTS_WIKIS = ['lol', 'halo', 'smite', 'vg', 'rl', 'pubg', 'fortnite',
 					 'default-loadout', 'commons', 'teamfighttactics']
 
 def get_wiki(wiki):
-	if wiki in ['lol', 'teamfighttactics']:
+	if wiki in ['lol', 'teamfighttactics'] or wiki not in ALL_ESPORTS_WIKIS:
 		return wiki
 	return wiki + '-esports'
 

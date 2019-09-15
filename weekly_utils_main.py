@@ -10,6 +10,8 @@ site = EsportsSite('me','lol')
 
 limit = -1
 
+site.standard_name_redirects()
+
 # Blank edit pages we need to
 blank_edit_pages = ['Leaguepedia:Top Schedule']
 for page in blank_edit_pages:
@@ -93,8 +95,6 @@ for page in pages:
 			report_page = site.pages['User talk:RheingoldRiver']
 			report_errors(report_page, page, errors)
 luacache_refresh.teamnames(site)
-
-site.standard_name_redirects()
 
 success_page = site.pages['User:RheingoldRiver/Maint Log']
 text = success_page.text()
