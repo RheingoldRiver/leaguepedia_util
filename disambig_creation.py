@@ -3,8 +3,8 @@ from log_into_wiki import *
 
 #################################################################################################
 
-original_name = 'Starky'
-irl_name = "Juan Carlos Cano"
+original_name = 'Awaker'
+irl_name = "Kentaro Hanaoka"
 new_name = '{} ({})'.format(original_name, irl_name.strip())
 init_move = True
 blank_edit = False

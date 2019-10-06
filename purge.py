@@ -1,7 +1,7 @@
 from log_into_wiki import *
 import mwparserfromhell
 
-site = login('bot', 'fortnite-esports')  # Set wiki
+site = login('bot', 'lol')  # Set wiki
 summary = 'Forcing blank edit'  # Set summary
 
 limit = -1

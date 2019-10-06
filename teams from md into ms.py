@@ -7,7 +7,7 @@ summary = 'Adding MH + teams/winner from MH'  # Set summary
 limit = -1
 startat = -1
 
-thispage = 'OPL/2017 Season/Split 1'
+thispage = 'LJL/2017 Season/Spring Season'
 pages_array = [thispage]
 
 team_replace = {

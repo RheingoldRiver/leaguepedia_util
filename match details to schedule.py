@@ -109,7 +109,7 @@ for pagename in pages_var:
 			if template.name.matches('MatchSchedule'):
 				if template.has('ff') and template.get('ff').value.strip() in ['1','2']:
 					pass
-				else:
+				elif len(add_to_matches) > i:
 					for param in add_to_matches[i]:
 						name = str(param.name)
 						if name in param_lookup:
