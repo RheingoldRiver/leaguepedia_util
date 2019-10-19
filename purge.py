@@ -1,3 +1,5 @@
+import time
+
 from log_into_wiki import *
 import mwparserfromhell
 
@@ -7,8 +9,8 @@ summary = 'Forcing blank edit'  # Set summary
 limit = -1
 startat_page = None
 print(startat_page)
-# startat_page = 'Duji'
-this_template = site.pages['Template:Infobox Player']  # Set template
+startat_page = 'Swathe'
+this_template = site.pages['Template:PlayerResults']  # Set template
 pages = this_template.embeddedin()
 
 # pages = site.categories['Pages with script errors']
@@ -25,7 +27,14 @@ for page in pages:
 		continue
 	text = page.text()
 	print('Purging page %s...' % page.name)
-	site.api('purge', format='json',
-			 titles = page.name,
-			 forcelinkupdate = '1'
+	try:
+		site.api('purge', format='json',
+				 titles = page.name,
+				 forcelinkupdate = '1'
+					 )
+	except Exception as e:
+		time.sleep(30)
+		site.api('purge', format='json',
+				 titles=page.name,
+				 forcelinkupdate='1'
 				 )

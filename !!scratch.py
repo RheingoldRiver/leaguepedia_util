@@ -1,45 +1,43 @@
-from log_into_wiki import *
-import mwparserfromhell
+from esports_site import EsportsSite
 
-site = login('me', 'lol')  # Set wiki
-summary = '|sub=Yes |trainee=Yes & take out of |status='  # Set summary
+pages = [
+"Module:ScoreboardPlayerStats",
+"Module:ExtendedRosterLine",
+"Module:Scoreboard",
+"Module:Standings",
+"Module:Timeline",
+"Module:Crossbox",
+"Module:MatchList",
+"Module:CargoUtil",
+"Module:RosterTooltip",
+"Module:DisambigPage",
+"Module:ArgsUtil",
+"Module:FootnoteUtil",
+"Module:PickBanHistory",
+"Module:CastingHistory",
+"Module:TeamPLHQuery",
+"Module:I18nUtil",
+"Module:MatchDetails",
+"Module:MatchSchedule",
+"Module:MatchCalendarExport",
+"Module:PlayerPentakills",
+"Module:PlayerResults1v1",
+"Module:UserPredictionsLeaderboard",
+"Module:CargoDeclare",
+"Module:RosterChangeData",
+"Module:LeaguesNavbox",
+"Module:NewsQueryAbstract",
+"Module:ExternalContentQueryBase",
+"Module:SourceUtil",
+]
 
-limit = -1
-startat_page = None
-print(startat_page)
-# startat_page = 'asdf'
-this_template = site.pages['Template:RCInfo']  # Set template
-pages = this_template.embeddedin()
+site = EsportsSite('me', 'lol')
 
-# with open('pages.txt', encoding="utf-8") as f:
-# 	pages = f.readlines()
-
-passed_startat = False if startat_page else True
-lmt = 0
-for page in pages:
-	if lmt == limit:
-		break
-	if startat_page and page.name == startat_page:
-		passed_startat = True
-	if not passed_startat:
-		print("Skipping page %s" % page.name)
-		continue
-	lmt += 1
+for p in pages:
+	page = site.pages[p]
 	text = page.text()
-	wikitext = mwparserfromhell.parse(text)
-	for template in wikitext.filter_templates():
-		if tl_matches(template, ['RCInfo']):
-			if template.has('status'):
-				if template.get('status').value.strip().lower() == 'sub':
-					template.add('sub', 'Yes')
-					template.add('status', '')
-				if template.get('status').value.strip().lower() == 'trainee':
-					template.add('trainee', 'Yes')
-					template.add('status', '')
-
-	newtext = str(wikitext)
-	if text != newtext:
-		print('Saving page %s...' % page.name)
-		page.save(newtext, summary=summary)
-	else:
-		print('Skipping page %s...' % page.name)
+	split_str = text.split('util_table.map')
+	split_str = [_[0].lower() + _[1:] for _ in split_str]
+	new_text = 'util_map.'.join(split_str)
+	if new_text != text:
+		page.save(new_text, summary = 'Use MapUtil instead of TableUtil for mapping functions')

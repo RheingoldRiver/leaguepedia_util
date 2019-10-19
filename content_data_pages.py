@@ -65,14 +65,17 @@ def make_data_pages(years, this, startat_page = None):
 		list_of_sundays = [year_switch]
 		for d in allsundays(year):
 			list_of_sundays.append('* [[Data:{}/{}|{}]]'.format(data_prefix, d.strftime('%Y-%m-%d'), str(d.strftime('%b %d'))))
-			
+
 			# START SAVING DATA PAGES - COMMENT THIS BLOCK TO DO NAVBOX ONLY
-			page_name = 'Data:{}/{}'.format(data_prefix, str(d))
+			page_prefix = 'Data:{}/'.format(data_prefix)
+			page_name = page_prefix + str(d)
 			if page_name == startat_page:
 				passed_startat = True
 			if not passed_startat:
 				continue
 			p = site.pages[page_name]
+			redirect_text = '#redirect[[%s]]' % page_name
+			check_and_make_redirects(d, page_prefix, redirect_text)
 			if p.exists:
 				continue
 			lines = [ '{{%s/Start}}' % template_prefix ]
@@ -87,7 +90,7 @@ def make_data_pages(years, this, startat_page = None):
 				lines.append('{{%s/End}}' % template_prefix)
 			p.save('\n'.join(lines), summary=summary)
 			# END SAVING DATA PAGES - COMMENT THIS BLOCK TO DO NAVBOX ONLY
-		
+
 		list_of_sundays.append('}}\n{{Endflatlist}}')
 		template_page = site.pages['Template:%s Navbox' % navbox_template]
 		wikitext = mwparserfromhell.parse(template_page.text())
@@ -115,7 +118,17 @@ def make_templates(this):
 	site.pages['Template:%s Navbox' % navbox_template].save(navbox_text % data_prefix, summary=summary)
 	site.pages['Template:%s/Start' % template_prefix].save(start_text % template_prefix, summary=summary)
 
+def check_and_make_redirects(d, page_prefix, redirect_text):
+	weekday_index = d
+	for i in range(0, 6):
+		weekday_index += timedelta(days=1)
+		y = weekday_index.year
+		m = '{:02d}'.format(weekday_index.month)
+		day = '{:02d}'.format(weekday_index.day)
+		site.pages[page_prefix + '{}-{}-{}'.format(y, m, day)].save(redirect_text)
+
+
 if __name__ == "__main__":
 	this = 'ec'
 	# make_templates(this)
-	make_data_pages(range(2009,2021), this, startat_page='Data:ExternalContent/2019-11-03')
+	make_data_pages(range(2009,2021), this, startat_page=None)

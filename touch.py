@@ -1,17 +1,17 @@
 from log_into_wiki import *
 import time
 limit = -1
-site = login('me','cavesofqud')
-t = site.pages["Template:Item Page"]
+site = login('me','lol')
+t = site.pages["Template:TeamRoster"]
 
 pages = t.embeddedin()
 
 c = site.categories['Pages with script errors']
 
-pages = site.allpages(namespace=0)
+pages = t.embeddedin()
 
-startat_page = 'Burrowing Claws'
-passed_startat = False
+startat_page = None
+passed_startat = True
 
 lmt = 0
 #for p in c:
