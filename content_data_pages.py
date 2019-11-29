@@ -27,12 +27,13 @@ navbox_text = """{{Navbox
 
 }}<noinclude>[[Category:Navboxes]]</noinclude>"""
 
-site = EsportsSite('bot', 'cod-esports')  # Set wiki
+site = EsportsSite('bot', 'lol')  # Set wiki
 
 lookup = {
 	"news" : { "template_prefix" : "NewsData",
 			   "data_prefix" : "News",
-			   "navbox_template" : "NewsData" },
+			   "navbox_template" : "NewsData"
+			   },
 	"ec" : { "template_prefix" : "ExternalContent",
 			 "data_prefix" : "ExternalContent",
 			 "navbox_template" : "External Content"
@@ -41,6 +42,11 @@ lookup = {
 		"template_prefix" : "RosterChangeData",
 		"data_prefix" : "RosterChanges",
 		"navbox_template" : "Roster Change Data"
+	},
+	"rumors" : {
+		"template_prefix" : "RosterRumorData",
+		"data_prefix" : "RosterRumors",
+		"navbox_template" : "Roster Rumor Data"
 	}
 }
 
@@ -129,6 +135,6 @@ def check_and_make_redirects(d, page_prefix, redirect_text):
 
 
 if __name__ == "__main__":
-	this = 'ec'
-	# make_templates(this)
-	make_data_pages(range(2009,2021), this, startat_page=None)
+	this = 'rumors'
+	make_templates(this)
+	make_data_pages(range(2015,2021), this, startat_page=None)

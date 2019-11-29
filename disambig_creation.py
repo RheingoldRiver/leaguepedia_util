@@ -3,8 +3,8 @@ from log_into_wiki import *
 
 #################################################################################################
 
-original_name = 'Awaker'
-irl_name = "Kentaro Hanaoka"
+original_name = 'Duke'
+irl_name = "Lee Ho-seong"
 new_name = '{} ({})'.format(original_name, irl_name.strip())
 init_move = True
 blank_edit = False
@@ -109,7 +109,7 @@ def check_list(template, param, sep = ','):
 			tbl[i] = new_name
 	if made_changes:
 		template.add(param, sep.join(tbl))
-	
+
 
 def process_template(template):
 	def tl_matches(arr, field=None):
@@ -144,10 +144,10 @@ def process_template(template):
 	
 	elif tl_matches(['Player', 'RSRR/Player'], field=1):
 		template.add('link', new_name)
-				
+	
 	elif tl_matches(["MatchDetails/Series"], field='mvp'):
 		template.add("mvplink", new_name, before="mvp")
-		
+	
 	elif tl_matches(["PentakillLine"], field=6):
 		template.add("playerlink", new_name, before=6)
 	
@@ -171,6 +171,9 @@ def process_template(template):
 	elif tl_matches(['PlayerImageMetadata'], field="playerlink"):
 		template.add('playerlink', new_name)
 	
+	elif tl_matches(['RCPlayer'], field="player"):
+		template.add('playerlink', new_name)
+
 	elif tl_matches(["PortalCurrentRosters"]):
 		for pos in ['t', 'j', 'm', 'a', 's']:
 			for period in ['old', 'new']:
@@ -200,8 +203,8 @@ if init_move:
 	if concept.exists:
 		edit_concept(concept)
 		move_page(concept)
-	
-	
+
+
 pages = thispage.backlinks()
 i = 0
 for page in pages:

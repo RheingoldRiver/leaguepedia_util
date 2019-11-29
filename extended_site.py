@@ -7,7 +7,7 @@ class ExtendedSite(mwclient.Site):
 		for item in response['cargoquery']:
 			ret.append(item['title'])
 		return ret
-	
+
 	def cargo_pagelist(self, fields=None, limit="max", page_pattern = "%s", **kwargs):
 		field = fields.split('=')[1] if '=' in fields else fields
 		group_by = fields.split('=')[0]
@@ -24,7 +24,7 @@ class ExtendedSite(mwclient.Site):
 				continue
 			pages.append(page)
 			yield(self.pages[page])
-	
+
 	def recentchanges_by_interval(self, interval, offset=0, prop='title|ids', **kwargs):
 		now = datetime.datetime.utcnow() - datetime.timedelta(minutes=offset)
 		then = now - datetime.timedelta(minutes=interval)
@@ -36,7 +36,7 @@ class ExtendedSite(mwclient.Site):
 			**kwargs
 		)
 		return result
-	
+
 	def patrol_recent(self, interval, f, **kwargs):
 		revisions = self.recentchanges_by_interval(interval, prop='title|ids|patrolled', **kwargs)
 		patrol_token = self.get_token('patrol')
@@ -46,8 +46,9 @@ class ExtendedSite(mwclient.Site):
 				self.api('patrol', revid = revision['revid'], token = patrol_token)
 
 class GamepediaSite(ExtendedSite):
-	def __init__(self, user, wiki):
-		super().__init__('%s.gamepedia.com' % wiki, path='/')
+	def __init__(self, user, wiki, stg=False):
+		suffix = 'io' if stg else 'com'
+		super().__init__('%s.gamepedia.' % wiki + suffix, path='/')
 		pwd_file = 'password2.txt' if user == 'bot' else 'password.txt'
 		user_file = 'username2.txt' if user == 'bot' else 'username.txt'
 		pwd = open(pwd_file).read().strip()

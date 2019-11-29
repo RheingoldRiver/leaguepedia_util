@@ -1,5 +1,6 @@
 from extended_site import GamepediaSite
 from extended_page import ExtendedPage
+import mwclient
 
 site = GamepediaSite('me', 'lol')
 
@@ -8,6 +9,9 @@ create_text = """{{PlayerTabsHeader}}
 
 overview_create_text = """{{PlayerTabsHeader}}
 {{CareerPlayerStats}}"""
+
+mh_create_text = """{{PlayerTabsHeader}}
+{{MatchHistoryPlayer}}"""
 
 redirect_text = '#redirect[[%s]]'
 
@@ -30,6 +34,9 @@ def save_pages(page):
 	base_stats_page = site.pages[page.base_title + '/Statistics']
 	if not base_stats_page.exists:
 		base_stats_page.save(overview_create_text, summary=summary)
+	mh_page = site.pages[page.base_title + '/Match History']
+	if not mh_page.exists:
+		mh_page.save(mh_create_text, summary=summary)
 
 for result in results:
 	if result['StatsPage'].endswith('Statistics'):

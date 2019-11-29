@@ -10,11 +10,11 @@ def get_wiki(wiki):
 	return wiki + '-esports'
 
 class EsportsSite(GamepediaSite):
-	def __init__(self, user, wiki):
-		super().__init__(user, get_wiki(wiki))
+	def __init__(self, user, wiki, **kwargs):
+		super().__init__(user, get_wiki(wiki), **kwargs)
 		self.user = user
 		self.wiki = wiki
-	
+
 	def standard_name_redirects(self):
 		for item in self.cargoquery(
 			tables="Tournaments,_pageData",
@@ -26,22 +26,22 @@ class EsportsSite(GamepediaSite):
 			page = self.pages[item['Name']]
 			target = item['Target']
 			page.save('#redirect[[%s]]' % target, summary="creating needed CM_StandardName redirects")
-	
+
 	def other_wikis(self):
 		for wiki in ALL_ESPORTS_WIKIS:
 			if wiki == self.wiki:
 				continue
 			yield wiki
-	
+
 	def other_sites(self):
 		for wiki in self.other_wikis():
 			yield EsportsSite('me', wiki)
-	
+
 	@staticmethod
 	def all_wikis():
 		for wiki in ALL_ESPORTS_WIKIS:
 			yield wiki
-	
+
 	@staticmethod
 	def all_sites(user):
 		for wiki in ALL_ESPORTS_WIKIS:

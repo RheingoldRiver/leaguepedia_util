@@ -1,10 +1,11 @@
 import re, urllib.request, io
+import extended_site
 from esports_site import EsportsSite
 from PIL import Image, ImageFile
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
-def login(user, wiki, timeout = 30):
-		return EsportsSite(user, wiki)
+def login(user, wiki, timeout = 30, **kwargs):
+		return EsportsSite(user, wiki, **kwargs)
 
 def log_into_fandom(user, wiki):
 	if user == 'me':
