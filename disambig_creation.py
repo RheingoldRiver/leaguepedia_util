@@ -171,8 +171,8 @@ def process_template(template):
 	elif tl_matches(['PlayerImageMetadata'], field="playerlink"):
 		template.add('playerlink', new_name)
 	
-	elif tl_matches(['RCPlayer'], field="player"):
-		template.add('playerlink', new_name)
+	elif tl_matches(['RCPlayer', 'PlayerPronunciationFile'], field="player"):
+		template.add('player', new_name)
 
 	elif tl_matches(["PortalCurrentRosters"]):
 		for pos in ['t', 'j', 'm', 'a', 's']:
