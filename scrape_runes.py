@@ -1,5 +1,8 @@
 import re, json, urllib.request, urllib.error, math, copy
 
+import requests
+
+
 def get_rune_dict():
 	with urllib.request.urlopen('http://ddragon.leagueoflegends.com/cdn/9.13.1/data/en_US/runesReforged.json') as url:
 		data = json.loads(url.read().decode())
@@ -15,6 +18,7 @@ def get_rune_dict():
 		8200 : 'Sorcery',
 		8300 : 'Inspiration',
 		8400 : 'Resolve',
+		8358 : 'MasterKey',
 		'trees' : {}
 	}
 	for tree in data: # tree as in rune tree
@@ -33,6 +37,23 @@ def get_champ_dict():
 		champ_dict[n] = champ
 	return champ_dict
 
+def get_token():
+	password = open('password_riot.txt').read().strip()
+	
+	url = 'https://auth.riotgames.com/token'
+	
+	data = {
+		'client_assertion_type': 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
+		'client_assertion': 'eyJhbGciOiJSUzI1NiJ9.eyJhdWQiOiJodHRwczpcL1wvYXV0aC5yaW90Z2FtZXMuY29tXC90b2tlbiIsInN1YiI6ImxvbCIsImlzcyI6ImxvbCIsImV4cCI6MTYwMTE1MTIxNCwiaWF0IjoxNTM4MDc5MjE0LCJqdGkiOiIwYzY3OThmNi05YTgyLTQwY2ItOWViOC1lZTY5NjJhOGUyZDcifQ.dfPcFQr4VTZpv8yl1IDKWZz06yy049ANaLt-AKoQ53GpJrdITU3iEUcdfibAh1qFEpvVqWFaUAKbVIxQotT1QvYBgo_bohJkAPJnZa5v0-vHaXysyOHqB9dXrL6CKdn_QtoxjH2k58ZgxGeW6Xsd0kljjDiD4Z0CRR_FW8OVdFoUYh31SX0HidOs1BLBOp6GnJTWh--dcptgJ1ixUBjoXWC1cgEWYfV00-DNsTwer0UI4YN2TDmmSifAtWou3lMbqmiQIsIHaRuDlcZbNEv_b6XuzUhi_lRzYCwE4IKSR-AwX_8mLNBLTVb8QzIJCPR-MGaPL8hKPdprgjxT0m96gw',
+		'grant_type': 'password',
+		'username': 'RheingoldRiver',
+		'password': password,
+		'scope': 'openid offline_access lol ban profile email phone'
+	}
+	session = requests.Session()
+	r = session.post(url, data=data)
+	return r.json()['id_token']
+
 def scrape(site, events, force):
 	player_data_keys = ["perkPrimaryStyle", "perkSubStyle", "perk0", "perk1", "perk2", "perk3", "perk4", "perk5",
 						 "statPerk0", "statPerk1", "statPerk2"]
@@ -42,6 +63,7 @@ def scrape(site, events, force):
 	print(events)
 	with open('mh_riot_endpoint.txt') as f:
 		mh_riot_endpoint = f.read().strip()
+	mh_riot_token = get_token()
 	for page_to_query in events:
 		print(page_to_query)
 		result = site.api('cargoquery', format = "json",
@@ -86,11 +108,15 @@ def scrape(site, events, force):
 					print('Querying match %s' % mh)
 					json_loc = mh_riot_endpoint + location
 					try:
-						with urllib.request.urlopen(json_loc) as url:
-							game = json.loads(url.read().decode())
+						game = requests.Session().get(
+							json_loc,
+							cookies = {
+								'id_token' : mh_riot_token
+							}
+						).json()
 						full_patch = game['gameVersion']
 						patch_tbl = full_patch.split('.')
-						patch = patch_tbl[0] + '.' + patch_tbl[1]
+						patch = str(patch_tbl[0] + '.' + patch_tbl[1])
 						for j in range(0,10):
 							player_name = game['participantIdentities'][j]['player']['summonerName']
 							player_team = re.match('^(.+?) (.*)', player_name)[1]

@@ -1,15 +1,15 @@
 from log_into_wiki import *
-import mwparserfromhell
+import mwparserfromhell, time
 limit = -1
 
 site = login('bot', 'fortnite-esports')
 summary = 'Automatically create player pages for Power Rankings'
 
 result = site.api('cargoquery',
-				  tables = 'TournamentResults=TR,TournamentResults__RosterLinks=RL,_pageData=PD',
-				  join_on = 'TR._ID=RL._rowID,RL._value=PD._pageName',
+				  tables = 'TournamentResults=TR,TournamentResults__RosterLinks=RL,_pageData=PD,Tournaments=T',
+				  join_on = 'TR._ID=RL._rowID,RL._value=PD._pageName,TR.OverviewPage=T._pageName',
 				  where = 'PD._pageName IS NULL AND RL._value IS NOT NULL AND TR.PRPoints > "0"',
-				  fields = 'RL._value=name',
+				  fields = 'RL._value=name,T.Region=res',
 				  group_by = 'RL._value',
 				  limit = 'max'
 				  )
@@ -24,31 +24,26 @@ for template in wikitext.filter_templates():
 		this_template.add('pronly','Yes')
 		break
 
-def get_residency(name):
-	print(name)
-	res_response = site.api('cargoquery',
-						tables='Tournaments=T,TournamentResults=TR,TournamentResults__RosterLinks=RL',
-						join_on='T._pageName=TR.OverviewPage,TR._ID=RL._rowID',
-						where='RL._value="%s"' % name,
-						fields='T.Region',
-						group_by='T.Region'
-						)
-	res_result = res_response['cargoquery']
-	if len(res_result) == 1:
-		return res_result[0]['title']['Region']
-	return ''
-
 lmt = 0
 for item in result['cargoquery']:
 	if lmt == limit:
 		break
 	lmt = lmt + 1
 	name = item['title']['name']
-	if site.pages[name].text() != '':
-		print('Page %s already exists, skipping' % name)
+	res = item['title']['res']
+	if name == '0':
 		continue
-	print('Processing page %s...' % name)
-	this_template.add('residency', get_residency(name))
-	this_template.add('id', name)
-	text = str(wikitext)
-	site.pages[name].save(text, summary=summary)
+	try:
+		page = site.pages[name]
+		if page.text() != '':
+			print('Page %s already exists, skipping' % name)
+			page.save(page.text())
+			continue
+		print('Processing page %s...' % name)
+		this_template.add('residency', res)
+		this_template.add('id', name)
+		text = str(wikitext)
+		page.save(text, summary=summary)
+	except Exception as e:
+		time.sleep(10)
+		site.pages['User:RheingoldRiver/auto players errors'].save(e)

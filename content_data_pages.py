@@ -27,7 +27,7 @@ navbox_text = """{{Navbox
 
 }}<noinclude>[[Category:Navboxes]]</noinclude>"""
 
-site = EsportsSite('bot', 'lol')  # Set wiki
+site = None
 
 lookup = {
 	"news" : { "template_prefix" : "NewsData",
@@ -135,6 +135,7 @@ def check_and_make_redirects(d, page_prefix, redirect_text):
 
 
 if __name__ == "__main__":
-	this = 'rumors'
-	make_templates(this)
-	make_data_pages(range(2015,2021), this, startat_page=None)
+	this = 'ec'
+	site = EsportsSite('bot', 'lol')  # Set wiki
+	# make_templates(this)
+	make_data_pages(range(2020,2021), this, startat_page=None)
