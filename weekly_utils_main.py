@@ -5,6 +5,7 @@ import weekly_utils as utils
 from esports_site import EsportsSite
 import scrape_runes, luacache_refresh
 from template_list import *
+from log_into_wiki import report_errors
 
 site = EsportsSite('me','lol')
 

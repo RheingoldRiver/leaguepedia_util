@@ -174,6 +174,12 @@ def process_template(template):
 	elif tl_matches(['RCPlayer', 'PlayerPronunciationFile'], field="player"):
 		template.add('player', new_name)
 
+	elif tl_matches(['PlayerRename'], field="original"):
+		template.add('original', new_name)
+		
+	elif tl_matches(['PlayerRename'], field="new"):
+		template.add('new', new_name)
+
 	elif tl_matches(["PortalCurrentRosters"]):
 		for pos in ['t', 'j', 'm', 'a', 's']:
 			for period in ['old', 'new']:

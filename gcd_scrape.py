@@ -13,8 +13,8 @@ ERRORS = []
 ERROR_REPORT_PAGE = 'User:RheingoldRiver/GCD Errors'
 
 def main():
-	# if int(now_localized().strftime('%H')) != 23:
-	# 	return
+	if int(now_localized().strftime('%H')) != 23:
+		return
 	site = login('me', 'lol', stg=False)
 	pages = get_pages_to_make()
 	for k in pages.keys():
@@ -44,14 +44,21 @@ def get_league_jsons():
 	league_jsons = {}
 	for i, league in enumerate(leagues):
 		if league != 'SKIP':
-			league_jsons[league] = get_league_array(i)
+			# i is 0-indexed key in leagues
+			# sheets is 1-indexed and the 1st one is just an info tab
+			try:
+				response = requests.get(GCD_URL.format(str(i + 2))).json()
+			except Exception as e:
+				ERRORS.append(str(e))
+				continue
+			league_jsons[get_league_name(response)] = get_league_array(response)
 	return league_jsons
 
-def get_league_array(i):
-	# i is 0-indexed key in leagues
-	# sheets is 1-indexed and the 1st one is just an info tab
-	response = requests.get(GCD_URL.format(str(i + 2)))
-	return entries_to_array(response.json()['feed']['entry'])
+def get_league_name(response):
+	return response['feed']['title']['$t']
+
+def get_league_array(response):
+	return entries_to_array(response['feed']['entry'])
 
 def entries_to_array(entries):
 	# entries is a 1-dimensional array of cells, 1-indexed

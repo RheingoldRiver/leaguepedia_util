@@ -23,11 +23,12 @@ def check_recent_revisions(site):
 						 )
 	titles = []
 	for log in revisions['query']['logevents']:
-		send_event(log['params']['custom-1'])
+		if 'custom-1' in log['params'].keys():
+			send_event(log['params']['custom-1'], log['params']['custom-2'])
 
-def send_event(text):
+def send_event(text, team):
 	embed = DiscordEmbed(
-		title="News RefreshOverview",
+		title=team if team and team.strip() != "" else "News RefreshOverview",
 		description=text
 	)
 	webhook.add_embed(embed)
