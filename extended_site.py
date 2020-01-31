@@ -25,9 +25,10 @@ class ExtendedSite(mwclient.Site):
 			pages.append(page)
 			yield(self.pages[page])
 
-	def recentchanges_by_interval(self, interval, offset=0, prop='title|ids', **kwargs):
+	def recentchanges_by_interval(self, minutes, offset=0,
+	                              prop='title|ids', **kwargs):
 		now = datetime.datetime.utcnow() - datetime.timedelta(minutes=offset)
-		then = now - datetime.timedelta(minutes=interval)
+		then = now - datetime.timedelta(minutes=minutes)
 		result = self.recentchanges(
 			start=now.isoformat(),
 			end=then.isoformat(),
@@ -36,6 +37,24 @@ class ExtendedSite(mwclient.Site):
 			**kwargs
 		)
 		return result
+	
+	def logs_by_interval(self, minutes, offset=0,
+	                     lelimit="max",
+	                     leprop='details|type|title', **kwargs):
+		now = datetime.datetime.utcnow() - datetime.timedelta(minutes=offset)
+		then = now - datetime.timedelta(minutes=minutes)
+		print(now)
+		print(then)
+		logs = self.api('query', format='json',
+		                    list='logevents',
+		                    # lestart=now.isoformat(),
+		                    leend=then.isoformat(),
+		                    leprop=leprop,
+		                    lelimit="max",
+	                        ledir='older',
+	                        **kwargs
+		                )
+		return logs['query']['logevents']
 
 	def patrol_recent(self, interval, f, **kwargs):
 		revisions = self.recentchanges_by_interval(interval, prop='title|ids|patrolled', **kwargs)

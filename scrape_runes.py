@@ -4,7 +4,7 @@ import requests
 
 
 def get_rune_dict():
-	with urllib.request.urlopen('http://ddragon.leagueoflegends.com/cdn/9.13.1/data/en_US/runesReforged.json') as url:
+	with urllib.request.urlopen('http://ddragon.leagueoflegends.com/cdn/10.1.1/data/en_US/runesReforged.json') as url:
 		data = json.loads(url.read().decode())
 	rune_dict = {
 		5008 : 'Adaptive Force',

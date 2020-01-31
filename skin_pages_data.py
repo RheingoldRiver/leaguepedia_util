@@ -11,9 +11,10 @@ lmt = 0
 
 def get_and_add_info_to_infobox(name, template):
 	champion = site.cargoquery(
-		tables="SkinImages",
-		fields="Champion",
-		where='Name=\"%s\"' % name
+		tables="SkinImages,Champions",
+		join_on="SkinImages.Champion=Champions.Name",
+		fields="Champions._pageName=Champion",
+		where='SkinImages.Name=\"%s\"' % name
 	)[0]['Champion']
 	data_page = site.pages['%s/Skins' % champion]
 	locate_old_template_and_add_data_to_new(name, template, data_page)

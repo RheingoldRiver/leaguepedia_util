@@ -9,20 +9,10 @@ with open('webhook_leona.txt') as f:
 
 webhook = DiscordWebhook(url=webhook_url)
 
-def check_recent_revisions(site):
-	then_time = datetime.datetime.utcnow() - datetime.timedelta(minutes=1)
-	then = then_time.isoformat()
-	now = datetime.datetime.utcnow().isoformat()
-	revisions = site.api('query', format='json',
-						 list='logevents',
-						 lestart=now,
-						 leend=then,
-						 leprop='details',
-						 leimit='max',
-						 ledir='older'
-						 )
-	titles = []
-	for log in revisions['query']['logevents']:
+def run(logs):
+	for log in logs['query']['logevents']:
+		if type != 'ro-news':
+			continue
 		if 'custom-1' in log['params'].keys():
 			send_event(log['params']['custom-1'], log['params']['custom-2'])
 
@@ -36,4 +26,4 @@ def send_event(text, team):
 
 if __name__ == '__main__':
 	site = login('me', 'lol')
-	check_recent_revisions(site)
+	run(site.recentchanges_by_interval(1))
