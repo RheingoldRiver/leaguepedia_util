@@ -2,7 +2,6 @@ from log_into_wiki import login
 
 def run(site, logs):
 	for log in logs:
-		print(log)
 		if 'action' not in log.keys() or log['action'] != 'move':
 			continue
 		old_page_name = log['title']
@@ -12,7 +11,6 @@ def run(site, logs):
 		new_page = site.pages[new_page_name]
 		new_page.touch()
 		new_page.touch()
-		print(old_page_name)
 		
 	
 if __name__ == '__main__':

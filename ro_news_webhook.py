@@ -10,8 +10,8 @@ with open('webhook_leona.txt') as f:
 webhook = DiscordWebhook(url=webhook_url)
 
 def run(logs):
-	for log in logs['query']['logevents']:
-		if type != 'ro-news':
+	for log in logs:
+		if log['type'] != 'ro-news':
 			continue
 		if 'custom-1' in log['params'].keys():
 			send_event(log['params']['custom-1'], log['params']['custom-2'])

@@ -43,8 +43,6 @@ class ExtendedSite(mwclient.Site):
 	                     leprop='details|type|title', **kwargs):
 		now = datetime.datetime.utcnow() - datetime.timedelta(minutes=offset)
 		then = now - datetime.timedelta(minutes=minutes)
-		print(now)
-		print(then)
 		logs = self.api('query', format='json',
 		                    list='logevents',
 		                    # lestart=now.isoformat(),
