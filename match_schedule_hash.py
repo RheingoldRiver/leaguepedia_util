@@ -76,26 +76,16 @@ def check_page(site, page_name):
 	if text != new_text:
 		hash_location.save(new_text)
 
-def check_recent_revisions(site):
-	then_time = datetime.datetime.utcnow() - datetime.timedelta(minutes=20)
-	then = then_time.isoformat()
-	now = datetime.datetime.utcnow().isoformat()
-	revisions = site.api('query', format='json',
-						 list='recentchanges',
-						 rcstart=now,
-						 rcend=then,
-						 rcprop='title',
-						 rclimit='max',
-						 # rctoponly=0, # commented bc we need all revisions to patrol user pages
-						 rcdir='older'
-						 )
-	titles = []
-	for revision in revisions['query']['recentchanges']:
-		if revision['title'].startswith('Data:'):
-			titles.append(revision['title'])
-	for title in titles:
-		check_page(site, title)
+def run(site, revs):
+	done = {}
+	for rev in revs:
+		title = rev['title']
+		if title in done:
+			continue
+		done[title] = True
+		if title.startswith('Data:'):
+			check_page(site, title)
 
 if __name__ == '__main__':
 	site = login('me', 'lol')
-	check_recent_revisions(site)
+	run(site, site.recentchanges_by_interval(200))

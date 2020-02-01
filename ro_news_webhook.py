@@ -9,7 +9,7 @@ with open('webhook_leona.txt') as f:
 
 webhook = DiscordWebhook(url=webhook_url)
 
-def run(logs):
+def run(site, logs):
 	for log in logs:
 		if log['type'] != 'ro-news':
 			continue
@@ -26,4 +26,4 @@ def send_event(text, team):
 
 if __name__ == '__main__':
 	site = login('me', 'lol')
-	run(site.recentchanges_by_interval(1))
+	run(site, site.recentchanges_by_interval(1))

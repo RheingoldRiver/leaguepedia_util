@@ -26,7 +26,8 @@ class ExtendedSite(mwclient.Site):
 			yield(self.pages[page])
 
 	def recentchanges_by_interval(self, minutes, offset=0,
-	                              prop='title|ids', **kwargs):
+	                              prop='title|ids|tags|user|patrolled'
+	                              , **kwargs):
 		now = datetime.datetime.utcnow() - datetime.timedelta(minutes=offset)
 		then = now - datetime.timedelta(minutes=minutes)
 		result = self.recentchanges(
@@ -37,6 +38,17 @@ class ExtendedSite(mwclient.Site):
 			**kwargs
 		)
 		return result
+	
+	def recent_titles_by_interval(self, *args, **kwargs):
+		revisions = self.recentchanges_by_interval(*args, **kwargs, toponly=0)
+		titles = [_['title'] for _ in revisions]
+		return titles
+	
+	def recent_pages_by_interval(self, *args, **kwargs):
+		revisions = self.recent_titles_by_interval(*args, **kwargs)
+		titles = [_['title'] for _ in revisions]
+		for title in titles:
+			yield self.pages[title]
 	
 	def logs_by_interval(self, minutes, offset=0,
 	                     lelimit="max",
@@ -53,14 +65,6 @@ class ExtendedSite(mwclient.Site):
 	                        **kwargs
 		                )
 		return logs['query']['logevents']
-
-	def patrol_recent(self, interval, f, **kwargs):
-		revisions = self.recentchanges_by_interval(interval, prop='title|ids|patrolled', **kwargs)
-		patrol_token = self.get_token('patrol')
-		for revision in revisions:
-			# revid == 0 if the page was deleted, so it can't be deleted
-			if f(revision) and revision['revid'] != 0 and 'unpatrolled' in revision:
-				self.api('patrol', revid = revision['revid'], token = patrol_token)
 
 class GamepediaSite(ExtendedSite):
 	def __init__(self, user, wiki, stg=False):

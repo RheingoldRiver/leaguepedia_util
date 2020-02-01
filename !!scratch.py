@@ -1,9 +1,5 @@
-import re, json, urllib.request, urllib.error, math, copy
+import log_into_wiki
 
-import requests
+site = log_into_wiki.login('me', 'lol')
 
-url = urllib.request.urlopen('http://ddragon.leagueoflegends.com/cdn/10.1.1/data/en_US/champion.json')
-
-data = json.loads(url.read().decode())
-for champ, champ_info in data['data'].items():
-	print(champ_info['name'], ', ', champ_info['key'])
+print(site.pages['Sami (Nicol\u00e1s Veliz)/Tournament Results'].text())
