@@ -2,6 +2,16 @@ from log_into_wiki import login
 
 
 class CronTasks(object):
+	"""Handles scheduling cron tasks that run based on sites' revisions and/or logs
+	
+	Initialize with number of minutes and set of wikis to create lists for, then
+	run the tasks that you want run with run_logs or run_revs.
+	Does NOT support running code that requires seeing both - in cases like that, separate
+	the functionality into 2 separate functions.
+	The set of wikis you run each individual task on will often be a subset of the total
+	set of wikis, so re-specify that for each function defined.
+	Use one file per interval because that's convenient for cron scheduling.
+	"""
 	def __init__(self, interval=1, wikis=None):
 		self.all_wikis = wikis
 		self.all_sites = {}
