@@ -1,56 +1,106 @@
-from extended_site import GamepediaSite
+from log_into_wiki import login
 from extended_page import ExtendedPage
-import mwclient
 
-site = GamepediaSite('me', 'lol')
+CREATE_TEXT = """{{{{{}TabsHeader}}}}
+{{{{{}YearStats}}}}"""
 
-create_text = """{{PlayerTabsHeader}}
-{{PlayerYearStats}}"""
+OVERVIEW_CREATE_TEXT = """{{{{{}TabsHeader}}}}
+{{{{Career{}Stats}}}}"""
 
-overview_create_text = """{{PlayerTabsHeader}}
-{{CareerPlayerStats}}"""
+MH_CREATE_TEXT = """{{{{{}TabsHeader}}}}
+{{{{MatchHistory{}}}}}"""
 
-mh_create_text = """{{PlayerTabsHeader}}
-{{MatchHistoryPlayer}}"""
+class StatsCreator(object):
+	def __init__(self, page_type):
+		self.site = login('bot', 'lol')
+		self.summary = "Automatically discovering & creating year player & team stats"
+		self.error_page = self.site.pages['Log:Failed Yearly Stats Pages']
+		self.errors = set()
+		self.create_text = CREATE_TEXT.format(page_type, page_type)
+		self.overview_create_text = OVERVIEW_CREATE_TEXT.format(page_type, page_type)
+		self.mh_create_text = MH_CREATE_TEXT.format(page_type, page_type)
+		self.redirect_text = '#redirect[[%s]]'
+	
+	def run(self):
+		results = self.get_page_list()
+		for result in results:
+			if result['StatsPage'].endswith('Statistics'):
+				self.report_error(result['OverviewPage'])
+				continue
+			stats_page = ExtendedPage(self.site.pages[result['StatsPage']])
+			if result['IsRedirect'] == '0':
+				self.save_pages(stats_page)
+				continue
+			target = self.site.pages[stats_page.base_title].redirects_to()
+			target_stats_page_name = stats_page.name.replace(stats_page.base_title, target.name)
+			target_stats_page = ExtendedPage(self.site.pages[target_stats_page_name])
+			self.save_pages(target_stats_page)
+			stats_page.save(self.redirect_text % target_stats_page.name)
+		self.log_all_errors()
+	
+	def get_page_list(self):
+		# pass, but we don't want it giving a warning in self.run()
+		return []
+	
+	def save_pages(self, page: ExtendedPage):
+		base_title = page.base_title
+		self.save_stats_year(page)
+		self.save_stats_overview(self.site.pages[base_title + '/Statistics'])
+		self.save_mh(self.site.pages[base_title + '/Match History'])
+	
+	def save_stats_overview(self, page):
+		if not page.exists:
+			page.save(self.overview_create_text, summary=self.summary)
+	
+	def save_mh(self, page):
+		if not page.exists:
+			page.save(self.mh_create_text, summary=self.summary)
+	
+	def save_stats_year(self, page):
+		page.save(self.create_text, summary=self.summary)
+	
+	def report_error(self, title):
+		self.errors.add(title)
+	
+	def log_all_errors(self):
+		if not self.errors:
+			return
+		self.error_page.append('\n' + '\n'.join(['[[%s]]' % _ for _ in list(self.errors)]), summary=self.summary)
+	
 
-redirect_text = '#redirect[[%s]]'
+class TeamStatsCreator(StatsCreator):
+	def __init__(self):
+		super().__init__('Team')
+	
+	def get_page_list(self):
+		results = self.site.cargoquery(
+			tables='ScoreboardTeam=ST,_pageData=PD1,_pageData=PD2',
+			join_on='ST.Team=PD1._pageName,ST.StatsPage=PD2._pageName',
+			where='PD1._pageName IS NOT NULL and PD2._pageName IS NULL and BINARY PD1._pageName=BINARY ST.Team',
+			fields="ST.StatsPage=StatsPage, PD1._isRedirect=IsRedirect,ST.OverviewPage=OverviewPage",
+			group_by="ST.StatsPage",
+			limit='max'
+		)
+		return results
+	
+	def save_stats_overview(self, page):
+		pass
 
-summary= "Automatically discovering & creating year player stats"
+class PlayerStatsCreator(StatsCreator):
+	def __init__(self):
+		super().__init__('Player')
+	
+	def get_page_list(self):
+		results = self.site.cargoquery(
+			tables='ScoreboardPlayer=SP,_pageData=PD1,_pageData=PD2',
+			join_on='SP.Link=PD1._pageName,SP.StatsPage=PD2._pageName',
+			where='PD1._pageName IS NOT NULL and PD2._pageName IS NULL and BINARY PD1._pageName=BINARY SP.Link',
+			fields="SP.StatsPage=StatsPage, PD1._isRedirect=IsRedirect,SP.OverviewPage=OverviewPage",
+			group_by="SP.StatsPage",
+			limit='max'
+		)
+		return results
 
-error_page = site.pages['Maintenance:Failed Yearly Stats Pages']
-errors = set()
-
-results = site.cargoquery(
-	tables='ScoreboardPlayer=SP,_pageData=PD1,_pageData=PD2',
-	join_on='SP.Link=PD1._pageName,SP.StatsPage=PD2._pageName',
-	where='PD1._pageName IS NOT NULL and PD2._pageName IS NULL and BINARY PD1._pageName=BINARY SP.Link',
-	fields="SP.StatsPage=StatsPage, PD1._isRedirect=IsRedirect,SP.OverviewPage=OverviewPage",
-	group_by= "SP.StatsPage",
-	limit='max'
-)
-
-def save_pages(page):
-	page.save(create_text, summary=summary)
-	base_stats_page = site.pages[page.base_title + '/Statistics']
-	if not base_stats_page.exists:
-		base_stats_page.save(overview_create_text, summary=summary)
-	mh_page = site.pages[page.base_title + '/Match History']
-	if not mh_page.exists:
-		mh_page.save(mh_create_text, summary=summary)
-
-for result in results:
-	if result['StatsPage'].endswith('Statistics'):
-		errors.add(result['OverviewPage'])
-		continue
-	stats_page = ExtendedPage(site.pages[result['StatsPage']])
-	if result['IsRedirect'] == '0':
-		save_pages(stats_page)
-		continue
-	target = site.pages[stats_page.base_title].redirects_to()
-	target_stats_page_name = stats_page.name.replace(stats_page.base_title, target.name)
-	target_stats_page = ExtendedPage(site.pages[target_stats_page_name])
-	save_pages(target_stats_page)
-	stats_page.save(redirect_text % target_stats_page.name)
-
-if errors:
-	error_page.save(error_page.text() + '\n' + '\n'.join(['[[%s]]' % _ for _ in list(errors)]), summary=summary)
+if __name__ == '__main__':
+	PlayerStatsCreator().run()
+	TeamStatsCreator().run()

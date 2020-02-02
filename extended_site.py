@@ -60,7 +60,7 @@ class ExtendedSite(mwclient.Site):
 		                    # lestart=now.isoformat(),
 		                    leend=then.isoformat(),
 		                    leprop=leprop,
-		                    lelimit="max",
+		                    lelimit=lelimit,
 	                        ledir='older',
 	                        **kwargs
 		                )
