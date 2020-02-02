@@ -1,7 +1,7 @@
 from log_into_wiki import login
 from extended_page import ExtendedPage
 
-CREATE_TEXT = """{{{{{}TabsHeader}}}}
+YEAR_CREATE_TEXT = """{{{{{}TabsHeader}}}}
 {{{{{}YearStats}}}}"""
 
 OVERVIEW_CREATE_TEXT = """{{{{{}TabsHeader}}}}
@@ -12,11 +12,11 @@ MH_CREATE_TEXT = """{{{{{}TabsHeader}}}}
 
 class StatsCreator(object):
 	def __init__(self, page_type):
-		self.site = login('bot', 'lol')
+		self.site = login('me', 'lol')
 		self.summary = "Automatically discovering & creating year player & team stats"
 		self.error_page = self.site.pages['Log:Failed Yearly Stats Pages']
 		self.errors = set()
-		self.create_text = CREATE_TEXT.format(page_type, page_type)
+		self.create_text = YEAR_CREATE_TEXT.format(page_type, page_type)
 		self.overview_create_text = OVERVIEW_CREATE_TEXT.format(page_type, page_type)
 		self.mh_create_text = MH_CREATE_TEXT.format(page_type, page_type)
 		self.redirect_text = '#redirect[[%s]]'
