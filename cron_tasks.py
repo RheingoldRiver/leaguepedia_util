@@ -1,4 +1,4 @@
-from log_into_wiki import login
+from esportswiki_editing import *
 
 
 class CronTasks(object):
@@ -36,8 +36,9 @@ class CronTasks(object):
 		if wikis is None:
 			return
 		for wiki in wikis:
+			site = self.all_sites[wiki]
 			try:
-				fn(self.all_sites[wiki], data[wiki], **kwargs)
+				fn(site, data[wiki], **kwargs)
 			except Exception as e:
-				print(e)
-				pass
+				site.error_script(error=e)
+			site.report_all_errors('Cron Errors (%s)' % fn.__module__)

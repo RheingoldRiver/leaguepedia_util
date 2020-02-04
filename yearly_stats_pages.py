@@ -1,4 +1,4 @@
-from log_into_wiki import login
+from esportswiki_editing import *
 from extended_page import ExtendedPage
 
 YEAR_CREATE_TEXT = """{{{{{}TabsHeader}}}}
@@ -14,8 +14,7 @@ class StatsCreator(object):
 	def __init__(self, page_type):
 		self.site = login('me', 'lol')
 		self.summary = "Automatically discovering & creating year player & team stats"
-		self.error_page = self.site.pages['Log:Failed Yearly Stats Pages']
-		self.errors = set()
+		self.error_page = 'Failed Yearly Stats Pages'
 		self.create_text = YEAR_CREATE_TEXT.format(page_type, page_type)
 		self.overview_create_text = OVERVIEW_CREATE_TEXT.format(page_type, page_type)
 		self.mh_create_text = MH_CREATE_TEXT.format(page_type, page_type)
@@ -25,7 +24,7 @@ class StatsCreator(object):
 		results = self.get_page_list()
 		for result in results:
 			if result['StatsPage'].endswith('Statistics'):
-				self.report_error(result['OverviewPage'])
+				self.site.error_content(title=result['OverviewPage'])
 				continue
 			stats_page = ExtendedPage(self.site.pages[result['StatsPage']])
 			if result['IsRedirect'] == '0':
@@ -36,7 +35,7 @@ class StatsCreator(object):
 			target_stats_page = ExtendedPage(self.site.pages[target_stats_page_name])
 			self.save_pages(target_stats_page)
 			stats_page.save(self.redirect_text % target_stats_page.name)
-		self.log_all_errors()
+		self.site.report_all_errors(self.error_page)
 	
 	def get_page_list(self):
 		# pass, but we don't want it giving a warning in self.run()
@@ -58,14 +57,6 @@ class StatsCreator(object):
 	
 	def save_stats_year(self, page):
 		page.save(self.create_text, summary=self.summary)
-	
-	def report_error(self, title):
-		self.errors.add(title)
-	
-	def log_all_errors(self):
-		if not self.errors:
-			return
-		self.error_page.append('\n' + '\n'.join(['[[%s]]' % _ for _ in list(self.errors)]), summary=self.summary)
 	
 
 class TeamStatsCreator(StatsCreator):

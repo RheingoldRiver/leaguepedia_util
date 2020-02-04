@@ -52,7 +52,7 @@ class ExtendedSite(mwclient.Site):
 	
 	def logs_by_interval(self, minutes, offset=0,
 	                     lelimit="max",
-	                     leprop='details|type|title', **kwargs):
+	                     leprop='details|type|title|tags', **kwargs):
 		now = datetime.datetime.utcnow() - datetime.timedelta(minutes=offset)
 		then = now - datetime.timedelta(minutes=minutes)
 		logs = self.api('query', format='json',

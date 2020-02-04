@@ -20,43 +20,6 @@ def report_errors(report_page, page, errors):
 	newtext = text + '\n==Python Error Report==\nPage: [[{}]] Messages:\n* {}'.format(page, error_text)
 	report_page.save(newtext)
 
-def api_parse_query(site, datatype, values):
-	query_text = '{{#invoke:PrintParsedText|unordered|type=' + datatype + '|' + '|'.join(values) + '}}'
-	query_result = site.api(
-		'parse',
-		format='json',
-		text=query_text,
-		prop='text',
-		disablelimitreport=1,
-		wrapoutputclass=''
-	)
-	result = query_result['parse']['text']['*']
-	result = result.replace('<p>', '').replace('\n</p>', '')
-	result_tbl = result.split(',')
-	return result_tbl
-
-def parse_ordered_field(val, sep):
-	if not sep:
-		sep = ','
-	tbl = re.split('\s*' + sep + '\s*' + '\s*', val)
-	return tbl
-
-def check_links(template, key1, key2, sep, name, link):
-	if not sep:
-		sep = ','
-	if template.has(key1):
-		val1 = template.get(key1).value.strip()
-		tbl1 = parse_ordered_field(val1, sep)
-		tbl2 = ['' for _ in range(len(tbl1))] # list(range(len(tbl1)))
-		if template.has(key2):
-			val2 = template.get(key2).value.strip()
-			tbl2 = parse_ordered_field(val2, sep)
-		if name in tbl1:
-			i = tbl1.index(name)
-			tbl2[i] = link
-			template.add(key2,sep.join(tbl2), before=key1)
-			template.add(key1, val1, before=key2)
-
 def get_filename_url_to_open(site, filename, size=None):
 	pattern = r'.*src\=\"(.+?)\".*'
 	size = '|' + str(size) + 'px' if size else ''

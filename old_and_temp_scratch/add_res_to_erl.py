@@ -21,6 +21,21 @@ except ValueError as e:
 	startat = -1
 print(startat)
 
+def api_parse_query(site, datatype, values):
+	query_text = '{{#invoke:PrintParsedText|unordered|type=' + datatype + '|' + '|'.join(values) + '}}'
+	query_result = site.api(
+		'parse',
+		format='json',
+		text=query_text,
+		prop='text',
+		disablelimitreport=1,
+		wrapoutputclass=''
+	)
+	result = query_result['parse']['text']['*']
+	result = result.replace('<p>', '').replace('\n</p>', '')
+	result_tbl = result.split(',')
+	return result_tbl
+
 lmt = 0
 for page in pages_var:
 	if lmt == limit:

@@ -18,7 +18,7 @@ def main():
 	site = login('me', 'lol', stg=False)
 	pages = get_pages_to_make()
 	for k in pages.keys():
-		print(k)
+		# print(k)
 		try:
 			site.pages[k].save(pages[k], summary="Automatic GCD Backup")
 		except Exception as e:

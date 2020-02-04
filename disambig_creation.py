@@ -110,6 +110,27 @@ def check_list(template, param, sep = ','):
 	if made_changes:
 		template.add(param, sep.join(tbl))
 
+def parse_ordered_field(val, sep):
+	if not sep:
+		sep = ','
+	tbl = re.split('\s*' + sep + '\s*' + '\s*', val)
+	return tbl
+
+def check_links(template, key1, key2, sep, name, link):
+	if not sep:
+		sep = ','
+	if template.has(key1):
+		val1 = template.get(key1).value.strip()
+		tbl1 = parse_ordered_field(val1, sep)
+		tbl2 = ['' for _ in range(len(tbl1))] # list(range(len(tbl1)))
+		if template.has(key2):
+			val2 = template.get(key2).value.strip()
+			tbl2 = parse_ordered_field(val2, sep)
+		if name in tbl1:
+			i = tbl1.index(name)
+			tbl2[i] = link
+			template.add(key2,sep.join(tbl2), before=key1)
+			template.add(key1, val1, before=key2)
 
 def process_template(template):
 	def tl_matches(arr, field=None):
