@@ -42,7 +42,7 @@ social_fr = [
 	{ "field" : "instagram", "find" : r'/$', "replace" : r'' },
 	{ "field" : "facebook", "find" : r'\[?(?:https?://)?(.*)/([^ \n]+).*', "replace" : r'https://\1/\2' },
 	{ "field" : "facebook", "find" : r'/$', "replace" : r'' },
-	{ "field" : "youtube", "find" : r'\[?(?:https?://)?([^ \n]*)(.*\])?', "replace" : r'https://\1' },
+	{ "field" : "youtube", "find" : r'\[?(?:https?://)?([^ \n]+)(.*\])?', "replace" : r'https://\1' },
 	{ "field" : "website", "find" : r'\[?([^ \n]*)(.*\])?', "replace" : r'\1' },
 	{ "field" : "vk", "find": r'(?:\[?https?://)?(?:www\.)?(?:vk\.com/)?([^/ \n]+)(.*\])?', "replace": r'https://vk.com/\1'},
 	{ "field" : "vk", "find" : r'/$', "replace" : r'' },
@@ -54,12 +54,14 @@ def fixSocialField(template, item):
 		val_old = template.get(field).value.strip()
 		if val_old != '':
 			val_arr = re.split(r'(<!--|-->)', val_old)
-			val_arr[0] = re.sub(item['find'], item['replace'], val_arr[0])
-			val_new = ''.join(val_arr)
-			if val_old != val_new:
-				print('old: ', val_old)
-				print('new: ', val_new)
-			# template.add(field, val_new)
+			# This was added as a fix because youtube was adding random https:// at the end of everything
+			# Maybe space and \n isn't sufficient whitespace to require a match actually be there
+			# But it seems to work now
+			# (the error was a python 3.5 -> 3.8 change, re was updated in 3.7, probably caused this)
+			if val_arr[0].strip() != '':
+				val_arr[0] = re.sub(item['find'], item['replace'], val_arr[0])
+				val_new = ''.join(val_arr)
+				template.add(field, val_new)
 			
 def fixInfoboxPlayer(template):
 	for item in social_fr:
