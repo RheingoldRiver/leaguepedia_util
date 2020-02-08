@@ -1,4 +1,4 @@
-from log_into_wiki import login
+from esportswiki_editing import *
 
 def run(site, revs):
 	error_page = site.pages['Log:Prediction Reports']

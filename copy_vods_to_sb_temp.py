@@ -1,7 +1,7 @@
-from extended_site import GamepediaSite
+from esportswiki_editing import *
 import mwparserfromhell, re
 
-site = GamepediaSite('me', 'lol')  # Set wiki
+site = login('me', 'lol')  # Set wiki
 summary = 'Discover & auto-add vods to SB'  # Set summary
 
 vod_params = ['vodpb', 'vodstart', 'vod']

@@ -1,10 +1,16 @@
 import re, json, urllib.request, urllib.error, math, copy
-
+from esportswiki_editing import *
 import requests
 
+def get_patch():
+	with urllib.request.urlopen('http://ddragon.leagueoflegends.com/api/versions.json') as url:
+		data = json.loads(url.read().decode())
+		return data[0]
 
-def get_rune_dict():
-	with urllib.request.urlopen('http://ddragon.leagueoflegends.com/cdn/10.1.1/data/en_US/runesReforged.json') as url:
+
+def get_rune_dict(site):
+	patch = get_patch()
+	with urllib.request.urlopen('http://ddragon.leagueoflegends.com/cdn/{}/data/en_US/runesReforged.json'.format(patch)) as url:
 		data = json.loads(url.read().decode())
 	rune_dict = {
 		5008 : 'Adaptive Force',
@@ -28,9 +34,10 @@ def get_rune_dict():
 				rune_dict['trees'][int(rune['id'])] = tree['key']
 	return rune_dict
 
-def get_champ_dict():
+def get_champ_dict(site):
+	patch = get_patch()
 	champ_dict = {}
-	with urllib.request.urlopen('http://ddragon.leagueoflegends.com/cdn/9.10.1/data/en_US/champion.json') as url:
+	with urllib.request.urlopen('http://ddragon.leagueoflegends.com/cdn/{}/data/en_US/champion.json'.format(patch)) as url:
 		champ_list = json.loads(url.read().decode())
 	for champ in champ_list['data']:
 		n = int(champ_list['data'][champ]['key'])
@@ -58,8 +65,8 @@ def scrape(site, events, force):
 	player_data_keys = ["perkPrimaryStyle", "perkSubStyle", "perk0", "perk1", "perk2", "perk3", "perk4", "perk5",
 						 "statPerk0", "statPerk1", "statPerk2"]
 	player_positions = ['Top','Jungle','Mid','ADC','Support']
-	rune_dict = get_rune_dict()
-	champ_dict = get_champ_dict()
+	rune_dict = get_rune_dict(site)
+	champ_dict = get_champ_dict(site)
 	print(events)
 	with open('mh_riot_endpoint.txt') as f:
 		mh_riot_endpoint = f.read().strip()
@@ -119,8 +126,11 @@ def scrape(site, events, force):
 						patch = str(patch_tbl[0] + '.' + patch_tbl[1])
 						for j in range(0,10):
 							player_name = game['participantIdentities'][j]['player']['summonerName']
-							player_team = re.match('^(.+?) (.*)', player_name)[1]
-							player_name = re.match('^(.+?) (.*)', player_name)[2]
+							try:
+								player_team = re.match('^(.+?) (.*)', player_name)[1]
+								player_name = re.match('^(.+?) (.*)', player_name)[2]
+							except Exception as e:
+								player_team = ''
 							player_champion_n = game['participants'][j]['championId']
 							player_champion = champ_dict[player_champion_n] if player_champion_n in champ_dict else str(player_champion_n)
 							player_position = player_positions[j % 5]
@@ -174,8 +184,8 @@ def get_this_teamname(teamnames, team_keys, j):
 
 def scrapeLPL(site, events, force):
 	player_positions = ['Top', 'Jungle', 'Mid', 'ADC', 'Support']
-	rune_dict = get_rune_dict()
-	champ_dict = get_champ_dict()
+	rune_dict = get_rune_dict(site)
+	champ_dict = get_champ_dict(site)
 	please_escape = False
 	with open('mh_qq_endpoint.txt') as f:
 		mh_qq_endpoint = f.readlines()
@@ -335,3 +345,11 @@ def scrapeLPL(site, events, force):
 			if error_text != '':
 				error_page = site.pages['User:RheingoldRiver/Rune Errors']
 				error_page.save(error_text, summary='Reporting a Rune Error')
+
+if __name__ == '__main__':
+	site = login('me', 'lol')
+	
+	pages = ['Data:Nordic Championship/2020 Season/Spring Season']
+	
+	scrape(site, pages, False)
+	# scrapeLPL(site, pages, False)
