@@ -53,10 +53,11 @@ def fixSocialField(template, item):
 	if template.has(field):
 		val_old = template.get(field).value.strip()
 		if val_old != '':
-			val_arr = re.split(r'(<!--|-->)', val_old)
-			val_arr[0] = re.sub(item['find'], item['replace'], val_arr[0])
-			val_new = ''.join(val_arr)
-			template.add(field, val_new)
+			print(val_old)
+			# val_arr = re.split(r'(<!--|-->)', val_old)
+			# val_arr[0] = re.sub(item['find'], item['replace'], val_arr[0])
+			# val_new = ''.join(val_arr)
+			# template.add(field, val_new)
 			
 def fixInfoboxPlayer(template):
 	for item in social_fr:
