@@ -5,7 +5,7 @@ import patrol_namespaces as patrol
 
 if __name__ == '__main__':
 	tasks = CronTasks(
-		interval=100,
+		interval=1,
 		wikis=['lol', 'cod-esports']
 	)
 	tasks.run_logs(ro_news.run, ['lol'])
