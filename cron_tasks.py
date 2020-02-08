@@ -37,8 +37,8 @@ class CronTasks(object):
 			return
 		for wiki in wikis:
 			site = self.all_sites[wiki]
-			# try:
-			fn(site, data[wiki], **kwargs)
-			# except Exception as e:
-			# 	site.error_script(error=e)
+			try:
+				fn(site, data[wiki], **kwargs)
+			except Exception as e:
+				site.error_script(error=e)
 			site.report_all_errors('Cron Errors (%s)' % fn.__module__)
