@@ -3,10 +3,10 @@ from log_into_wiki import *
 
 #################################################################################################
 
-original_name = 'Duke'
-irl_name = "Lee Ho-seong"
+original_name = 'Emperor'
+irl_name = "Emperor (Kim Jin-hyun)"
 new_name = '{} ({})'.format(original_name, irl_name.strip())
-init_move = True
+init_move = False
 blank_edit = False
 limit = -1
 timeout_limit = 30
