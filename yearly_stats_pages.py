@@ -1,4 +1,4 @@
-from esportswiki_editing import *
+from river_mwclient import *
 from extended_page import ExtendedPage
 
 YEAR_CREATE_TEXT = """{{{{{}TabsHeader}}}}

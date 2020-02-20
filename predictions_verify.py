@@ -1,4 +1,4 @@
-from esportswiki_editing import *
+from river_mwclient import *
 
 def run(site, revs):
 	error_page = site.pages['Log:Prediction Reports']

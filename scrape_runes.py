@@ -1,5 +1,5 @@
 import re, json, urllib.request, urllib.error, math, copy
-from esportswiki_editing import *
+from river_mwclient import *
 import requests
 
 def get_patch():

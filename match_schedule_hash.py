@@ -1,5 +1,5 @@
 import mwparserfromhell
-from esportswiki_editing import *
+from river_mwclient import *
 
 ERROR_LOCATION = 'MatchSchedule Ordering Errors'
 ERROR_TEAMS_TEXT = 'Team 1 - {}; Team 2: {}'

@@ -1,4 +1,4 @@
-from esportswiki_editing import *
+from river_mwclient import *
 
 
 class CronTasks(object):

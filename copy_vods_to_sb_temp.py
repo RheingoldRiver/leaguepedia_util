@@ -1,4 +1,4 @@
-from esportswiki_editing import *
+from river_mwclient import *
 import mwparserfromhell, re
 
 site = login('me', 'lol')  # Set wiki
