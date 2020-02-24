@@ -1,11 +1,11 @@
-from esports_site import EsportsSite
+from river_mwclient.esports_site import EsportsSite
 
-archive = EsportsSite('me', 'lol-archive')
-live = EsportsSite('me', 'lol')
+archive = EsportsSite('lol-archive', user_file="me") # Set wiki
+live = EsportsSite('lol', user_file="me") # Set wiki
 
 pages = []
 
-for page in archive.allpages(namespace=0):
+for page in archive.client.allpages(namespace=0):
 	pages.append((page.name, live.pages[page.name].exists))
 
 text = []

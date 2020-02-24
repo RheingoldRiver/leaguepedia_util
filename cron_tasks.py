@@ -1,4 +1,4 @@
-from river_mwclient import *
+from river_mwclient.esports_site import EsportsSite
 
 
 class CronTasks(object):
@@ -18,10 +18,10 @@ class CronTasks(object):
 		self.all_revs = {}
 		self.all_logs = {}
 		for wiki in self.all_wikis:
-			site = login('me', wiki)
-			revs_gen = site.recentchanges_by_interval(interval)
+			site = EsportsSite('lol', user_file="me")  # Set wiki
+			revs_gen = site.client.recentchanges_by_interval(interval)
 			revs = [_ for _ in revs_gen]
-			logs = site.logs_by_interval(interval)
+			logs = site.client.logs_by_interval(interval)
 			self.all_sites[wiki] = site
 			self.all_revs[wiki] = revs
 			self.all_logs[wiki] = logs
@@ -40,5 +40,5 @@ class CronTasks(object):
 			try:
 				fn(site, data[wiki], **kwargs)
 			except Exception as e:
-				site.error_script(error=e)
-			site.report_all_errors('Cron Errors (%s)' % fn.__module__)
+				site.client.error_script(error=e)
+			site.client.report_all_errors('Cron Errors (%s)' % fn.__module__)

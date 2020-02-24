@@ -1,14 +1,14 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 limit = -1
 #startat_page = 'Donut'
 template = 'Infobox Player'
 form = 'Infobox Player'
 
-site = login('bot','lol')
+site = EsportsSite('lol', user_file="me") # Set wiki
 
 ########################################
 
-result = site.api('query', format='json',
+result = site.client.api('query', format='json',
 				  list='embeddedin',
 				  eititle='Template:' + template,
 				  einamespace = '0',
@@ -38,7 +38,7 @@ for page in pages:
 		pass
 	else:
 		try:
-			site.api('pfautoedit', format='json',
+			site.client.api('pfautoedit', format='json',
 					 form = form,
 					 target = page
 					 )

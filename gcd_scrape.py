@@ -1,5 +1,5 @@
 import requests, datetime, pytz, time
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 
 GCD_URL = "https://spreadsheets.google.com/feeds/cells/1Y7k5kQ2AegbuyiGwEPsa62e883FYVtHqr6UVut9RC4o/{}/public/values?alt=json"
 
@@ -15,19 +15,19 @@ ERROR_REPORT_PAGE = 'User:RheingoldRiver/GCD Errors'
 def main():
 	if int(now_localized().strftime('%H')) != 23:
 		return
-	site = login('me', 'lol', stg=False)
+	site = EsportsSite('lol', user_file="me")  # Set wiki
 	pages = get_pages_to_make()
 	for k in pages.keys():
 		# print(k)
 		try:
-			site.pages[k].save(pages[k], summary="Automatic GCD Backup")
+			site.client.pages[k].save(pages[k], summary="Automatic GCD Backup")
 		except Exception as e:
 			ERRORS.append(str(e))
 	
 	if len(ERRORS) > 0:
 		# for sure wait out any rate limiting
 		time.sleep(30)
-		site.pages[ERROR_REPORT_PAGE].save('<br>'.join(ERRORS))
+		site.client.pages[ERROR_REPORT_PAGE].save('<br>'.join(ERRORS))
 
 def get_pages_to_make():
 	league_dict = get_league_jsons()

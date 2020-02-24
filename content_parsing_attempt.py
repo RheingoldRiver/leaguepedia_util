@@ -1,7 +1,7 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 import mwparserfromhell, re
 
-site = login('bot', 'lol')  # Set wiki
+site = EsportsSite('lol', user_file="bot") # Set wiki
 summary = 'Attempting to parse old content as templates'  # Set summary
 
 page_type = 'players' # tournament, players, teams
@@ -29,7 +29,7 @@ translator = r"^\* ?" + months + date + r"\[(.+?) ([^\]]*)\]" + attrib_sep + '(t
 passed_startat = False if startat_page else True
 lmt = 0
 
-pages = site.pages['Template:ExternalContent/Line'].embeddedin(namespace=0)
+pages = site.client.pages['Template:ExternalContent/Line'].embeddedin(namespace=0)
 
 def process_line(line):
 	match = re.match(regex, line)
@@ -98,7 +98,7 @@ for page in pages:
 	for template in wikitext.filter_templates(recursive=False):
 		if template.name.matches('Infobox ' + template_by_type[page_type]):
 			is_right_type = True
-		if tl_matches(template, ['TD','TDRight','TabsDynamic', 'TDR']) and is_right_type:
+		if template.name.matches(['TD','TDRight','TabsDynamic', 'TDR']) and is_right_type:
 			i = 1
 			while template.has('content' + str(i)):
 				content = template.get('content' + str(i)).value.strip()

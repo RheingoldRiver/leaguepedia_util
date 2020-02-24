@@ -4,9 +4,6 @@ from esports_site import EsportsSite
 from PIL import Image, ImageFile
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
-def login(user, wiki, timeout = 30, **kwargs):
-		return EsportsSite(user, wiki, **kwargs)
-
 def log_into_fandom(user, wiki):
 	if user == 'me':
 		password = open('password_fandom.txt').read().strip()
@@ -36,6 +33,3 @@ def open_file_url(url):
 def open_image_from_filename(site, filename, size=None):
 	url = get_filename_url_to_open(site, filename, size=size)
 	return open_file_url(url)
-
-def tl_matches(tl, arr):
-	return [_ for _ in arr if tl.name.matches(_)]

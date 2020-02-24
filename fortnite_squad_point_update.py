@@ -1,4 +1,4 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 import mwparserfromhell
 from mwclient.page import Page
 
@@ -6,7 +6,7 @@ PLAYERS_PER_SQUAD = 4
 CURRENT_YEAR = 2020
 CURRENT_YEAR_STR = str(CURRENT_YEAR)
 
-site = login('me', 'fortnite-esports')  # Set wiki
+site = EsportsSite('fortnite', user_file="me") # Set wiki
 summary = 'Automatic Squad Update'  # Set summary
 
 def run():
@@ -16,7 +16,7 @@ def run():
 		update_and_save(page, lookup)
 
 def get_pages():
-	this_template = site.pages['Template:Listplayer/Current']  # Set template
+	this_template = site.client.pages['Template:Listplayer/Current']  # Set template
 	return this_template.embeddedin(namespace=0)
 
 def get_player_squads(page:Page):
@@ -44,7 +44,7 @@ def get_player_squads(page:Page):
 	# print(','.join(table_list))
 	# print(','.join(join_list))
 	# print(' AND '.join(['(%s)' % _ for _ in where]))
-	result = site.cargoquery(
+	result = site.cargo_client.cargoquery(
 		tables=','.join(table_list),
 		join_on = ','.join(join_list),
 		group_by = 'PR._pageName',
@@ -68,7 +68,7 @@ def update_and_save(page, lookup):
 	text = page.text()
 	wikitext = mwparserfromhell.parse(text)
 	for template in wikitext.filter_templates():
-		if tl_matches(template, ['Listplayer/Current']):
+		if template.name.matches(['Listplayer/Current']):
 			player = template.get('1').value.strip()
 			if player not in lookup:
 				template.add('squad', '')

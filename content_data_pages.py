@@ -1,4 +1,4 @@
-from esports_site import EsportsSite
+from river_mwclient.esports_site import EsportsSite
 from datetime import date, timedelta
 import mwparserfromhell
 
@@ -27,7 +27,7 @@ navbox_text = """{{Navbox
 
 }}<noinclude>[[Category:Navboxes]]</noinclude>"""
 
-site = None
+site: EsportsSite = None
 
 lookup = {
 	"news" : { "template_prefix" : "NewsData",
@@ -66,7 +66,7 @@ def make_data_pages(years, this, startat_page = None):
 	navbox_template = lookup[this]["navbox_template"]
 	summary = 'Initializing %s Pages' % template_prefix  # Set summary
 	for year in years:
-		site.pages['Data:{}/{}'.format(data_prefix, year)].save('{{%sOverview}}' % template_prefix, summary=summary)
+		site.client.pages['Data:{}/{}'.format(data_prefix, year)].save('{{%sOverview}}' % template_prefix, summary=summary)
 		year_switch = '|' + str(year) + '='
 		list_of_sundays = [year_switch]
 		for d in allsundays(year):
@@ -118,11 +118,11 @@ def make_templates(this):
 	navbox_template = lookup[this]["navbox_template"]
 	data_prefix = lookup[this]["data_prefix"]
 	summary = 'Initializing %s Pages' % template_prefix  # Set summary
-	site.pages['Template:%sOverview' % template_prefix].save(overview_text % navbox_template, summary=summary)
-	site.pages['Template:%s/End' % template_prefix].save(end_text % template_prefix, summary=summary)
-	site.pages['Template:%s/Date' % template_prefix].save(date_text % template_prefix, summary=summary)
-	site.pages['Template:%s Navbox' % navbox_template].save(navbox_text % data_prefix, summary=summary)
-	site.pages['Template:%s/Start' % template_prefix].save(start_text % template_prefix, summary=summary)
+	site.client.pages['Template:%sOverview' % template_prefix].save(overview_text % navbox_template, summary=summary)
+	site.client.pages['Template:%s/End' % template_prefix].save(end_text % template_prefix, summary=summary)
+	site.client.pages['Template:%s/Date' % template_prefix].save(date_text % template_prefix, summary=summary)
+	site.client.pages['Template:%s Navbox' % navbox_template].save(navbox_text % data_prefix, summary=summary)
+	site.client.pages['Template:%s/Start' % template_prefix].save(start_text % template_prefix, summary=summary)
 
 def check_and_make_redirects(d, page_prefix, redirect_text):
 	weekday_index = d
@@ -131,11 +131,11 @@ def check_and_make_redirects(d, page_prefix, redirect_text):
 		y = weekday_index.year
 		m = '{:02d}'.format(weekday_index.month)
 		day = '{:02d}'.format(weekday_index.day)
-		site.pages[page_prefix + '{}-{}-{}'.format(y, m, day)].save(redirect_text)
+		site.client.pages[page_prefix + '{}-{}-{}'.format(y, m, day)].save(redirect_text)
 
 
 if __name__ == "__main__":
-	this = 'ec'
-	site = EsportsSite('bot', 'lol')  # Set wiki
-	# make_templates(this)
-	make_data_pages(range(2020,2021), this, startat_page=None)
+	this = 'news'
+	site = EsportsSite('splatoon2-esports', user_file='bot')  # Set wiki
+	make_templates(this)
+	make_data_pages(range(20020,2021), this, startat_page=None)

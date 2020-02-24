@@ -1,13 +1,14 @@
-import log_into_wiki, re, mwparserfromhell
+import re, mwparserfromhell
+from river_mwclient.esports_site import EsportsSite
 
 interval = 180
 
 pattern_add = r'Hook.add\([\'"](\w+).*\)'
 pattern_run = r'Hook.run\([\'"](\w+).*\)'
 
-site = log_into_wiki.login('me', 'lol')
+site = EsportsSite('lol', user_file="me") # Set wiki
 
-revisions = site.recentchanges_by_interval(interval, toponly=1)
+revisions = site.client.recentchanges_by_interval(interval, toponly=1)
 
 def add_missing_params(template, params_to_add):
 	n = 0
@@ -19,7 +20,7 @@ def add_missing_params(template, params_to_add):
 	for param in params_to_add:
 		template.add(n + 1, param)
 	params_to_add.clear()
-		
+	
 
 def add_new_template(text, template_name, params):
 	if not len(params):
@@ -37,8 +38,8 @@ for revision in revisions:
 	title = revision['title'].replace('/doc', '')
 	if not title.startswith('Module:'):
 		continue
-	module = site.pages[title]
-	doc = site.pages[title + '/doc']
+	module = site.client.pages[title]
+	doc = site.client.pages[title + '/doc']
 	text = module.text()
 	added = set()
 	run = set()

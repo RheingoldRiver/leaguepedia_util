@@ -1,6 +1,6 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 limit = -1
-site = login('me','lol')
+site = EsportsSite('lol', user_file="me") # Set wiki
 
 with open('pages.txt', encoding="utf-8") as f:
 	tournaments = f.readlines()
@@ -8,7 +8,7 @@ with open('pages.txt', encoding="utf-8") as f:
 pages = set()
 
 for tournament in tournaments:
-	response = site.api('cargoquery',
+	response = site.client.api('cargoquery',
 		tables = 'ScoreboardPlayer',
 		where = 'OverviewPage="%s"' % tournament.strip().replace('_', ' '),
 		fields = 'Link',
@@ -21,7 +21,7 @@ lmt = 0
 for page in pages:
 	if lmt == limit:
 		break
-	p = site.pages[page]
+	p = site.client.pages[page]
 	lmt += 1
 	print(p.name)
 	text = p.text()

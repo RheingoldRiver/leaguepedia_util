@@ -1,5 +1,6 @@
 import urllib.request, time, sprite_creator, io, os
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
+import re
 
 SUFFIX = ''
 SPRITE_NAME = 'Champion'
@@ -8,17 +9,17 @@ TEAM_DATA_FILE_LOCATION = SPRITE_NAME + 'Sprite' + SUFFIX + '.txt'
 limit = -1
 startat = None
 
-site = login('me', 'commons-esports')
-site_lol = login('me', 'lol')
+site = EsportsSite('commons', user_file="me") # Set wiki
+site_lol = EsportsSite('lol', user_file="me") # Set wiki
 
 def get_country_name(file_name):
 	return file_name.replace('Square', '').replace('.png', '').replace('File:', '')
 
 pattern = r'.*src\=\"(.+?)\".*'
-cat = site_lol.categories['Champions']
+cat = site_lol.client.categories['Champions']
 for page in cat:
 	to_parse_text = '[[File:%sSquare.png|link=]]' % page.name
-	result = site_lol.api('parse', title = 'Main Page', text = to_parse_text, disablelimitreport = 1)
+	result = site_lol.client.api('parse', title = 'Main Page', text = to_parse_text, disablelimitreport = 1)
 	parse_result_text = result['parse']['text']['*']
 	url = re.match(pattern, parse_result_text)[1]
 	image = urllib.request.urlopen(url).read()

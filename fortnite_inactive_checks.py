@@ -1,8 +1,8 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 import mwparserfromhell, datetime
 limit = -1
 
-site = login('bot', 'fortnite-esports')
+site = EsportsSite('fortnite', user_file="bot") # Set wiki
 summary = 'Automatically setting active/inactive status'
 
 def change_active_status(result, status):
@@ -19,7 +19,7 @@ def change_active_status(result, status):
 now = datetime.datetime.now()
 then = now - datetime.timedelta(days=6*28)
 
-result = site.cargo_pagelist(
+result = site.cargo_client.page_list(
                   tables='Tournaments=T,TournamentResults=Res, TournamentResults__RosterLinks=RL,PlayerRedirects=PR,Players=P',
                   join_on = 'T._pageName=Res.OverviewPage,Res._ID=RL._rowID,RL._value=PR.AllName,PR._pageName=P._pageName',
                   where = 'P.IsInactive="1"',
@@ -29,7 +29,7 @@ result = site.cargo_pagelist(
 
 change_active_status(result, 'No')
 
-result = site.cargo_pagelist(
+result = site.cargo_client.page_list(
                   tables='Tournaments=T,TournamentResults=Res, TournamentResults__RosterLinks=RL,PlayerRedirects=PR,Players=P',
                   join_on = 'T._pageName=Res.OverviewPage,Res._ID=RL._rowID,RL._value=PR.AllName,PR._pageName=P._pageName',
                   where = 'P.IsInactive IS NULL OR P.IsInactive="0"',

@@ -1,8 +1,9 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 import mwparserfromhell, datetime
+import re
 from dateutil import parser
 
-site = login('bot', 'lol')  # Set wiki
+site = EsportsSite('lol', user_file="me") # Set wiki
 summary = 'Attempting to migrate content to data ns'  # Set summary
 
 page_type = 'players' # players or teams
@@ -26,7 +27,7 @@ months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'Septe
 # site.pages["Wraith"]
 # ]
 
-pages = site.pages['Template:ExternalContent/Line'].embeddedin(namespace=0)
+pages = site.client.pages['Template:ExternalContent/Line'].embeddedin(namespace=0)
 
 def add_player_to_line(data_tl, name):
 	if not data_tl.has(page_type):
@@ -71,7 +72,7 @@ for page in pages:
 	for template in wikitext.filter_templates(recursive=False):
 		if template.name.matches('Infobox ' + template_types[page_type]):
 			is_right_type = True
-		if tl_matches(template, tabs_templates) and is_right_type:
+		if template.name.matches(tabs_templates) and is_right_type:
 			i = 1
 			while template.has('name' + str(i)) and template.has('content' + str(i)):
 				param_text = template.get('content' + str(i)).value.strip()

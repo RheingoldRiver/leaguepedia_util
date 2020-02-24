@@ -1,6 +1,6 @@
-from log_into_wiki import login
+from river_mwclient.esports_site import EsportsSite
 
-def run(site, logs):
+def run(site: EsportsSite, logs):
 	for log in logs:
 		if 'action' not in log.keys() or log['action'] != 'move':
 			continue
@@ -14,5 +14,5 @@ def run(site, logs):
 		
 	
 if __name__ == '__main__':
-	site = login('me', 'lol')
-	run(site, site.logs_by_interval(40))
+	site = EsportsSite('lol', user_file="me") # Set wiki
+	run(site, site.client.logs_by_interval(40))

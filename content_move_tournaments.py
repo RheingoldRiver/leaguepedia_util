@@ -1,15 +1,15 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 import mwparserfromhell, datetime
 from dateutil import parser
 
-site = login('bot', 'lol')  # Set wiki
+site = EsportsSite('lol', user_file="me") # Set wiki
 summary = 'Attempting to migrate content to data ns'  # Set summary
 
 limit = -1
 startat_page = None
 print(startat_page)
 # startat_page = 'asdf'
-this_template = site.pages['Template:ExternalContent/Line']  # Set template
+this_template = site.client.pages['Template:ExternalContent/Line']  # Set template
 pages = this_template.embeddedin()
 
 tabs_templates = ['TDRight', 'TabsDynamic', 'TD']
@@ -17,22 +17,7 @@ years = ['2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019']
 months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'September', 'October', 'November', 'December']
 
 pages = [
-site.pages["User:RheingoldRiver/content/2015"],
-# site.pages["Magyar Nemzeti E-sport Bajnokság/Regular Season"],
-# site.pages["LLA/2019_Season/Opening_Season/Media"],
-# site.pages["LCK/2016_Season/Summer_Season"],
-# site.pages["IEM_Season_IX_-_World_Championship"],
-# site.pages["LCK/2017_Season/Spring_Season"],
-# site.pages["2015_Mid-Season_Invitational"],
-# site.pages["LCK/2019_Season/Spring_Season/Media"],
-# site.pages["LEC/2019_Season/Spring_Playoffs/Media"],
-# site.pages["LLN/2018_Season/Opening_Season"],
-# site.pages["2017_Season_World_Championship/Main_Event/Media"],
-# site.pages["2015_Season_World_Championship/Media"],
-# site.pages["LCK/2018_Season/Summer_Season"],
-# site.pages["PG_Nationals/2018_Season/Summer_Season"],
-site.pages["EU_LCS/2018_Season/Summer_Season/Media"],
-# site.pages["LCS/2019_Season/Spring_Season/Media"]
+site.client.pages["User:RheingoldRiver/content/2015"],
 ]
 
 passed_startat = False if startat_page else True
@@ -60,7 +45,7 @@ for page in pages:
 	wikitext = mwparserfromhell.parse(text)
 	for template in wikitext.filter_templates(recursive=False):
 		print(template.name)
-		if tl_matches(template, tabs_templates):
+		if template.name.matches(tabs_templates):
 			i = 1
 			while template.has('name' + str(i)) and template.has('content' + str(i)):
 				param_text = template.get('content' + str(i)).value.strip()

@@ -1,5 +1,5 @@
 import re, threading, mwparserfromhell
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 
 #################################################################################################
 
@@ -29,12 +29,14 @@ blank_edit_these = []
 
 #############################################################################################
 
+site = EsportsSite('lol', user_file="me") # Set wiki
+
 def savepage(targetpage, savetext):
 	targetpage.save(savetext, summary=summary, tags="bot_disambig")
 
 def blank_edit_page(page):
 	textname = str(page.name)
-	newpage = site.pages[textname]
+	newpage = site.client.pages[textname]
 	text = newpage.text(cache=False)
 	page.save(text, summary="Blank Editing")
 
@@ -214,8 +216,6 @@ def make_disambig_page():
 	old_text = page.text()
 	if 'disambigpage' not in old_text.lower():
 		page.save(text, summary=summary)
-
-site = login('me','lol')
 
 thispage = site.pages[original_name]
 newpage = site.pages[new_name]

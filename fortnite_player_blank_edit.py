@@ -1,9 +1,9 @@
-import log_into_wiki
+from river_mwclient.esports_site import EsportsSite
 from extended_page import ExtendedPage
 
-site = log_into_wiki.login('bot', 'fortnite-esports')
+site = EsportsSite('fortnite', user_file="me") # Set wiki
 
-rc = site.recentchanges_by_interval(12 * 60, toponly=1)
+rc = site.client.recentchanges_by_interval(12 * 60, toponly=1)
 
 data_pages = []
 
@@ -13,7 +13,7 @@ for p in rc:
 
 where = ' OR '.join(['TR._pageName="%s"' % _ for _ in data_pages])
 
-players = site.cargo_pagelist(
+players = site.cargo_client.page_list(
 	tables="TournamentResults=TR,TournamentResults__RosterLinks=RL,_pageData=pd",
 	join_on="TR._ID=RL._rowID, RL._value=pd._pageName",
 	where='(%s) AND RL._rowID IS NOT NULL AND pd._pageName IS NOT NULL' % where,
@@ -24,5 +24,5 @@ for player in ExtendedPage.extend_pages(players):
 	player.touch(check_existence=True)
 
 # purge PR pages
-for page in site.pages['Template:PRWiki'].embeddedin():
+for page in site.client.pages['Template:PRWiki'].embeddedin():
 	page.purge()
