@@ -50,22 +50,6 @@ def move_page(from_page):
 		from_page.move(new_page_name, reason=summary, no_redirect=True)
 		blank_edit_these.append(new_page)
 
-def edit_concept(concept):
-	text = concept.text()
-	wikitext = mwparserfromhell.parse(text)
-	for template in wikitext.filter_templates():
-		if template.name.matches("PlayerGamesConcept"):
-			i = 1
-			while template.has(i):
-				if template.get(i).strip() == original_name:
-					template.add(i, new_name)
-				elif template.get(i).strip() == orig_name_lc:
-					template.add(i, new_name_lc)
-				i = i + 1
-	newtext = str(wikitext)
-	if newtext != text:
-		concept.save(newtext, summary=summary, tags="bot_disambig")
-
 def edit_subpage(subpage):
 	text = subpage.text()
 	wikitext = mwparserfromhell.parse(text)
@@ -222,15 +206,10 @@ newpage = site.client.pages[new_name]
 
 if init_move:
 	move_page(thispage)
-	subpages = site.allpages(prefix=original_name + "/")
+	subpages = site.client.allpages(prefix=original_name + "/")
 	for subpage in subpages:
 		edit_subpage(subpage)
 		move_page(subpage)
-	concept = site.client.pages["Concept:{}/Games".format(original_name)]
-	if concept.exists:
-		edit_concept(concept)
-		move_page(concept)
-
 
 pages = thispage.backlinks()
 i = 0
