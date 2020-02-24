@@ -12,7 +12,7 @@ startat_page = 'Swathe'
 this_template = site.client.pages['Template:PlayerResults']  # Set template
 pages = this_template.embeddedin()
 
-# pages = site.categories['Pages with script errors']
+# pages = site.client.categories['Pages with script errors']
 
 passed_startat = False if startat_page else True
 lmt = 0
