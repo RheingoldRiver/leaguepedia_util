@@ -7,8 +7,8 @@ def run(site: EsportsSite, logs):
 		old_page_name = log['title']
 		new_page_name = log['params']['target_title']
 		if 'suppressredirect' not in log['params'].keys():
-			site.pages[old_page_name].touch()
-		new_page = site.pages[new_page_name]
+			site.client.pages[old_page_name].touch()
+		new_page = site.client.pages[new_page_name]
 		new_page.touch()
 		new_page.touch()
 		

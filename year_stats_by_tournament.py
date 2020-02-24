@@ -1,4 +1,4 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 
 year = '2019'
 tournament = 'LPL 2019 Summer'
@@ -10,12 +10,12 @@ TEXT = """{{PlayerTabsHeader}}
 
 SUMMARY = "Autopopulating year player stats from tournament %s" % tournament
 
-site = login('me', 'lol')  # Set wiki
+site = EsportsSite('lol', user_file="me") # Set wiki
 summary = 'Bot Edit'  # Set summary
 
-overview_page = site.pages[tournament].redirects_to().name
+overview_page = site.client.pages[tournament].redirects_to().name
 
-pagelist = site.cargo_pagelist('Link', page_pattern="%s/Statistics/" + year,
+pagelist = site.client.cargo_pagelist('Link', page_pattern="%s/Statistics/" + year,
 	tables = 'ScoreboardPlayer',
 	where = 'OverviewPage="%s"' % overview_page,
 	fields = 'Link',

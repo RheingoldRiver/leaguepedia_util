@@ -1,17 +1,17 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 import mwparserfromhell
 
-site = login('me', 'lol')  # Set wiki
+site = EsportsSite('lol', user_file='me')  # Set wiki
 summary = 'Adding linting error category (mismatched divs)'  # Set summary
 
 limit = -1
 startat_page = None
 print(startat_page)
 startat_page = '2014 LNL Spring Qualifiers/Hong Kong and Macau'
-this_template = site.pages['Template:Infobox Tournament']  # Set template
+this_template = site.client.pages['Template:Infobox Tournament']  # Set template
 pages = this_template.embeddedin()
 
-pages = [site.pages['Lega Prima/Season 1']]
+pages = [site.client.pages['Lega Prima/Season 1']]
 
 passed_startat = False if startat_page else True
 lmt = 0

@@ -1,4 +1,4 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 import mwparserfromhell
 
 site = login('bot','lol') # Set wiki
@@ -8,7 +8,7 @@ limit = -1
 startat_page = None
 print(startat_page)
 #startat_page = 'ESL Benelux 5on5 Opening Cup'
-this_template = site.pages['Template:TeamRoster/Button'] # Set template
+this_template = site.client.pages['Template:TeamRoster/Button'] # Set template
 pages = this_template.embeddedin()
 
 MAX_TEAMS = {
@@ -30,7 +30,7 @@ def get_width(str):
 
 def get_new_line(page_name, max_teams):
 	roster_page = ''
-	text = site.pages[page_name + '/Team Rosters'].text()
+	text = site.client.pages[page_name + '/Team Rosters'].text()
 	if text != '':
 		roster_page = '|showrosterpage=yes'
 	return '{{{{RostersStart\n|maxteams={}{}\n}}}}'.format(max_teams, roster_page)

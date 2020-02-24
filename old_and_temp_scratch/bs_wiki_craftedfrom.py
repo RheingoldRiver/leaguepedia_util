@@ -1,4 +1,4 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 import mwparserfromhell
 
 recipes = {
@@ -455,7 +455,7 @@ recipes = {
 
 site = login("me","blacksurvival")
 
-infobox = site.pages['Template:ItemInfo']
+infobox = site.client.pages['Template:ItemInfo']
 pages = infobox.embeddedin()
 
 limit = -1

@@ -1,12 +1,12 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 import mwparserfromhell, re
 
-site = login('me', 'lol')  # Set wiki
+site = EsportsSite('lol', user_file='me')  # Set wiki
 summary = 'Bot Edit'  # Set summary
 
 limit = -1
 # startat_page = 'asdf'
-this_template = site.pages['Module:Bracket']  # Set template
+this_template = site.client.pages['Module:Bracket']  # Set template
 pages = this_template.embeddedin(namespace='828')
 
 pages_var = list(pages)
@@ -30,8 +30,8 @@ for page in pages_var:
 		print("Skipping page %s" % page.name)
 	else:
 		p = page.name
-		docpage = site.pages[p + '/doc']
-		tooltippage = site.pages['Tooltip:' + p]
+		docpage = site.client.pages[p + '/doc']
+		tooltippage = site.client.pages['Tooltip:' + p]
 		text = page.text()
 		newtext = text.replace('[[Category:Bracket Definitions]]','[[Category:Bracket Definitions|{{SubpageCategorySort}}]]')
 		if text != newtext:

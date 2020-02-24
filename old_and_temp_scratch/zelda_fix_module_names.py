@@ -1,7 +1,7 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 import re
 
-site = login('me','zelda') # Set wiki
+site = EsportsSite('lol')'zelda') # Set wiki
 summary = 'Rename Modules' # Set summary
 
 limit = 10

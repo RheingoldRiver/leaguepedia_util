@@ -1,8 +1,8 @@
 import mwclient
 
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 
-result = site.api("query",
+result = site.client.api("query",
 					   list = "categorymembers",
 					   cmtitle = "Category:Sister Team Cargo Concepts",
 					   cmlimit = "max",
@@ -16,7 +16,7 @@ for page in result['query']['categorymembers']:
 
 cat_str = "|".join(cat_tbl)
 
-result = site.api("query",
+result = site.client.api("query",
 				 prop = "revisions",
 				 titles = cat_str,
 				 rvprop = "content"
@@ -29,6 +29,6 @@ for page in result['query']['pages'].values():
 
 text = '\n'.join(content_tbl)
 
-page = site.pages["CargoConcept:SisterTeams"]
+page = site.client.pages["CargoConcept:SisterTeams"]
 
 page.save(text,summary="Concatenating Sister Teams Cargo Concepts")

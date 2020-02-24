@@ -69,7 +69,7 @@ for page in pages:
 							sun = date - datetime.timedelta(idx)
 							data_page_name = 'Data:ExternalContent/' + sun.strftime('%Y-%m-%d')
 							print(data_page_name)
-							data_page = site.pages[data_page_name]
+							data_page = site.client.pages[data_page_name]
 							data_text = data_page.text()
 							if param_tl.has('url') and param_tl.get('url').value.strip() in data_text:
 								param_tl.add('finished', 'yes')

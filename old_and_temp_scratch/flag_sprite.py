@@ -1,5 +1,5 @@
 import urllib.request, time, sprite_creator, io, os
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 
 SUFFIX = ''
 IMAGE_DIR = 'Flag Images'
@@ -13,7 +13,7 @@ WLH_MIN_FOR_INCLUSION = 0
 limit = -1
 startat = None
 
-site = login('me', 'commons-esports')
+site = EsportsSite('lol') 'commons-esports')
 site_lol = login('me', 'lol')
 
 def get_country_name(file_name):
@@ -28,7 +28,7 @@ pattern = r'.*src\=\"(.+?)\".*'
 cat = site.categories['Flags']
 for page in cat:
 	to_parse_text = '[[%s|link=]]' % page.name
-	result = site.api('parse', title = 'Main Page', text = to_parse_text, disablelimitreport = 1)
+	result = site.client.api('parse', title = 'Main Page', text = to_parse_text, disablelimitreport = 1)
 	parse_result_text = result['parse']['text']['*']
 	url = re.match(pattern, parse_result_text)[1]
 	image = urllib.request.urlopen(url).read()

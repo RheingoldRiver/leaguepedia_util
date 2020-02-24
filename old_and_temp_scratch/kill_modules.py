@@ -1,7 +1,7 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 import mwparserfromhell
 
-site = login('me', 'fifa-esports')  # Set wiki
+site = EsportsSite('lol') 'fifa-esports')  # Set wiki
 summary = 'Bot Edit'  # Set summary
 
 pages_array = [
@@ -61,7 +61,7 @@ token = site.get_token('csrf')
 
 for page in pages_array:
 	print(page)
-	site.api('edit', format='json',
+	site.client.api('edit', format='json',
 			 title=page,
 			 contentmodel="Scribunto",
 			 token= token,

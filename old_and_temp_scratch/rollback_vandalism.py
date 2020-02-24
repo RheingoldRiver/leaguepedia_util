@@ -1,7 +1,7 @@
 import datetime
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 
-site = login('me','spyro')
+site = EsportsSite('lol')'spyro')
 
 limit = -1
 
@@ -10,7 +10,7 @@ now_timestamp = now.isoformat()
 then = now - datetime.timedelta(hours = 4) # change hours if needed
 last_timestamp = then.isoformat()
 
-revisions = site.api('query', format='json',
+revisions = site.client.api('query', format='json',
 					 list='recentchanges',
 					 rcstart=now_timestamp,
 					 rcend=last_timestamp,
@@ -37,7 +37,7 @@ for page in pages:
 	if lmt == limit:
 		break
 	lmt += 1
-	data = site.api('query',
+	data = site.client.api('query',
 		format = 'json',
 		prop = 'revisions',
 		titles = page,
@@ -63,7 +63,7 @@ for page in pages:
 	if thisrev == -1:
 		failed_pages.append(page)
 	else:
-		p = site.pages[page]
+		p = site.client.pages[page]
 		p.save(text,'Reverting oops')
 
 if len(failed_pages) > 0:

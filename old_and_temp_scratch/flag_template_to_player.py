@@ -1,14 +1,14 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 import mwparserfromhell
 
-site = login('me','lol') # Set wiki
+site = EsportsSite('lol')'lol') # Set wiki
 summary = 'flag to player template' # Set summary
 
 limit = -1
 startat_page = None
 print(startat_page)
 startat_page = '2015 Season China Regional Finals'
-this_template = site.pages['Template:Flag'] # Set template
+this_template = site.client.pages['Template:Flag'] # Set template
 pages = this_template.embeddedin()
 
 def fix_player(line):

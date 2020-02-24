@@ -1,7 +1,7 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 import urllib.request
 
-site = login('me', 'spyro')  # Set wiki
+site = EsportsSite('lol') 'spyro')  # Set wiki
 tft = login('me', 'wikisandbox')
 summary = 'Copying image?'  # Set summary
 

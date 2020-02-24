@@ -1,20 +1,20 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 import mwparserfromhell
 
-site = login('me', 'fortnite-esports')  # Set wiki
+site = EsportsSite('lol') 'fortnite-esports')  # Set wiki
 summary = 'TR to data and update template'  # Set summary
 
 limit = -10
 startat_page = None
 print(startat_page)
 # startat_page = 'asdf'
-this_template = site.pages['Template:TournamentResultsLineDuos']  # Set template
+this_template = site.client.pages['Template:TournamentResultsLineDuos']  # Set template
 pages = this_template.embeddedin()
 
 # with open('pages.txt', encoding="utf-8") as f:
 # 	pages = f.readlines()
 
-# pages = [site.pages['Fortnite World Cup 2019/South America/Week 3']]
+# pages = [site.client.pages['Fortnite World Cup 2019/South America/Week 3']]
 
 def parse_text(s):
 	tbl = s.split('\n')
@@ -71,7 +71,7 @@ for page in pages:
 		print('Saving data page....')
 		new_text = parse_text(old_text)
 		new_text = fix_rosters(new_text)
-		site.pages['Data:' + page.name].save(new_text, summary=summary)
+		site.client.pages['Data:' + page.name].save(new_text, summary=summary)
 		wikitext.replace(section, '{{TournamentResultsQuery}}\n')
 	
 	newtext = str(wikitext).replace('{{TournamentResultsQuery}}', '=== Prize Pool ===\n{{TournamentResultsQuery}}')
@@ -79,7 +79,7 @@ for page in pages:
 		print('Saving page %s...' % page.name)
 		page.save(newtext, summary=summary)
 		page.save(newtext, summary='Blank editing...')
-		data_page = site.pages['Data:' + page.name]
+		data_page = site.client.pages['Data:' + page.name]
 		data_page.save(data_page.text(), summary='Blank editing...')
 	else:
 		print('Skipping page %s...' % page.name)

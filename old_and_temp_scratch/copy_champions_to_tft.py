@@ -1,7 +1,7 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 import mwparserfromhell
 
-site = login('me', 'lol')  # Set wiki
+site = EsportsSite('lol', user_file='me')  # Set wiki
 tft = login('me', 'teamfighttactics')
 summary = 'Initial Population of Champion Pages'  # Set summary
 

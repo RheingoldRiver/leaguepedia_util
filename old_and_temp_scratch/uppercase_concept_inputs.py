@@ -1,4 +1,4 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 import mwparserfromhell
 
 site = login('bot', 'lol')  # Set wiki
@@ -6,7 +6,7 @@ summary = 'Updating player concepts to use uc-first links only'  # Set summary
 
 limit = -1
 startat_page = 'Concept:Carbono/Games'
-this_template = site.pages['Template:PlayerGamesConcept']  # Set template
+this_template = site.client.pages['Template:PlayerGamesConcept']  # Set template
 pages = this_template.embeddedin()
 
 pages_var = list(pages)

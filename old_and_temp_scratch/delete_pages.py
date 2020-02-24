@@ -1,4 +1,4 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 limit = -1
 site = login('bot', 'lol')
 
@@ -9,7 +9,7 @@ for page in pages:
 	if lmt == limit:
 		break
 	lmt += 1
-	site.api('delete',
+	site.client.api('delete',
 			 title = page.name,
 			 token = site.get_token('delete'),
 			 reason = "oops i forgot to change the summary lol bye concepts"

@@ -1,8 +1,7 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 import mwparserfromhell
-import urllib.parse
 
-site = login('bot', 'lol')  # Set wiki
+site = EsportsSite('lol', user_file="me") # Set wiki
 summary = 'Importing skin info from pre-existing pages'  # Set summary
 
 limit = -1
@@ -10,13 +9,13 @@ limit = -1
 lmt = 0
 
 def get_and_add_info_to_infobox(name, template):
-	champion = site.cargoquery(
+	champion = site.cargo_client.query(
 		tables="SkinImages,Champions",
 		join_on="SkinImages.Champion=Champions.Name",
 		fields="Champions._pageName=Champion",
 		where='SkinImages.Name=\"%s\"' % name
 	)[0]['Champion']
-	data_page = site.pages['%s/Skins' % champion]
+	data_page = site.client.pages['%s/Skins' % champion]
 	locate_old_template_and_add_data_to_new(name, template, data_page)
 
 def locate_old_template_and_add_data_to_new(name, template, data_page):
@@ -34,7 +33,7 @@ def add_data_from_old_to_new(template, tl):
 passed_startat = True
 startat_page = None #'Blood Moon Akali'
 
-for page in site.categories['Skins']:
+for page in site.client.categories['Skins']:
 	if lmt == limit:
 		break
 	if startat_page and page.name == startat_page:
@@ -47,7 +46,7 @@ for page in site.categories['Skins']:
 	text = page.text()
 	wikitext = mwparserfromhell.parse(text)
 	for template in wikitext.filter_templates():
-		if tl_matches(template, ['Infobox Skin']):
+		if template.name.matches(['Infobox Skin']):
 			get_and_add_info_to_infobox(page.name, template)
 	
 	newtext = str(wikitext)

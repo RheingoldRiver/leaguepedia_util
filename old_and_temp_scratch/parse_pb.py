@@ -1,8 +1,8 @@
 import mwparserfromhell, time, mwclient
-from log_into_wiki import *
-site = login('me','lol')
+from river_mwclient.esports_site import EsportsSite
+site = EsportsSite('lol')'lol')
 
-tl = site.pages['Module:PicksAndBans']
+tl = site.client.pages['Module:PicksAndBans']
 page_list = tl.embeddedin()
 
 pages_var = list(page_list)
@@ -42,7 +42,7 @@ def fixPB(site, template):
 			if template.has(arg):
 				values.append(template.get(arg).value.strip())
 		query_text = '{{#invoke:PrintParsedText|unordered|type=' + datatype + '|' + '|'.join(values) + '}}'
-		query_result = site.api(
+		query_result = site.client.api(
 			'parse',
 			format = 'json',
 			text = query_text,

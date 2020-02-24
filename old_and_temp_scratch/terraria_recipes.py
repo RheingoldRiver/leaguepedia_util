@@ -1,4 +1,4 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 import mwparserfromhell
 
 site = login('bot', 'terraria')  # Set wiki
@@ -6,7 +6,7 @@ summary = 'Separating recipes into its own template'  # Set summary
 
 limit = -1
 startat_page = 'Gray Brick Wall'
-this_template = site.pages['Template:crafts row']  # Set template
+this_template = site.client.pages['Template:crafts row']  # Set template
 pages = this_template.embeddedin()  # get the list of pages that transclude the template in question
 # there are a lot of other ways to generate a list of pages, but this is probably the most standard that i use
 

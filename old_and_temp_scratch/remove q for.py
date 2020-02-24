@@ -1,12 +1,12 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 import mwparserfromhell
 
-site = login('me', 'lol')  # Set wiki
+site = EsportsSite('lol', user_file='me')  # Set wiki
 summary = 'remove "Q for" from TRL qual2 param'  # Set summary
 
 limit = -1
 startat_page = 'Thailand Pro League/2018 Season/Spring Season'
-this_template = site.pages['Template:TournamentResults/Line']  # Set template
+this_template = site.client.pages['Template:TournamentResults/Line']  # Set template
 pages = this_template.embeddedin()
 
 pages_var = list(pages)

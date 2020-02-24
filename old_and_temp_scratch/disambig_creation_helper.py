@@ -1,19 +1,19 @@
 import re, threading, mwclient, mwparserfromhell
 from disambig_creation_constants import *
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 
 def savepage(targetpage,savetext):
 	targetpage.save(savetext, summary=summary, tags="bot_disambig")
 
 def blank_edit_page(page):
 	textname = str(page.name)
-	newpage = site.pages[textname]
+	newpage = site.client.pages[textname]
 	text = newpage.text(cache=False)
 	page.save(text,summary="Blank Editing")
 
 def movepage(fromPage):
 	newPageName = str(fromPage.name).replace(originalName, newName)
-	newPage = site.pages[newPageName]
+	newPage = site.client.pages[newPageName]
 	if newPage.exists:
 		print("{} already exists, cannot move!".format(fromPage.name))
 	else:
@@ -38,7 +38,7 @@ def editconcept(concept):
 		concept.save(newtext, summary=summary, tags="bot_disambig")
 
 def save_css_page():
-	csspage = site.pages["MediaWiki:Gadget-highlightDisambigs.css"]
+	csspage = site.client.pages["MediaWiki:Gadget-highlightDisambigs.css"]
 	csstext = csspage.text()
 	if originalName not in csstext:
 		# use re in case a human edited the page and didn't use exactly the expected styling
@@ -130,5 +130,5 @@ def processtemplate(template):
 
 def make_disambig_page():
 	text = "{{DisambigPage\n|player1=" + newName + "\n|player2=\n}}"
-	page = site.pages[originalName]
+	page = site.client.pages[originalName]
 	page.save(text,summary=summary)

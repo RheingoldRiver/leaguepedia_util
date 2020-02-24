@@ -1,9 +1,9 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 
-site = login('me','lol') # Set wiki
+site = EsportsSite('lol')'lol') # Set wiki
 summary = 'Automatically creating tournament StandardName redirect'
 
-response = site.api('cargoquery', tables="Tournaments,_pageData",
+response = site.client.api('cargoquery', tables="Tournaments,_pageData",
 					join_on = 'Tournaments.StandardName_Redirect=_pageData._pageName',
 					where='_pageData._pageName IS NULL AND Tournaments.StandardName_Redirect IS NOT NULL',
 					fields='Tournaments.StandardName_Redirect=Name,Tournaments._pageName=Target',
@@ -15,4 +15,4 @@ for item in response['cargoquery']:
 	name = data['Name']
 	target = data['Target']
 	text = '#redirect[[%s]]' % target
-	site.pages[name].save(text)
+	site.client.pages[name].save(text)

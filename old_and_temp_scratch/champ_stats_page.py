@@ -1,4 +1,4 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 import mwparserfromhell
 
 site = login('bot','lol') # Set wiki
@@ -9,7 +9,7 @@ startat_page = None
 print(startat_page)
 #startat_page = 'asdf'
 for year in ["2015", "2016", "2017", "2018", "2019"]:
-	this_template = site.pages['Template:ChampStatsPage/' + year] # Set template
+	this_template = site.client.pages['Template:ChampStatsPage/' + year] # Set template
 	pages = this_template.embeddedin()
 	
 	passed_startat = False if startat_page else True

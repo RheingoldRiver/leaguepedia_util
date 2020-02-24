@@ -1,4 +1,4 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 import mwparserfromhell
 
 site = login('bot', 'lol')  # Set wiki
@@ -8,7 +8,7 @@ limit = -1
 startat_page = 'Kedu'
 print(startat_page)
 # startat_page = 'asdf'
-this_template = site.pages['Template:Infobox Player']  # Set template
+this_template = site.client.pages['Template:Infobox Player']  # Set template
 pages = this_template.embeddedin()
 
 passed_startat = False if startat_page else True
@@ -24,12 +24,12 @@ for page in pages:
 	lmt += 1
 	text = page.text()
 	wikitext = mwparserfromhell.parse(text)
-	res = site.api('cargoquery', tables="ScoreboardPlayer=SP,Tournaments",
+	res = site.client.api('cargoquery', tables="ScoreboardPlayer=SP,Tournaments",
 				   join_on="SP.OverviewPage=Tournaments.OverviewPage",
 				   fields="Tournaments.Year=Year",where='SP.Link="%s"' % page.name,group_by="Tournaments.Year")
 	for item in res['cargoquery']:
 		if 'Year' in item['title'] and item['title']['Year'] != '':
 			year_page = page.name + '/Statistics/' + item['title']['Year']
-			if site.pages[year_page].text() == '':
-				print(site.pages[year_page].name)
-				site.pages[year_page].save('{{PlayerTabsHeader}}\n{{PlayerYearStats}}',summary=summary)
+			if site.client.pages[year_page].text() == '':
+				print(site.client.pages[year_page].name)
+				site.client.pages[year_page].save('{{PlayerTabsHeader}}\n{{PlayerYearStats}}',summary=summary)

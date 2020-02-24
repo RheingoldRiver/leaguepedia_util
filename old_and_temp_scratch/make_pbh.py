@@ -1,4 +1,4 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 import mwparserfromhell
 
 site = login('bot', 'lol')  # Set wiki
@@ -6,7 +6,7 @@ summary = 'Bot Edit'  # Set summary
 
 limit = -1
 startat_player = 'Underdogs Season 3'
-this_template = site.pages['Template:Infobox Tournament']  # Set template
+this_template = site.client.pages['Template:Infobox Tournament']  # Set template
 pages = this_template.embeddedin()
 
 pages_var = list(pages)
@@ -27,7 +27,7 @@ for page in pages_var:
 	if lmt < startat:
 		print("Skipping page %s" % page.name)
 	else:
-		pb_page = site.pages[page.name + '/Picks and Bans']
+		pb_page = site.client.pages[page.name + '/Picks and Bans']
 		if pb_page.text() == '':
 			print("Skipping page %s" % page.name)
 		else:
@@ -48,7 +48,7 @@ for page in pages_var:
 						break
 				newtext = '{{' + tabs + '}}\n{{PBHistoryTournament}}'
 				print('Saving page %s...' % page.name)
-				newpage = site.pages[page.name + '/Pick-Ban History']
+				newpage = site.client.pages[page.name + '/Pick-Ban History']
 				newpage.save(newtext, summary = summary)
 			else:
 				print('Skipping page %s bc no PBS7' % page.name)

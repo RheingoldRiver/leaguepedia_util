@@ -14,7 +14,7 @@ pages = this_template.embeddedin()
 # with open('pages.txt', encoding="utf-8") as f:
 # 	pages = f.readlines()
 
-#pages = [site.pages['Data:Challengers Korea/2019 Season/Spring Season']]
+#pages = [site.client.pages['Data:Challengers Korea/2019 Season/Spring Season']]
 
 params = ['player','player1']
 

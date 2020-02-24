@@ -1,9 +1,9 @@
 import threading, mwparserfromhell
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 
-site = login('me','lol')
+site = EsportsSite('lol')'lol')
 blankedit = False
-thispage = site.pages['Samsung Galaxy']
+thispage = site.client.pages['Samsung Galaxy']
 timeoutLimit = 30
 pages = thispage.backlinks()
 

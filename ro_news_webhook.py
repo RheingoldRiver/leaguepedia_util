@@ -1,15 +1,13 @@
 import datetime
 from discord_webhook import DiscordWebhook, DiscordEmbed
-from log_into_wiki import *
-
-site = login('bot', 'lol')
+from river_mwclient.esports_site import EsportsSite
 
 with open('webhook_leona.txt') as f:
 	webhook_url = f.read().strip()
 
 webhook = DiscordWebhook(url=webhook_url)
 
-def run(site, logs):
+def run(site: EsportsSite, logs):
 	for log in logs:
 		if log['type'] != 'ro-news':
 			continue
@@ -25,5 +23,5 @@ def send_event(text, team):
 	webhook.execute()
 
 if __name__ == '__main__':
-	site = login('me', 'lol')
-	run(site, site.recentchanges_by_interval(1))
+	site = EsportsSite('lol', user_file="me")  # Set wiki
+	run(site, site.client.recentchanges_by_interval(1))

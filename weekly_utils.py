@@ -1,9 +1,9 @@
 import dateutil.parser, pytz, re, datetime, mwparserfromhell
 import dateutil
 from leaguepedia_validation.pickban import PickBanValidator
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 
-site = login('me','lol')
+site = EsportsSite('lol', user_file="me") # Set wiki
 
 typo_find = ['favourite','quater','partecipate','Portugese', 'Regelations']
 typo_replace = ['favorite','quarter','participate','Portuguese', 'Relegations']
@@ -90,7 +90,7 @@ def createResults(site, page, template, subpage, result_type, template_text):
 	if template.has('checkboxIsPersonality') and template.get('checkboxIsPersonality').value.strip() == 'Yes':
 		pass
 	else:
-		p = site.pages[page + '/' + subpage]
+		p = site.client.pages[page + '/' + subpage]
 		text = p.text()
 		if text == '':
 			p.save('{{{{{}TabsHeader}}}}\n{}'.format(result_type, template_text),tags='daily_errorfix')
@@ -178,7 +178,7 @@ DOC_PAGES_TO_MAKE = [
 	}
 ]
 
-def make_doc_pages(site, p):
+def make_doc_pages(site: EsportsSite, p):
 	for case in DOC_PAGES_TO_MAKE:
 		if 'matches' in case.keys():
 			if not re.findall(case['matches'], p.name):
@@ -187,5 +187,5 @@ def make_doc_pages(site, p):
 			if re.findall(case['notmatches'], p.name):
 				continue
 		for i, (k, v) in enumerate(case['pages'].items()):
-			site.pages[k.format(p.page_title)].save(v, summary='Automated error fixing (Python)',
+			site.client.pages[k.format(p.page_title)].save(v, summary='Automated error fixing (Python)',
 									   tags='daily_errorfix')

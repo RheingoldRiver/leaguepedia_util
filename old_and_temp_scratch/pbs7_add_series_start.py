@@ -1,4 +1,4 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 import mwparserfromhell
 
 site = login('bot', 'lol')  # Set wiki
@@ -6,7 +6,7 @@ summary = 'Add "game1" argument'  # Set summary
 
 limit = -1
 startat_page = 'LLN/2018 Season/Closing Season/Picks and Bans'
-this_template = site.pages['Template:PicksAndBansS7']  # Set template
+this_template = site.client.pages['Template:PicksAndBansS7']  # Set template
 pages = this_template.embeddedin()
 
 pages_var = list(pages)

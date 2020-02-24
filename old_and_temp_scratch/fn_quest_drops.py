@@ -1,12 +1,12 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 import mwparserfromhell
 
-site = login('me', 'fortnite')  # Set wiki
+site = EsportsSite('lol') 'fortnite')  # Set wiki
 summary = 'Bot Edit'  # Set summary
 
 limit = -1
 startat_page = 'Challenge the Horde 25'
-this_template = site.pages['Template:Infobox Quests']  # Set template
+this_template = site.client.pages['Template:Infobox Quests']  # Set template
 pages = this_template.embeddedin()
 
 pages_var = list(pages)

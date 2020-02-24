@@ -1,4 +1,4 @@
-from log_into_wiki import *
-site = login('me', 'lol')
+from river_mwclient.esports_site import EsportsSite
+site = EsportsSite('lol', user_file='me')
 
 site.upload(open('RuneSprite.png', 'rb'), 'TeamSprite.png', 'Team Sprite', ignore=True)

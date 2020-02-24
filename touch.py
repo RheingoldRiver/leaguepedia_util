@@ -1,12 +1,12 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 import time
 limit = -1
-site = login('me','lol')
-t = site.pages["Template:TeamRoster"]
+site = EsportsSite('lol', user_file="me") # Set wiki
+t = site.client.pages["Template:TeamRoster"]
 
 pages = t.embeddedin()
 
-c = site.categories['Pages with script errors']
+c = site.client.categories['Pages with script errors']
 
 pages = t.embeddedin()
 

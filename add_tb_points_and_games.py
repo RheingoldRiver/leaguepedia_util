@@ -23,11 +23,11 @@ max_scores = {
 	'bo2' : 2
 }
 
-# pages_var = [site.pages['Data:' + pagename]]
+# pages_var = [site.client.pages['Data:' + pagename]]
 
 with open('pages.txt', encoding="utf-8") as f:
 	pages = f.readlines()
-pages_var = [site.pages['Data:' + page.strip()] for page in pages]
+pages_var = [site.client.pages['Data:' + page.strip()] for page in pages]
 
 lmt = 0
 for page in pages_var:

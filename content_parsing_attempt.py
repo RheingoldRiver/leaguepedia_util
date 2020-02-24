@@ -15,7 +15,7 @@ template_by_type = {
 	'teams' : 'Team',
 	'tournament' : 'Tournament'
 }
-this_template = site.pages['Template:Infobox ' + template_by_type[page_type]]  # Set template
+this_template = site.client.pages['Template:Infobox ' + template_by_type[page_type]]  # Set template
 pages = this_template.embeddedin()
 
 months = r'(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\.?'
@@ -89,8 +89,8 @@ for page in pages:
 	lmt += 1
 	this_page = page
 	if page_type == 'tournament':
-		if site.pages[page.name + '/Media'].text() != '':
-			this_page = site.pages[page.name + '/Media']
+		if site.client.pages[page.name + '/Media'].text() != '':
+			this_page = site.client.pages[page.name + '/Media']
 	print('beginning page %s' % page.name)
 	text = this_page.text()
 	wikitext = mwparserfromhell.parse(text, skip_style_tags=True)

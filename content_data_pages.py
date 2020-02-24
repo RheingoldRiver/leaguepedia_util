@@ -79,7 +79,7 @@ def make_data_pages(years, this, startat_page = None):
 				passed_startat = True
 			if not passed_startat:
 				continue
-			p = site.pages[page_name]
+			p = site.client.pages[page_name]
 			redirect_text = '#redirect[[%s]]' % page_name
 			check_and_make_redirects(d, page_prefix, redirect_text)
 			if p.exists:
@@ -98,7 +98,7 @@ def make_data_pages(years, this, startat_page = None):
 			# END SAVING DATA PAGES - COMMENT THIS BLOCK TO DO NAVBOX ONLY
 
 		list_of_sundays.append('}}\n{{Endflatlist}}')
-		template_page = site.pages['Template:%s Navbox' % navbox_template]
+		template_page = site.client.pages['Template:%s Navbox' % navbox_template]
 		wikitext = mwparserfromhell.parse(template_page.text())
 		for template in wikitext.filter_templates():
 			if template.name.matches('Navbox'):

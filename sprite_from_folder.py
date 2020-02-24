@@ -1,5 +1,4 @@
 import urllib.request, time, sprite_creator, io, os
-from log_into_wiki import *
 
 SUFFIX = ''
 SPRITE_NAME = 'SmiteRole'

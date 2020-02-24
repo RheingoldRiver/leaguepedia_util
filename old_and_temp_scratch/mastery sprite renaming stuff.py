@@ -1,5 +1,5 @@
 import re
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 
 site = login('bot', 'lol')
 
@@ -12,7 +12,7 @@ for line in lines:
 	t.append(line)
 	logo = re.search(r'"(.+?)"', line)[1]
 	pos = re.search(r'pos = ([0-9]*)', line)[1]
-	page = site.pages['File:Mastery ' + logo + '.png']
+	page = site.client.pages['File:Mastery ' + logo + '.png']
 	print(page.name)
 	for p in page.backlinks(namespace=6,redirect=True):
 		print('redirect - %s' % p.name)

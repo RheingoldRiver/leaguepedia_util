@@ -1,4 +1,4 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 import mwparserfromhell
 limit = -1
 
@@ -19,7 +19,7 @@ for page in site.categories['Power Ranking Player Pages']:
 	lmt += 1
 	name = page.name
 	print('starting page %s...' % page.name)
-	response = site.api('cargoquery',
+	response = site.client.api('cargoquery',
 					  tables = 'Tournaments=T,TournamentResults=TR,TournamentResults__RosterLinks=RL,PlayerRedirects=PR',
 					  join_on='T._pageName=TR.OverviewPage,TR._ID=RL._rowID,RL._value=PR.AllName',
 					  where = 'PR._pageName="%s"' % name,

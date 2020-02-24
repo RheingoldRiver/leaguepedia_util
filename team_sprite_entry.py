@@ -79,7 +79,7 @@ class SpriteSheet(object):
 	
 	def add_activity_from_wiki_page(self, site, page_name):
 		to_parse_text = '{{:%s}}' % page_name
-		result = site.api('expandtemplates', title = 'Main Page', text = to_parse_text, disablelimitreport = 1)
+		result = site.client.api('expandtemplates', title = 'Main Page', text = to_parse_text, disablelimitreport = 1)
 		text = result['expandtemplates']['*']
 		#print(text)
 		pattern = r'\[\[File:([^\]]+?)logo[ _]std\.png'

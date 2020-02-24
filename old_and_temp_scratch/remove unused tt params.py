@@ -1,4 +1,4 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 import mwparserfromhell
 
 site = login('bot', 'lol')  # Set wiki
@@ -713,7 +713,7 @@ limit = -1
 # startat_page = 'asdf'
 for this_template_name in all_templates:
 	print('Starting template %s...' % this_template_name)
-	this_template = site.pages['Template:' + this_template_name]  # Set template
+	this_template = site.client.pages['Template:' + this_template_name]  # Set template
 	pages = this_template.embeddedin()
 	
 	lmt = 0

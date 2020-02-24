@@ -1,12 +1,12 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 import mwparserfromhell
 
-site = login('me', 'gears-esports')  # Set wiki
+site = EsportsSite('lol') 'gears-esports')  # Set wiki
 summary = 'Fix YT'  # Set summary
 
 limit = -1
 #startat_page = 'Dirtgen'
-this_template = site.pages['Template:Infobox Player']
+this_template = site.client.pages['Template:Infobox Player']
 pages = this_template.embeddedin()
 pages_var = list(pages)
 

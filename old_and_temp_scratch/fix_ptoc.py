@@ -1,4 +1,4 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 import mwparserfromhell
 
 site = login('bot', 'lol')  # Set wiki
@@ -363,7 +363,7 @@ fuckgrasp = ['grasp of the undying2']
 
 limit = -1
 # startat_page = 'asdf'
-this_template = site.pages['Template:PTOC']  # Set template
+this_template = site.client.pages['Template:PTOC']  # Set template
 pages = this_template.embeddedin()
 
 pages_var = list(pages)

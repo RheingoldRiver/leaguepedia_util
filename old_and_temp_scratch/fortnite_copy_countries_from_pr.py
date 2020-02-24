@@ -1,4 +1,4 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 import mwparserfromhell
 
 site = login('bot', 'fortnite-esports')  # Set wiki
@@ -8,7 +8,7 @@ limit = -1
 startat_page = None
 print(startat_page)
 startat_page = '12AM Poppin'
-# this_template = site.pages['Template:TEMPLATE']  # Set template
+# this_template = site.client.pages['Template:TEMPLATE']  # Set template
 # pages = this_template.embeddedin()
 c = site.categories['Power Ranking Player Pages']
 
@@ -27,7 +27,7 @@ for page in c:
 		continue
 	lmt += 1
 	text = page.text()
-	response = site.api('cargoquery',
+	response = site.client.api('cargoquery',
 						tables = 'PowerRankings',
 						fields = 'Country',
 						where = 'Player = "%s"' % page.name

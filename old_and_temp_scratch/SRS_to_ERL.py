@@ -1,9 +1,9 @@
 import mwparserfromhell, mwclient
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 
 limit = -1
 
-thispage = site.pages["Template:SeasonRosterSlot"]
+thispage = site.client.pages["Template:SeasonRosterSlot"]
 pages = thispage.embeddedin(namespace=0)
 
 i = 0

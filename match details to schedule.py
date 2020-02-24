@@ -100,7 +100,7 @@ for pagename in pages_var:
 				all_data.append(game_data)
 				add_to_matches.append(series)
 		
-		data_page = site.pages['Data:' + pagename]
+		data_page = site.client.pages['Data:' + pagename]
 		data_text = data_page.text()
 		data_wikitext = mwparserfromhell.parse(data_text)
 		

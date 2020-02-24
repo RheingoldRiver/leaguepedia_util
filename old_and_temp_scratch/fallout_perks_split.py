@@ -1,4 +1,4 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 import mwparserfromhell, re
 limit = -1
 
@@ -54,7 +54,7 @@ games_to_skip = [ 'Fallout: Brotherhood of Steel', 'Fallout:Brotherhood of Steel
 
 site = login("me","fallout")
 
-infobox = site.pages['Template:Infobox perk']
+infobox = site.client.pages['Template:Infobox perk']
 pages = infobox.embeddedin()
 conflicts = []
 
@@ -110,7 +110,7 @@ for page in pages_var:
 		rest_of_text = rest_of_text.split('{{Navbox perks')[0]
 		for game in games:
 			if game not in games_to_skip:
-				p = site.pages[page.name + '/' + game]
+				p = site.client.pages[page.name + '/' + game]
 				print('Saving page %s...' % p.name)
 				p.save('{{PerksTabsHeader}}\n' + games_dict[game] + rest_of_text + navbox_dict[game], summary = 'Attempting to auto-split perk page')
 		

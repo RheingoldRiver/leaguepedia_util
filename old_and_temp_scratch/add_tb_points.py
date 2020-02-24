@@ -1,12 +1,12 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 import mwparserfromhell
 
-site = login('me', 'lol')  # Set wiki
+site = EsportsSite('lol', user_file='me')  # Set wiki
 summary = 'Bot Edit'  # Set summary
 
 limit = -1
 # startat_page = 'asdf'
-this_template = site.pages['Template:MatchSchedule']  # Set template
+this_template = site.client.pages['Template:MatchSchedule']  # Set template
 pages = this_template.embeddedin()
 
 pages_var = list(pages)
@@ -21,7 +21,7 @@ except ValueError as e:
 	startat = -1
 print(startat)
 
-pages_var = [site.pages['Data:Challengers Korea/2018 Season/Summer Season']]
+pages_var = [site.client.pages['Data:Challengers Korea/2018 Season/Summer Season']]
 
 lmt = 0
 for page in pages_var:

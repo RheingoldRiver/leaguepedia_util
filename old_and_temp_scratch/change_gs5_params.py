@@ -1,4 +1,4 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 import mwparserfromhell
 
 site = login('bot', 'lol')  # Set wiki
@@ -6,7 +6,7 @@ summary = 'update to new params'  # Set summary
 
 limit = -1
 startat_page = 'ESL Balkans League/Season V'
-this_template = site.pages['Template:GameSchedule5']  # Set template
+this_template = site.client.pages['Template:GameSchedule5']  # Set template
 pages = this_template.embeddedin()
 
 pages_var = list(pages)

@@ -1,7 +1,7 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 import mwparserfromhell
 
-site = login('me','smite-esports')
+site = EsportsSite('lol')'smite-esports')
 summary = 'Attempting to split news regions'
 console_regions = [ 'nax', 'eux' ]
 
@@ -12,7 +12,7 @@ region_lookup = {
 
 limit = -1
 #startat_player = 'asdf'
-infobox = site.pages['Template:News Navbox']
+infobox = site.client.pages['Template:News Navbox']
 pages = infobox.embeddedin()
 
 pages_var = list(pages)

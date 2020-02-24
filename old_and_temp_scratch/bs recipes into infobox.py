@@ -1,12 +1,12 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 import mwparserfromhell
 
-site = login('me', 'blacksurvival')  # Set wiki
+site = EsportsSite('lol') 'blacksurvival')  # Set wiki
 summary = 'Recipes into infobox'  # Set summary
 
 limit = -1
 # startat_page = 'asdf'
-this_template = site.pages['Module:RecipeDatabase']  # Set template
+this_template = site.client.pages['Module:RecipeDatabase']  # Set template
 pages = this_template.embeddedin()
 
 pages_var = list(pages)

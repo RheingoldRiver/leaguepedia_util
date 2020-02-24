@@ -1,7 +1,7 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 import urllib.request, json, re, mwparserfromhell
 
-site = login('me', 'lol')  # Set wiki
+site = EsportsSite('lol', user_file="me") # Set wiki
 summary = 'Adding MH + teams/winner from MH'  # Set summary
 
 limit = -1
@@ -23,7 +23,7 @@ for pagename in pages_array:
 	if lmt < startat:
 		print("Skipping page %s" % pagename)
 	else:
-		page = site.pages[pagename + '/Match Details']
+		page = site.client.pages[pagename + '/Match Details']
 		text = page.text()
 		wikitext = mwparserfromhell.parse(text)
 		game_info = []
@@ -53,7 +53,7 @@ for pagename in pages_array:
 					else:
 						game_info.append({'blue': '', 'red' : '', 'winner' : '', 'mh' : ''})
 		
-		data_page = site.pages['Data:' + pagename]
+		data_page = site.client.pages['Data:' + pagename]
 		data_text = data_page.text()
 		data_wikitext = mwparserfromhell.parse(data_text)
 		

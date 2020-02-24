@@ -1,12 +1,12 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 import mwparserfromhell, re
 
-site = login('me', 'siege-esports')  # Set wiki
+site = EsportsSite('lol') 'siege-esports')  # Set wiki
 summary = 'redo otherwikis to match infobox player'  # Set summary
 
 limit = -1
 startat_page = 'Team Vidar'
-this_template = site.pages['Template:Infobox Team']  # Set template
+this_template = site.client.pages['Template:Infobox Team']  # Set template
 pages = this_template.embeddedin()
 
 pages_var = list(pages)

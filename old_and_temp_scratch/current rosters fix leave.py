@@ -1,12 +1,12 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 import mwparserfromhell
 
-site = login('me','lol') # Set wiki
+site = EsportsSite('lol')'lol') # Set wiki
 summary = 'add leaving classes' # Set summary
 
 limit = -1
 #startat_page = 'asdf'
-this_template = site.pages['Template:PortalCurrentRosters'] # Set template
+this_template = site.client.pages['Template:PortalCurrentRosters'] # Set template
 pages = this_template.embeddedin()
 
 pages_var = list(pages)

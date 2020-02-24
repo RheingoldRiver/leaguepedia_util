@@ -1,12 +1,12 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 import mwparserfromhell
 
-site = login('me', 'lol')  # Set wiki
+site = EsportsSite('lol', user_file='me')  # Set wiki
 summary = 'Fix gold'  # Set summary
 
 limit = -1
 # startat_page = 'asdf'
-this_template = site.pages['Template:Scoreboard/Player']  # Set template
+this_template = site.client.pages['Template:Scoreboard/Player']  # Set template
 pages = this_template.embeddedin()
 
 pages_var = list(pages)

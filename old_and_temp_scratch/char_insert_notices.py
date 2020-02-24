@@ -1,12 +1,12 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 import mwparserfromhell
 
-site = login('me','lol') # Set wiki
+site = EsportsSite('lol')'lol') # Set wiki
 summary = 'Bot Edit' # Set summary
 
 
 for namespace in site.namespaces:
 	if namespace < 1:
 		continue
-	page = site.pages['MediaWiki:Editnotice-' + str(namespace)]
+	page = site.client.pages['MediaWiki:Editnotice-' + str(namespace)]
 	page.save('{{int:Editnotice-0}}', summary = "Creating char insert page")

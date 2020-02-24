@@ -1,4 +1,4 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 import mwparserfromhell
 
 site = login('bot', 'lol')  # Set wiki
@@ -8,7 +8,7 @@ limit = -1
 startat_page = None
 print(startat_page)
 # startat_page = 'asdf'
-this_template = site.pages['Template:ExternalContent/Line']  # Set template
+this_template = site.client.pages['Template:ExternalContent/Line']  # Set template
 pages = this_template.embeddedin()
 
 passed_startat = False if startat_page else True

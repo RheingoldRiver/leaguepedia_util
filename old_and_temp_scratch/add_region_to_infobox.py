@@ -1,5 +1,5 @@
 import mwparserfromhell
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 limit = -1
 
 region = 'Korea'
@@ -8,7 +8,7 @@ site = login('bot','lol')
 
 with open('pages.txt') as f:
 	lines = f.readlines()
-pages = [site.pages[p.strip()] for p in lines]
+pages = [site.client.pages[p.strip()] for p in lines]
 
 lmt = 0
 for p in pages:

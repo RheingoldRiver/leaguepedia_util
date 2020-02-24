@@ -42,7 +42,7 @@ def blank_edit_page(page):
 
 def move_page(from_page):
 	new_page_name = str(from_page.name).replace(original_name, new_name)
-	new_page = site.pages[new_page_name]
+	new_page = site.client.pages[new_page_name]
 	if new_page.exists:
 		print("{} already exists, cannot move!".format(from_page.name))
 	else:
@@ -212,13 +212,13 @@ def process_template(template):
 
 def make_disambig_page():
 	text = "{{DisambigPage\n|player1=" + new_name + "\n|player2=\n}}"
-	page = site.pages[original_name]
+	page = site.client.pages[original_name]
 	old_text = page.text()
 	if 'disambigpage' not in old_text.lower():
 		page.save(text, summary=summary)
 
-thispage = site.pages[original_name]
-newpage = site.pages[new_name]
+thispage = site.client.pages[original_name]
+newpage = site.client.pages[new_name]
 
 if init_move:
 	move_page(thispage)
@@ -226,7 +226,7 @@ if init_move:
 	for subpage in subpages:
 		edit_subpage(subpage)
 		move_page(subpage)
-	concept = site.pages["Concept:{}/Games".format(original_name)]
+	concept = site.client.pages["Concept:{}/Games".format(original_name)]
 	if concept.exists:
 		edit_concept(concept)
 		move_page(concept)

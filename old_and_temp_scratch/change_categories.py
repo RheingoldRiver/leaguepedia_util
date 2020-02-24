@@ -1,4 +1,4 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 import re, time
 
 site = login('bot', 'lol')  # Set wiki
@@ -27,7 +27,7 @@ for p in pages:
 		print("Skipping page %s" % p)
 	else:
 		try:
-			page = site.pages[p]
+			page = site.client.pages[p]
 			text = page.text()
 			newtext = re.sub(r'Ability[ _]icons', 'Ability Icons', text)
 			
@@ -39,7 +39,7 @@ for p in pages:
 		except Exception as e:
 			time.sleep(10)
 			site = login('bot', 'lol')
-			page = site.pages[p]
+			page = site.client.pages[p]
 			text = page.text()
 			newtext = re.sub(r'Ability[ _]icons', 'Ability Icons', text)
 			

@@ -1,4 +1,4 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 import mwparserfromhell
 
 class TemplateEditor(object):
@@ -44,12 +44,12 @@ class TemplateEditor(object):
 	
 class PageListGenerators(object):
 	def via_transclusion(self, template):
-		this_template = self.site.pages['Template:%s' % template]
+		this_template = self.site.client.pages['Template:%s' % template]
 		self.page_list = this_template.embeddedin()
 	
 	def via_file(self, file):
 		with open('pages.txt', encoding="utf-8") as f:
-			pages = [self.site.pages[_] for _ in f.readlines()]
+			pages = [self.site.client.pages[_] for _ in f.readlines()]
 	
 class CurrentTemplateEditor(TemplateEditor, PagelistGenerators):
 	def __init__(self):

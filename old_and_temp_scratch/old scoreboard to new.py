@@ -1,8 +1,8 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 from template_list import *
 import mwparserfromhell
 
-site = login('me', 'lol')  # Set wiki
+site = EsportsSite('lol', user_file='me')  # Set wiki
 summary = 'Updating scoreboards!?!?!?!!?!?!!? MatchRecapS4/Header'  # Set summary
 
 limit = -1
@@ -15,7 +15,7 @@ this_template_name = 'Template:MatchRecapS4/Header' + this_year_number + no_smw_
 
 this_template_name = 'Template:MatchRecapS4/Header'
 # startat_page = 'asdf'
-this_template = site.pages[this_template_name]  # Set template
+this_template = site.client.pages[this_template_name]  # Set template
 pages = this_template.embeddedin()
 
 pages_var = list(pages)

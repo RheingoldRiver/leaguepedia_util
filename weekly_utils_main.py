@@ -2,12 +2,12 @@
 
 import mwparserfromhell, datetime
 import weekly_utils as utils
-from esports_site import EsportsSite
 import scrape_runes, luacache_refresh
 from template_list import *
 from log_into_wiki import report_errors
+from river_mwclient.esports_site import EsportsSite
 
-site = EsportsSite('me','lol')
+site = EsportsSite('lol', user_file="me") # Set wiki
 
 limit = -1
 
@@ -16,7 +16,7 @@ site.standard_name_redirects()
 # Blank edit pages we need to
 blank_edit_pages = ['Leaguepedia:Top Schedule']
 for page in blank_edit_pages:
-	p = site.pages[page]
+	p = site.client.pages[page]
 	p.save(p.text(), summary = 'blank editing')
 
 now_timestamp = datetime.datetime.utcnow().isoformat()
@@ -25,7 +25,7 @@ with open('daily_last_run.txt','r') as f:
 with open('daily_last_run.txt','w') as f:
 	f.write(now_timestamp)
 
-revisions = site.api('query', format='json',
+revisions = site.client.api('query', format='json',
 					 list='recentchanges',
 					 rcstart=now_timestamp,
 					 rcend=last_timestamp,
@@ -51,7 +51,7 @@ for page in pages:
 		break
 	lmt+=1
 	try:
-		p = site.pages[page]
+		p = site.client.pages[page]
 	except KeyError:
 		print(page)
 		continue
@@ -75,7 +75,7 @@ for page in pages:
 					if p.namespace == 0:
 						utils.createResults(site, page, template, 'Tournament Results', 'Team', '{{TeamResults|show=everything}}')
 						utils.createResults(site, page, template, 'Schedule History', 'Team', '{{TeamScheduleHistory}}')
-						tooltip = site.pages['Tooltip:%s' % page]
+						tooltip = site.client.pages['Tooltip:%s' % page]
 						tooltip.save('{{RosterTooltip}}',tags='daily_errorfix')
 				elif template.name.strip() in gameschedule_templates:
 					utils.fixDST(template)
@@ -93,11 +93,11 @@ for page in pages:
 			print('Saving page %s...' % page)
 			p.save(newtext,summary='Automated error fixing (Python)',tags='daily_errorfix')
 		if len(errors) > 0:
-			report_page = site.pages['User talk:RheingoldRiver']
+			report_page = site.client.pages['User talk:RheingoldRiver']
 			report_errors(report_page, page, errors)
 luacache_refresh.teamnames(site)
 
-success_page = site.pages['User:RheingoldRiver/Maint Log']
+success_page = site.client.pages['User:RheingoldRiver/Maint Log']
 text = success_page.text()
 text = text + '\nScript finished maint successfully: ' + now_timestamp
 try:

@@ -1,10 +1,10 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 
-site = login('me','siege-esports')
+site = EsportsSite('lol')'siege-esports')
 
 limit = -1
 startat_player = 'asdf'
-infobox = site.pages['Template:Infobox Team']
+infobox = site.client.pages['Template:Infobox Team']
 pages = infobox.embeddedin()
 
 pages_var = list(pages)
@@ -27,5 +27,5 @@ for page in pages_var:
 	else:
 		if page.namespace == 0:
 			print("Saving page: " + page.name)
-			site.pages[page.name + '/Schedule'].save(
+			site.client.pages[page.name + '/Schedule'].save(
 				'{{TeamTabsHeader}}\n{{TeamSchedule|%s}}' % page.name)

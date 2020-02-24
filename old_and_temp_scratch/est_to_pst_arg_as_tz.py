@@ -1,15 +1,15 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 from template_list import *
 import mwparserfromhell, dateutil.parser, pytz
 
-site = login('me', 'lol')  # Set wiki
+site = EsportsSite('lol', user_file='me')  # Set wiki
 summary = 'EST -> PST'  # Set summary
 
 limit = -1
 # startat_page = 'asdf'
 with open('pages.txt', encoding="utf-8") as f:
 	pages = f.readlines()
-pages_var = [site.pages[page.strip()] for page in pages]
+pages_var = [site.client.pages[page.strip()] for page in pages]
 startat = -1
 
 pst = pytz.timezone('America/Los_Angeles')

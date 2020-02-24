@@ -1,7 +1,7 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 import mwparserfromhell
 
-site = login('me', 'cod-esports')  # Set wiki
+site = EsportsSite('lol') 'cod-esports')  # Set wiki
 summary = 'Add CCMT data to Infobox using CM_ prefix for params and LeagueIconKey'  # Set summary
 
 limit = -1
@@ -17,7 +17,7 @@ for param in param_list:
 
 param_keys['League'] = 'StandardLeague'
 
-result = site.api('cargoquery', tables = 'CCMTournaments',
+result = site.client.api('cargoquery', tables = 'CCMTournaments',
 				  fields=','.join(param_list),
 				  limit="max")
 pages = result['cargoquery']
@@ -27,7 +27,7 @@ param_list.pop()
 passed_startat = False if startat_page else True
 lmt = 0
 for p in pages:
-	page = site.pages[p['title']['OverviewPage']]
+	page = site.client.pages[p['title']['OverviewPage']]
 	if lmt == limit:
 		break
 	if startat_page and page.name == startat_page:

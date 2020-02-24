@@ -1,4 +1,4 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 import mwparserfromhell
 
 site = login('bot', 'lol')  # Set wiki
@@ -6,7 +6,7 @@ summary = 'Forcing blank edit'  # Set summary
 
 limit = -1
 startat_page = 'Faaa'
-this_template = site.pages['Template:Infobox Player']  # Set template
+this_template = site.client.pages['Template:Infobox Player']  # Set template
 pages = this_template.embeddedin()
 
 pages_var = list(pages)
@@ -28,7 +28,7 @@ lmt = 0
 for s in slices:
 	print(s[0])
 	pagelist = '|'.join(s)
-	site.api('purge', format='json',
+	site.client.api('purge', format='json',
 			 titles = pagelist,
 			 forcelinkupdate = '1'
 			 )

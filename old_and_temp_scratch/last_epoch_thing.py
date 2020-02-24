@@ -1,7 +1,7 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 import mwparserfromhell
 
-site = login('me', 'lastepoch')  # Set wiki
+site = EsportsSite('lol') 'lastepoch')  # Set wiki
 summary = 'Bot Edit'  # Set summary
 
 limit = -1 # set this to -1 to be unlimited
@@ -9,7 +9,7 @@ fieldname = 'OtherTag' # SET THIS TO PARAM
 
 
 # startat_page = 'asdf'
-this_template = site.pages['Template:Skills']  # Set template
+this_template = site.client.pages['Template:Skills']  # Set template
 pages = this_template.embeddedin()
 
 pages_var = list(pages)

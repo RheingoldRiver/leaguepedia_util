@@ -16,7 +16,7 @@ template_types = {
 	"players" : 'Player',
 	"teams" : 'Team'
 }
-this_template = site.pages['Template:Infobox ' + template_types[page_type]]  # Set template
+this_template = site.client.pages['Template:Infobox ' + template_types[page_type]]  # Set template
 pages = this_template.embeddedin()
 
 tabs_templates = ['TDRight', 'TabsDynamic', 'TD']
@@ -24,7 +24,7 @@ years = ['2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019']
 months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'September', 'October', 'November', 'December']
 
 # pages = [
-# site.pages["Wraith"]
+# site.client.pages["Wraith"]
 # ]
 
 pages = site.client.pages['Template:ExternalContent/Line'].embeddedin(namespace=0)
@@ -101,7 +101,7 @@ for page in pages:
 							idx = (date.weekday() + 1) % 7
 							sun = date - datetime.timedelta(idx)
 							data_page_name = 'Data:ExternalContent/' + sun.strftime('%Y-%m-%d')
-							data_page = site.pages[data_page_name]
+							data_page = site.client.pages[data_page_name]
 							data_text = data_page.text()
 							if param_tl.get('url').value.strip() not in data_text:
 								add_new_line(param_tl, data_page, data_text, date)

@@ -1,7 +1,9 @@
-from log_into_wiki import *
-import mwparserfromhell, sprite_creator
+from river_mwclient.esports_site import EsportsSite
+import sprite_creator
 from team_sprite_entry import *
-site = login('me','lol') # Set wiki
+from image_util import *
+from mwclient.errors import APIError
+site = EsportsSite('lol', user_file="me") # Set wiki
 summary = 'Update team sprite according to high-use pages' # Set summary
 
 IMAGE_DIR = 'Test Images/'
@@ -12,8 +14,8 @@ IMAGES_ACROSS = 15
 IMAGE_GAP = 2
 SPRITE_FILE_NAME = SPRITE_NAME + 'Sprite'
 SPRITE_FILE_NAME_FULL = SPRITE_FILE_NAME + '.png'
-SPRITE_DATA_PAGE = site.pages['Module:%sSprite' % SPRITE_NAME]
-HIGH_USE_PAGE_LIST = site.pages['Maintenance:High-Use Pages'].text().split(',')
+SPRITE_DATA_PAGE = site.client.pages['Module:%sSprite' % SPRITE_NAME]
+HIGH_USE_PAGE_LIST = site.client.pages['Maintenance:High-Use Pages'].text().split(',')
 
 spritesheet = sprite_creator.Sprite(IMAGE_WIDTH, IMAGE_HEIGHT, IMAGES_ACROSS, IMAGE_GAP, SPRITE_FILE_NAME)
 spritesheet.open_from_image(open_image_from_filename(site, SPRITE_FILE_NAME_FULL))
@@ -64,8 +66,8 @@ new_sprite_text = sprite_file_table[0] + split_text + sprite_data.print_output()
 
 if new_sprite_text != sprite_file_text:
 	try:
-		site.upload(open(SPRITE_FILE_NAME_FULL, "rb"), SPRITE_FILE_NAME_FULL, summary, ignore = True)
+		site.client.upload(open(SPRITE_FILE_NAME_FULL, "rb"), SPRITE_FILE_NAME_FULL, summary, ignore = True)
 		SPRITE_DATA_PAGE.save(new_sprite_text, summary = summary)
 		print('saved!')
-	except mwclient.errors.APIError:
+	except APIError:
 		print('no changes made')

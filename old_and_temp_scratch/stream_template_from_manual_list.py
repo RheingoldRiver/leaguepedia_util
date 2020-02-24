@@ -1,4 +1,4 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 import mwparserfromhell, time
 
 site = login('bot','lol') # Set wiki
@@ -6,7 +6,7 @@ summary = 'Converting streams to use stream template (incl in infobox)' # Set su
 
 limit = -1
 #startat_page = 'Liga de Videojuegos Profesional/Season 8/Sprint 2'
-this_template = site.pages['Template:Infobox Tournament'] # Set template
+this_template = site.client.pages['Template:Infobox Tournament'] # Set template
 pages = this_template.embeddedin()
 
 pages_var = list(pages)

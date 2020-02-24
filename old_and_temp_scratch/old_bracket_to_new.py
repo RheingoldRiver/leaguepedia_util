@@ -1,7 +1,7 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 import mwparserfromhell, math
 
-site = login('me', 'cod-esports')  # Set wiki
+site = EsportsSite('lol') 'cod-esports')  # Set wiki
 
 ################################################################
 this_bracket = '4SE'
@@ -17,18 +17,18 @@ old_bracket = False#'8SEBracketMatchInfo'
 summary = 'Change to new brackets (%s)' % this_bracket  # Set summary
 limit = 2
 # startat_page = 'asdf'
-this_template = site.pages['Template:%sBracket' % this_bracket]  # Set template
+this_template = site.client.pages['Template:%sBracket' % this_bracket]  # Set template
 bracket_to_match = '%sBracket' % this_bracket
 if old_bracket:
 	print(this_template) # fuck you pycharm "error" highlighting
 	print(bracket_to_match)
-	this_template = site.pages['Template:' + old_bracket]
+	this_template = site.client.pages['Template:' + old_bracket]
 	bracket_to_match = old_bracket
 pages = this_template.embeddedin()
 
 pages_var = list(pages)
 
-#pages_var = [site.pages['International Wildcard All-Star Melbourne 2015']]
+#pages_var = [site.client.pages['International Wildcard All-Star Melbourne 2015']]
 
 pages_array = [p.name for p in pages_var]
 

@@ -1,8 +1,8 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 limit = -1
 site = login('bot','lol')
 
-response = site.api('cargoquery', tables = 'Champions', fields='_pageName=Page',
+response = site.client.api('cargoquery', tables = 'Champions', fields='_pageName=Page',
 					group_by = '_pageName', limit='max'
 					)
 pages = []
@@ -16,7 +16,7 @@ lmt = 0
 for page in pages:
 	if lmt == limit:
 		break
-	p = site.pages[page]
+	p = site.client.pages[page]
 	lmt += 1
 	print(p.name)
 	text = p.text()

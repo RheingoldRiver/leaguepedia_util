@@ -1,8 +1,8 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 import mwparserfromhell
 
-site = login('me','minecraft') # Set wiki
-page = site.pages['Achievements']
+site = EsportsSite('lol')'minecraft') # Set wiki
+page = site.client.pages['Achievements']
 
 this_template = 'Achievements'
 this_param = 'title'

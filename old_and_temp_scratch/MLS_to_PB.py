@@ -1,5 +1,5 @@
 import mwparserfromhell, mwclient, re
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 
 limit = -1
 
@@ -29,7 +29,7 @@ oldregorder = { "bluebans":[2, 5],
 argorder = [ "noroles", "nocargo", "team1", "team2", "team1score", "team2score", "winner", "blueban1", "red_ban1", "blueban2", "red_ban2", "blueban3", "red_ban3", "bluepick1", "red_pick1", "red_pick2", "bluepick2", "bluepick3", "red_pick3", "red_pick4", "bluepick4", "bluepick5", "red_pick5"]
 deletethese = ["MatchListSlot","MatchListEnd"]
 
-thispage = site.pages["Template:MatchListStart"]
+thispage = site.client.pages["Template:MatchListStart"]
 pages = thispage.embeddedin(namespace=0)
 
 lmt = 0

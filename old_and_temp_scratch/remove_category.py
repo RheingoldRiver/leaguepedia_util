@@ -1,7 +1,7 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 limit = -1
 site = login('bot','lol')
-t = site.pages["Template:Item Page"]
+t = site.client.pages["Template:Item Page"]
 
 pages = t.embeddedin()
 

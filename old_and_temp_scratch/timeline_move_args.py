@@ -1,7 +1,7 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 import mwparserfromhell
 
-site = login('me', 'lol')  # Set wiki
+site = EsportsSite('lol', user_file='me')  # Set wiki
 summary = 'Rearranging timeline params'  # Set summary
 
 timeline_list = [
@@ -25,7 +25,7 @@ all_pages = []
 limit = -1
 # startat_page = 'asdf'
 for timeline in timeline_list:
-	this_template = site.pages['Template:' + timeline]  # Set template
+	this_template = site.client.pages['Template:' + timeline]  # Set template
 	pages = this_template.embeddedin()
 	pages_var = list(pages)
 	for page in pages_var:

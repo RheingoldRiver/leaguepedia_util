@@ -1,9 +1,9 @@
 import mwclient, mwparserfromhell, dateutil.parser, datetime
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 limit = -1
 templates = ["GameSchedule6","GameScheduleTST"]
 
-thispage = site.pages["Template:GameScheduleTST"]
+thispage = site.client.pages["Template:GameScheduleTST"]
 
 pages = thispage.embeddedin()
 

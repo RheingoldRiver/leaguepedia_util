@@ -1,5 +1,6 @@
 import urllib.request, time, sprite_creator, io, os
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
+import re
 
 SUFFIX = '_min_30'
 IMAGE_DIR = 'Team Images'
@@ -13,9 +14,9 @@ WLH_MIN_FOR_INCLUSION = 30
 limit = -1
 startat = None
 
-site = login('me', 'lol')
+site = EsportsSite('lol', user_file="me") # Set wiki
 
-teamnames_text = site.pages['Module:Teamnames'].text()
+teamnames_text = site.client.pages['Module:Teamnames'].text()
 teamnames = []
 for match in re.findall(r'link *= *\"(.+?)\"', teamnames_text):
 	teamnames.append(match)
@@ -41,13 +42,13 @@ for team in teamnames:
 		break
 	if startat and lmt < startat:
 		continue
-	result = site.api('query', list='backlinks', bltitle=team, bllimit=WLH_MIN_FOR_INCLUSION + 1)
+	result = site.client.api('query', list='backlinks', bltitle=team, bllimit=WLH_MIN_FOR_INCLUSION + 1)
 	if len(result['query']['backlinks']) < WLH_MIN_FOR_INCLUSION + 1:
 		print('%s has too few links, skipping' % team)
 		continue
 	# skip if the file is a redirect but record it as such for later
 	file_page = 'File:%slogo std.png' % team
-	file_text = site.pages[file_page].text().replace('_',' ')
+	file_text = site.client.pages[file_page].text().replace('_',' ')
 	final_file_location = '%slogo std.png' % team.replace('.','')
 	image_path = IMAGE_DIR + '/' + final_file_location
 	if os.path.isfile(image_path):
@@ -72,7 +73,7 @@ for team in teamnames:
 		else:
 			# get the file from the wiki & download it
 			to_parse_text = '[[%s|link=]]' % file_page
-			result = site.api('parse', title = 'Main Page', text = to_parse_text, disablelimitreport = 1)
+			result = site.client.api('parse', title = 'Main Page', text = to_parse_text, disablelimitreport = 1)
 			parse_result_text = result['parse']['text']['*']
 			url = re.match(pattern, parse_result_text)[1]
 			image = urllib.request.urlopen(url).read()

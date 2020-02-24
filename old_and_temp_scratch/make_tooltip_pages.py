@@ -1,4 +1,4 @@
-from log_into_wiki import *
+from river_mwclient.esports_site import EsportsSite
 import mwparserfromhell, time
 
 site = login('bot', 'lol')  # Set wiki
@@ -6,7 +6,7 @@ summary = 'Bot Edit'  # Set summary
 
 limit = -1
 startat_page = 'CompLexity.Black'
-this_template = site.pages['Template:Infobox Team']  # Set template
+this_template = site.client.pages['Template:Infobox Team']  # Set template
 pages = this_template.embeddedin()
 
 pages_var = list(pages)
@@ -30,12 +30,12 @@ for page in pages_var:
 		print("Skipping page %s" % page.name)
 	elif page.namespace == 0:
 		try:
-			newpage = site.pages['Tooltip:%s' % page.name]
+			newpage = site.client.pages['Tooltip:%s' % page.name]
 			print('Saving page %s...' % newpage.name)
 			newpage.save('{{RosterTooltip}}', summary = summary)
 		except Exception as e:
 			time.sleep(10)
 			site = login('bot', 'lol')
-			newpage = site.pages['Tooltip:%s' % page.name]
+			newpage = site.client.pages['Tooltip:%s' % page.name]
 			print('Saving page %s...' % newpage.name)
 			newpage.save('{{RosterTooltip}}', summary=summary)
