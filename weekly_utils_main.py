@@ -84,7 +84,7 @@ for page in pages:
 						utils.createResults(site, page, template, 'Schedule History', 'Team', '{{TeamScheduleHistory}}')
 						tooltip = site.client.pages['Tooltip:%s' % page]
 						tooltip.save('{{RosterTooltip}}',tags='daily_errorfix')
-				elif template.name.strip() in gameschedule_templates:
+				elif template.name.matches(['MatchSchedule','MatchSchedule/Game']):
 					utils.fixDST(template)
 					utils.updateParams(template)
 				elif template.name.matches('PicksAndBansS7') or template.name.matches('PicksAndBans'):
