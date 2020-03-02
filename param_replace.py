@@ -1,7 +1,9 @@
-from river_mwclient.esports_site import EsportsSite
+from river_mwclient.esports_client import EsportsClient
+from river_mwclient.auth_credentials import AuthCredentials
 import mwparserfromhell
 
-site = EsportsSite('lol', user_file="me") # Set wiki
+credentials = AuthCredentials(user_file="me")
+site = EsportsClient('lol', credentials=credentials) # Set wiki
 
 template_name = 'PicksAndBansS7'
 orig_params = ['team1', 'team2']

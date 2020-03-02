@@ -1,4 +1,5 @@
-from river_mwclient.esports_site import EsportsSite
+from river_mwclient.esports_client import EsportsClient
+from river_mwclient.auth_credentials import AuthCredentials
 from extended_page import ExtendedPage
 
 YEAR_CREATE_TEXT = """{{{{{}TabsHeader}}}}
@@ -12,7 +13,8 @@ MH_CREATE_TEXT = """{{{{{}TabsHeader}}}}
 
 class StatsCreator(object):
 	def __init__(self, page_type):
-		self.site = EsportsSite('lol', user_file="me") # Set wiki
+		self.credentials = AuthCredentials(user_file="me")
+site = EsportsClient('lol', credentials=credentials) # Set wiki
 		self.summary = "Automatically discovering & creating year player & team stats"
 		self.error_page = 'Failed Yearly Stats Pages'
 		self.create_text = YEAR_CREATE_TEXT.format(page_type, page_type)

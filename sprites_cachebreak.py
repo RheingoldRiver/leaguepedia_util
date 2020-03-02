@@ -1,7 +1,9 @@
-from river_mwclient.esports_site import EsportsSite
+from river_mwclient.esports_client import EsportsClient
+from river_mwclient.auth_credentials import AuthCredentials
 import re
 
-site = EsportsSite('lol', user_file="me") # Set wiki
+credentials = AuthCredentials(user_file="me")
+site = EsportsClient('lol', credentials=credentials) # Set wiki
 summary = 'Bot Edit - Automatically Forcing Sprite Cache Update'
 url_re_start = r'.*(\/.\/..\/)'
 url_re_end = r'(\?version=\w*)\".*'

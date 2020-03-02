@@ -1,6 +1,7 @@
 import urllib.request, time, sprite_creator, io, os
 import re
-from river_mwclient.esports_site import EsportsSite
+from river_mwclient.esports_client import EsportsClient
+from river_mwclient.auth_credentials import AuthCredentials
 
 SUFFIX = ''
 SPRITE_NAME = 'SmiteRole'
@@ -10,8 +11,9 @@ FILE_TYPE = 'png'
 limit = -1
 startat = None
 
-site = EsportsSite('smite', user_file="me") # Set wiki
-site_lol = EsportsSite('lol', user_file="me") # Set wiki
+credentials = AuthCredentials(user_file="me")
+site = EsportsClient('smite', credentials=credentials) #  set wiki
+site_lol = EsportsClient('lol', credentials=credentials) #  set wiki
 
 if not os.path.exists(IMAGE_DIR):
 	os.makedirs(IMAGE_DIR)

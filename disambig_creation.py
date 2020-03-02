@@ -1,5 +1,6 @@
 import re, threading, mwparserfromhell
-from river_mwclient.esports_site import EsportsSite
+from river_mwclient.esports_client import EsportsClient
+from river_mwclient.auth_credentials import AuthCredentials
 
 #################################################################################################
 
@@ -29,7 +30,8 @@ blank_edit_these = []
 
 #############################################################################################
 
-site = EsportsSite('lol', user_file="me") # Set wiki
+credentials = AuthCredentials(user_file="me")
+site = EsportsClient('lol', credentials=credentials) # Set wiki
 
 def savepage(targetpage, savetext):
 	targetpage.save(savetext, summary=summary, tags="bot_disambig")

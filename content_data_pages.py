@@ -1,4 +1,5 @@
-from river_mwclient.esports_site import EsportsSite
+from river_mwclient.esports_client import EsportsClient
+from river_mwclient.auth_credentials import AuthCredentials
 from datetime import date, timedelta
 import mwparserfromhell
 
@@ -27,7 +28,7 @@ navbox_text = """{{Navbox
 
 }}<noinclude>[[Category:Navboxes]]</noinclude>"""
 
-site: EsportsSite = None
+site: EsportsClient = None
 
 lookup = {
 	"news" : { "template_prefix" : "NewsData",
@@ -136,6 +137,6 @@ def check_and_make_redirects(d, page_prefix, redirect_text):
 
 if __name__ == "__main__":
 	this = 'news'
-	site = EsportsSite('splatoon2-esports', user_file='bot')  # Set wiki
+	site = EsportsClient('splatoon2-esports', user_file='bot')  # Set wiki
 	make_templates(this)
 	make_data_pages(range(20020,2021), this, startat_page=None)

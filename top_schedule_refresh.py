@@ -1,4 +1,5 @@
-from river_mwclient.esports_site import EsportsSite
+from river_mwclient.esports_client import EsportsClient
+from river_mwclient.auth_credentials import AuthCredentials
 
 wikis = [ 'lol', 'cod-esports' ]
 
@@ -14,13 +15,13 @@ to_blank_edits = {
 	'lol' : ['Project:Korizon Standings']
 }
 
-def blank_edit_pages(site: EsportsSite, ls):
+def blank_edit_pages(site: EsportsClient, ls):
 	for name in ls:
 		p = site.client.pages[name]
 		p.save(p.text(), summary='blank editing')
 
 for wiki in wikis:
-	site = EsportsSite(wiki, user_file='me')
+	site = EsportsClient(wiki, user_file='me')
 	
 	blank_edit_pages(site, to_blank_edit)
 	if wiki in to_blank_edits.keys():

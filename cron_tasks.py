@@ -1,4 +1,5 @@
-from river_mwclient.esports_site import EsportsSite
+from river_mwclient.esports_client import EsportsClient
+from river_mwclient.auth_credentials import AuthCredentials
 
 
 class CronTasks(object):
@@ -18,7 +19,8 @@ class CronTasks(object):
 		self.all_revs = {}
 		self.all_logs = {}
 		for wiki in self.all_wikis:
-			site = EsportsSite('lol', user_file="me")  # Set wiki
+			credentials = AuthCredentials(user_file="me")
+			site = EsportsClient('lol', credentials=credentials)  # Set wiki
 			revs_gen = site.client.recentchanges_by_interval(interval)
 			revs = [_ for _ in revs_gen]
 			logs = site.client.logs_by_interval(interval)

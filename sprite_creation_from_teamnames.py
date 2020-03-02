@@ -1,5 +1,6 @@
 import urllib.request, time, sprite_creator, io, os
-from river_mwclient.esports_site import EsportsSite
+from river_mwclient.esports_client import EsportsClient
+from river_mwclient.auth_credentials import AuthCredentials
 import re
 
 SUFFIX = '_min_30'
@@ -14,7 +15,8 @@ WLH_MIN_FOR_INCLUSION = 30
 limit = -1
 startat = None
 
-site = EsportsSite('lol', user_file="me") # Set wiki
+credentials = AuthCredentials(user_file="me")
+site = EsportsClient('lol', credentials=credentials) # Set wiki
 
 teamnames_text = site.client.pages['Module:Teamnames'].text()
 teamnames = []

@@ -1,8 +1,9 @@
-from river_mwclient.esports_site import EsportsSite
+from river_mwclient.esports_client import EsportsClient
+from river_mwclient.auth_credentials import AuthCredentials
 import mwparserfromhell, datetime
 limit = -1
 
-site = EsportsSite('fortnite', user_file="bot") # Set wiki
+site = EsportsClient('fortnite', user_file="bot") # Set wiki
 summary = 'Automatically setting active/inactive status'
 
 def change_active_status(result, status):

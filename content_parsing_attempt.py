@@ -1,7 +1,8 @@
-from river_mwclient.esports_site import EsportsSite
+from river_mwclient.esports_client import EsportsClient
+from river_mwclient.auth_credentials import AuthCredentials
 import mwparserfromhell, re
 
-site = EsportsSite('lol', user_file="bot") # Set wiki
+site = EsportsClient('lol', user_file="bot") # Set wiki
 summary = 'Attempting to parse old content as templates'  # Set summary
 
 page_type = 'players' # tournament, players, teams

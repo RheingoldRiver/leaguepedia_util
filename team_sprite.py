@@ -1,9 +1,11 @@
-from river_mwclient.esports_site import EsportsSite
+from river_mwclient.esports_client import EsportsClient
+from river_mwclient.auth_credentials import AuthCredentials
 import sprite_creator
 from team_sprite_entry import *
 from image_util import *
 from mwclient.errors import APIError
-site = EsportsSite('lol', user_file="me") # Set wiki
+credentials = AuthCredentials(user_file="me")
+site = EsportsClient('lol', credentials=credentials) # Set wiki
 summary = 'Update team sprite according to high-use pages' # Set summary
 
 IMAGE_DIR = 'Test Images/'

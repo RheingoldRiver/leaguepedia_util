@@ -1,8 +1,10 @@
-from river_mwclient.esports_site import EsportsSite
+from river_mwclient.esports_client import EsportsClient
+from river_mwclient.auth_credentials import AuthCredentials
 import mwparserfromhell, datetime
 from dateutil import parser
 
-site = EsportsSite('lol', user_file="me") # Set wiki
+credentials = AuthCredentials(user_file="me")
+site = EsportsClient('lol', credentials=credentials) # Set wiki
 summary = 'Attempting to migrate content to data ns'  # Set summary
 
 limit = -1

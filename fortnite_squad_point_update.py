@@ -1,4 +1,5 @@
-from river_mwclient.esports_site import EsportsSite
+from river_mwclient.esports_client import EsportsClient
+from river_mwclient.auth_credentials import AuthCredentials
 import mwparserfromhell
 from mwclient.page import Page
 
@@ -6,7 +7,8 @@ PLAYERS_PER_SQUAD = 4
 CURRENT_YEAR = 2020
 CURRENT_YEAR_STR = str(CURRENT_YEAR)
 
-site = EsportsSite('fortnite', user_file="me") # Set wiki
+credentials = AuthCredentials(user_file="me")
+site = EsportsClient('fortnite', credentials=credentials) #  set wiki
 summary = 'Automatic Squad Update'  # Set summary
 
 def run():

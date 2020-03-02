@@ -1,9 +1,11 @@
-from river_mwclient.esports_site import EsportsSite
+from river_mwclient.esports_client import EsportsClient
+from river_mwclient.auth_credentials import AuthCredentials
 
-def run(site: EsportsSite, logs):
+def run(site: EsportsClient, logs):
 	for log in logs:
 		if 'mw-new-redirect' not in log['tags']:
 			continue
 
 if __name__ == '__main__':
-	site = EsportsSite('lol', user_file="me")  # Set wiki
+	credentials = AuthCredentials(user_file="me")
+site = EsportsClient('lol', credentials=credentials)  # Set wiki

@@ -1,7 +1,9 @@
-from river_mwclient.esports_site import EsportsSite
+from river_mwclient.esports_client import EsportsClient
+from river_mwclient.auth_credentials import AuthCredentials
 
-archive = EsportsSite('lol-archive', user_file="me") # Set wiki
-live = EsportsSite('lol', user_file="me") # Set wiki
+credentials = AuthCredentials(user_file="me")
+archive = EsportsClient('lol-archive', credentials=credentials) #  set wiki
+live = EsportsClient('lol', credentials=credentials) #  set wiki
 
 pages = []
 

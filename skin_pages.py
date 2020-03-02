@@ -1,6 +1,8 @@
-from river_mwclient.esports_site import EsportsSite
+from river_mwclient.esports_client import EsportsClient
+from river_mwclient.auth_credentials import AuthCredentials
 
-site = EsportsSite('lol', user_file="me") # Set wiki
+credentials = AuthCredentials(user_file="me")
+site = EsportsClient('lol', credentials=credentials) # Set wiki
 summary = 'Populate skin pages' # Set summary
 
 pages = site.cargo_client.page_list(tables="SkinImages,_pageData=PD",join_on="SkinImages.Name=PD._pageName",fields="Name",where="Name IS NOT NULL and PD._pageName IS NULL")

@@ -1,5 +1,6 @@
 import requests, datetime, pytz, time
-from river_mwclient.esports_site import EsportsSite
+from river_mwclient.esports_client import EsportsClient
+from river_mwclient.auth_credentials import AuthCredentials
 
 GCD_URL = "https://spreadsheets.google.com/feeds/cells/1Y7k5kQ2AegbuyiGwEPsa62e883FYVtHqr6UVut9RC4o/{}/public/values?alt=json"
 
@@ -15,7 +16,8 @@ ERROR_REPORT_PAGE = 'User:RheingoldRiver/GCD Errors'
 def main():
 	if int(now_localized().strftime('%H')) != 23:
 		return
-	site = EsportsSite('lol', user_file="me")  # Set wiki
+	credentials = AuthCredentials(user_file="me")
+	site = EsportsClient('lol', credentials=credentials)  # Set wiki
 	pages = get_pages_to_make()
 	for k in pages.keys():
 		# print(k)

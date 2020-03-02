@@ -1,7 +1,9 @@
-from river_mwclient.esports_site import EsportsSite
+from river_mwclient.esports_client import EsportsClient
+from river_mwclient.auth_credentials import AuthCredentials
 
-loadout = EsportsSite('lol', user_file="me") # Set wiki
-target = EsportsSite('splatoon2', user_file="me") # Set wiki
+credentials = AuthCredentials(user_file="me")
+loadout = EsportsClient('lol', credentials=credentials) #  set wiki
+target = EsportsClient('splatoon2', credentials=credentials) #  set wiki
 summary = 'Backing up spyro'  # Set summary
 
 startat_namespace = None

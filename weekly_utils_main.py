@@ -5,9 +5,11 @@ import weekly_utils as utils
 import scrape_runes, luacache_refresh
 from template_list import *
 from log_into_wiki import report_errors
-from river_mwclient.esports_site import EsportsSite
+from river_mwclient.esports_client import EsportsClient
+from river_mwclient.auth_credentials import AuthCredentials
 
-site = EsportsSite('lol', user_file="me") # Set wiki
+credentials = AuthCredentials(user_file="me")
+site = EsportsClient('lol', credentials=credentials) # Set wiki
 
 limit = -1
 

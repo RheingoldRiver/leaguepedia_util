@@ -1,9 +1,11 @@
 import dateutil.parser, pytz, re, datetime, mwparserfromhell
 import dateutil
 from leaguepedia_validation.pickban import PickBanValidator
-from river_mwclient.esports_site import EsportsSite
+from river_mwclient.esports_client import EsportsClient
+from river_mwclient.auth_credentials import AuthCredentials
 
-site = EsportsSite('lol', user_file="me") # Set wiki
+credentials = AuthCredentials(user_file="me")
+site = EsportsClient('lol', credentials=credentials) # Set wiki
 
 typo_find = ['favourite','quater','partecipate','Portugese', 'Regelations']
 typo_replace = ['favorite','quarter','participate','Portuguese', 'Relegations']
@@ -178,7 +180,7 @@ DOC_PAGES_TO_MAKE = [
 	}
 ]
 
-def make_doc_pages(site: EsportsSite, p):
+def make_doc_pages(site: EsportsClient, p):
 	for case in DOC_PAGES_TO_MAKE:
 		if 'matches' in case.keys():
 			if not re.findall(case['matches'], p.name):

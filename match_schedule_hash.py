@@ -1,5 +1,6 @@
 import mwparserfromhell
-from river_mwclient.esports_site import EsportsSite
+from river_mwclient.esports_client import EsportsClient
+from river_mwclient.auth_credentials import AuthCredentials
 
 ERROR_LOCATION = 'MatchSchedule Ordering Errors'
 ERROR_TEAMS_TEXT = 'Team 1 - {}; Team 2: {}'
@@ -32,7 +33,7 @@ def get_error_text(res, tl):
 	new = ERROR_TEAMS_TEXT.format(res['Team1'], res['Team2'])
 	return 'Match Info: {}\n<br>Originally: {}\n<br>Now: {}<br>'.format(match_info, original, new)
 
-def check_page(site: EsportsSite, page_name):
+def check_page(site: EsportsClient, page_name):
 	response = site.client.api('cargoquery', tables = 'MatchSchedule',
 					  fields = 'InitialN_MatchInTab=Order, Team1, Team2, Tab, InitialPageAndTab',
 					  where = '_pageName="%s"' % page_name
@@ -64,7 +65,7 @@ def check_page(site: EsportsSite, page_name):
 	if text != new_text:
 		hash_location.save(new_text)
 
-def run(site: EsportsSite, revs):
+def run(site: EsportsClient, revs):
 	done = {}
 	for rev in revs:
 		title = rev['title']
@@ -76,5 +77,6 @@ def run(site: EsportsSite, revs):
 	site.client.report_all_errors(ERROR_LOCATION)
 
 if __name__ == '__main__':
-	site = EsportsSite('lol', user_file="me")  # Set wiki
+	credentials = AuthCredentials(user_file="me")
+	site = EsportsClient('lol', credentials=credentials)  # Set wiki
 	run(site, site.client.recentchanges_by_interval(200))

@@ -1,4 +1,5 @@
-from river_mwclient.esports_site import EsportsSite
+from river_mwclient.esports_client import EsportsClient
+from river_mwclient.auth_credentials import AuthCredentials
 
 def run(site, revs):
 	error_page = site.client.pages['Log:Prediction Reports']
@@ -15,7 +16,7 @@ def run(site, revs):
 		
 
 if __name__ == '__main__':
-	site = EsportsSite('lol')
+	site = EsportsClient('lol')
 	site.client.login_from_file('me')
 	revs = site.client.recentchanges_by_interval(100)
 	run(site, revs)

@@ -1,8 +1,10 @@
 import mwparserfromhell
-from river_mwclient.esports_site import EsportsSite
+from river_mwclient.esports_client import EsportsClient
+from river_mwclient.auth_credentials import AuthCredentials
 
 summary = 'Semi-automatically migrating MD pages to Data namespace (Python)'
-site = EsportsSite('lol', user_file="me") # Set wiki
+credentials = AuthCredentials(user_file="me")
+site = EsportsClient('lol', credentials=credentials) # Set wiki
 limit = -1
 startat = -1
 

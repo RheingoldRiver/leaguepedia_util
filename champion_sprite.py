@@ -1,5 +1,6 @@
 import urllib.request, time, sprite_creator, io, os
-from river_mwclient.esports_site import EsportsSite
+from river_mwclient.esports_client import EsportsClient
+from river_mwclient.auth_credentials import AuthCredentials
 import re
 
 SUFFIX = ''
@@ -9,8 +10,9 @@ TEAM_DATA_FILE_LOCATION = SPRITE_NAME + 'Sprite' + SUFFIX + '.txt'
 limit = -1
 startat = None
 
-site = EsportsSite('commons', user_file="me") # Set wiki
-site_lol = EsportsSite('lol', user_file="me") # Set wiki
+credentials = AuthCredentials(user_file="me")
+site = EsportsClient('commons', credentials=credentials) #  set wiki
+site_lol = EsportsClient('lol', credentials=credentials) #  set wiki
 
 def get_country_name(file_name):
 	return file_name.replace('Square', '').replace('.png', '').replace('File:', '')

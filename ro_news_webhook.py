@@ -1,13 +1,14 @@
 import datetime
 from discord_webhook import DiscordWebhook, DiscordEmbed
-from river_mwclient.esports_site import EsportsSite
+from river_mwclient.esports_client import EsportsClient
+from river_mwclient.auth_credentials import AuthCredentials
 
 with open('webhook_leona.txt') as f:
 	webhook_url = f.read().strip()
 
 webhook = DiscordWebhook(url=webhook_url)
 
-def run(site: EsportsSite, logs):
+def run(site: EsportsClient, logs):
 	for log in logs:
 		if log['type'] != 'ro-news':
 			continue
@@ -23,5 +24,6 @@ def send_event(text, team):
 	webhook.execute()
 
 if __name__ == '__main__':
-	site = EsportsSite('lol', user_file="me")  # Set wiki
+	credentials = AuthCredentials(user_file="me")
+	site = EsportsClient('lol', credentials=credentials)  # Set wiki
 	run(site, site.client.recentchanges_by_interval(1))

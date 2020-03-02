@@ -1,8 +1,10 @@
-from river_mwclient.esports_site import EsportsSite
+from river_mwclient.esports_client import EsportsClient
+from river_mwclient.auth_credentials import AuthCredentials
 import mwparserfromhell, time
 limit = -1
 
-site = EsportsSite('fortnite', user_file="me") # Set wiki
+credentials = AuthCredentials(user_file="me")
+site = EsportsClient('fortnite', credentials=credentials) #  set wiki
 summary = 'Automatically create player pages for Power Rankings'
 
 result = site.cargo_client.query(

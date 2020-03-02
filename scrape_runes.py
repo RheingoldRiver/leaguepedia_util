@@ -1,5 +1,6 @@
 import re, json, urllib.request, urllib.error, math, copy
-from river_mwclient.esports_site import EsportsSite
+from river_mwclient.esports_client import EsportsClient
+from river_mwclient.auth_credentials import AuthCredentials
 import requests
 
 def get_patch():
@@ -34,7 +35,7 @@ def get_rune_dict(site):
 				rune_dict['trees'][int(rune['id'])] = tree['key']
 	return rune_dict
 
-def get_champ_dict(site: EsportsSite):
+def get_champ_dict(site: EsportsClient):
 	patch = get_patch()
 	champ_dict = {}
 	with urllib.request.urlopen('http://ddragon.leagueoflegends.com/cdn/{}/data/en_US/champion.json'.format(patch)) as url:
@@ -61,7 +62,7 @@ def get_token():
 	r = session.post(url, data=data)
 	return r.json()['id_token']
 
-def scrape(site: EsportsSite, events, force):
+def scrape(site: EsportsClient, events, force):
 	player_data_keys = ["perkPrimaryStyle", "perkSubStyle", "perk0", "perk1", "perk2", "perk3", "perk4", "perk5",
 						 "statPerk0", "statPerk1", "statPerk2"]
 	player_positions = ['Top','Jungle','Mid','ADC','Support']
@@ -182,7 +183,7 @@ def get_this_teamname(teamnames, team_keys, j):
 	team_key = team_keys[math.floor(j / 5)]
 	return teamnames[team_key]
 
-def scrapeLPL(site: EsportsSite, events, force):
+def scrapeLPL(site: EsportsClient, events, force):
 	player_positions = ['Top', 'Jungle', 'Mid', 'ADC', 'Support']
 	rune_dict = get_rune_dict(site)
 	champ_dict = get_champ_dict(site)
@@ -347,7 +348,8 @@ def scrapeLPL(site: EsportsSite, events, force):
 				error_page.save(error_text, summary='Reporting a Rune Error')
 
 if __name__ == '__main__':
-	site = EsportsSite('lol', user_file="me")  # Set wiki
+	credentials = AuthCredentials(user_file="me")
+site = EsportsClient('lol', credentials=credentials)  # Set wiki
 	
 	pages = ['Data:Nordic Championship/2020 Season/Spring Season']
 	

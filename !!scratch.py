@@ -1,8 +1,10 @@
-from river_mwclient.esports_site import EsportsSite
+from river_mwclient.esports_client import EsportsClient
+from river_mwclient.auth_credentials import AuthCredentials
 import mwparserfromhell
 import json
 
-site = EsportsSite('lol', user_file="me")  # Set wiki
+credentials = AuthCredentials(user_file="me")
+site = EsportsClient('lol', credentials=credentials)  # Set wiki
 summary = 'Add |same_page= param for renames'  # Set summary
 
 limit = -1
@@ -16,7 +18,7 @@ pages = this_template.embeddedin()
 # 	pages = f.readlines()
 
 class Cache(object):
-	def __init__(self, site: EsportsSite):
+	def __init__(self, site: EsportsClient):
 		self.cache = {}
 		self.site = site
 	
