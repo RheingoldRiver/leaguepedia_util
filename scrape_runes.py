@@ -349,9 +349,7 @@ def scrapeLPL(site: EsportsClient, events, force):
 
 if __name__ == '__main__':
 	credentials = AuthCredentials(user_file="me")
-site = EsportsClient('lol', credentials=credentials)  # Set wiki
-	
+	site = EsportsClient('lol', credentials=credentials)  # Set wiki
 	pages = ['Data:Nordic Championship/2020 Season/Spring Season']
-	
 	scrape(site, pages, False)
 	# scrapeLPL(site, pages, False)

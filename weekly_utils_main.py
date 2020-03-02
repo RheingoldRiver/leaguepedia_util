@@ -4,7 +4,6 @@ import mwparserfromhell, datetime
 import weekly_utils as utils
 import scrape_runes, luacache_refresh
 from template_list import *
-from log_into_wiki import report_errors
 from river_mwclient.esports_client import EsportsClient
 from river_mwclient.auth_credentials import AuthCredentials
 
@@ -39,6 +38,12 @@ revisions = site.client.api('query', format='json',
 
 pages = []
 pages_for_runes = []
+
+def report_errors(report_page, page, errors):
+	text = report_page.text()
+	error_text = '\n* '.join([e.args[0] for e in errors])
+	newtext = text + '\n==Python Error Report==\nPage: [[{}]] Messages:\n* {}'.format(page, error_text)
+	report_page.save(newtext)
 
 for revision in revisions['query']['recentchanges']:
 	title = revision['title']
