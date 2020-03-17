@@ -37,4 +37,3 @@ def replace_css_in_file(css_page):
 for page_name in css_page_list:
 	replace_css_in_file(site.client.pages[page_name])
 
-print('Ran!')
