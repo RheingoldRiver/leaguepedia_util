@@ -74,7 +74,7 @@ def run(site: EsportsClient, revs):
 		done[title] = True
 		if title.startswith('Data:'):
 			check_page(site, title)
-	site.client.report_all_errors(ERROR_LOCATION)
+	site.report_all_errors(ERROR_LOCATION)
 
 if __name__ == '__main__':
 	credentials = AuthCredentials(user_file="me")

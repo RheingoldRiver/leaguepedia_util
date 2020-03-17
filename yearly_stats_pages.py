@@ -37,7 +37,7 @@ class StatsCreator(object):
 			target_stats_page = ExtendedPage(self.site.client.pages[target_stats_page_name])
 			self.save_pages(target_stats_page)
 			stats_page.save(self.redirect_text % target_stats_page.name)
-		self.site.client.report_all_errors(self.error_page)
+		self.site.report_all_errors(self.error_page)
 	
 	def get_page_list(self):
 		# pass, but we don't want it giving a warning in self.run()
