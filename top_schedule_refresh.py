@@ -21,7 +21,8 @@ def blank_edit_pages(site: EsportsClient, ls):
 		p.save(p.text(), summary='blank editing')
 
 for wiki in wikis:
-	site = EsportsClient(wiki, user_file='me')
+	credentials = AuthCredentials(user_file="me")
+	site = EsportsClient(wiki, credentials=credentials)
 	
 	blank_edit_pages(site, to_blank_edit)
 	if wiki in to_blank_edits.keys():
