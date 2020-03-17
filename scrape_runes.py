@@ -189,6 +189,7 @@ def scrapeLPL(site, events, force):
 	please_escape = False
 	with open('mh_qq_endpoint.txt') as f:
 		mh_qq_endpoint = f.readlines()
+	mh_qq_endpoint = [_.strip() for _ in mh_qq_endpoint]
 	for page_to_query in events:
 		lmt = 0
 		if please_escape:
@@ -349,7 +350,7 @@ def scrapeLPL(site, events, force):
 if __name__ == '__main__':
 	site = login('me', 'lol')
 	
-	pages = ['Data:Nordic Championship/2020 Season/Spring Season']
+	pages = ['Data:LPL Online Scrims League 2020/Spring Season']
 	
-	scrape(site, pages, False)
-	# scrapeLPL(site, pages, False)
+	# scrape(site, pages, False)
+	scrapeLPL(site, pages, False)
