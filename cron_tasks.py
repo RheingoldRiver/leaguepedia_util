@@ -43,4 +43,4 @@ class CronTasks(object):
 				fn(site, data[wiki], **kwargs)
 			except Exception as e:
 				site.log_error_script(error=e)
-			site.client.report_all_errors('Cron Errors (%s)' % fn.__module__)
+			site.report_all_errors('Cron Errors (%s)' % fn.__module__)
