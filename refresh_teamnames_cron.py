@@ -19,7 +19,7 @@ revisions = site.client.api('query',
 					 )
 
 for revision in revisions['query']['recentchanges']:
-	print(revision['title'])
+	# print(revision['title'])
 	if revision['title'] == 'Module:Teamnames':
 		luacache_refresh.teamnames(site)
 		break
