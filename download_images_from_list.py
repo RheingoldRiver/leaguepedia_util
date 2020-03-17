@@ -1,8 +1,12 @@
-from log_into_wiki import *
+from river_mwclient.esports_client import EsportsClient
+from river_mwclient.auth_credentials import AuthCredentials
 import os
+from image_util import *
+
 limit = -1
 
-site = login('bot', 'lol')
+credentials = AuthCredentials(user_file="me")
+site = EsportsClient('lol', credentials=credentials) # Set wiki
 
 LOC = 'Sprites/' + 'League Images'
 

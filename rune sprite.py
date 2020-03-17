@@ -1,5 +1,7 @@
 import urllib.request, time, sprite_creator, io, os
-from log_into_wiki import *
+import re
+from river_mwclient.esports_client import EsportsClient
+from river_mwclient.auth_credentials import AuthCredentials
 
 SUFFIX = ''
 SPRITE_NAME = 'SmiteRole'
@@ -9,20 +11,21 @@ FILE_TYPE = 'png'
 limit = -1
 startat = None
 
-site = login('me', 'smite-esports')
-site_lol = login('me', 'lol')
+credentials = AuthCredentials(user_file="me")
+site = EsportsClient('smite', credentials=credentials) #  set wiki
+site_lol = EsportsClient('lol', credentials=credentials) #  set wiki
 
 if not os.path.exists(IMAGE_DIR):
-    os.makedirs(IMAGE_DIR)
+	os.makedirs(IMAGE_DIR)
 
 def get_country_name(file_name):
 	return file_name.replace('.' + FILE_TYPE, '').replace('File:', '').replace('Square','')
 
 pattern = r'.*src\=\"(.+?)\".*'
-cat = site.categories['Role Icons']
+cat = site.client.categories['Role Icons']
 for page in cat:
 	to_parse_text = '[[%s|link=]]' % page.name
-	result = site.api('parse', title = 'Main Page', text = to_parse_text, disablelimitreport = 1)
+	result = site.client.api('parse', title = 'Main Page', text = to_parse_text, disablelimitreport = 1)
 	parse_result_text = result['parse']['text']['*']
 	url = re.match(pattern, parse_result_text)[1]
 	image = urllib.request.urlopen(url).read()

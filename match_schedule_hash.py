@@ -1,5 +1,6 @@
 import mwparserfromhell
-from esportswiki_editing import *
+from river_mwclient.esports_client import EsportsClient
+from river_mwclient.auth_credentials import AuthCredentials
 
 ERROR_LOCATION = 'MatchSchedule Ordering Errors'
 ERROR_TEAMS_TEXT = 'Team 1 - {}; Team 2: {}'
@@ -32,13 +33,13 @@ def get_error_text(res, tl):
 	new = ERROR_TEAMS_TEXT.format(res['Team1'], res['Team2'])
 	return 'Match Info: {}\n<br>Originally: {}\n<br>Now: {}<br>'.format(match_info, original, new)
 
-def check_page(site: GamepediaSite, page_name):
-	response = site.api('cargoquery', tables = 'MatchSchedule',
+def check_page(site: EsportsClient, page_name):
+	response = site.client.api('cargoquery', tables = 'MatchSchedule',
 					  fields = 'InitialN_MatchInTab=Order, Team1, Team2, Tab, InitialPageAndTab',
 					  where = '_pageName="%s"' % page_name
 					  )
 	result = response['cargoquery']
-	hash_location = site.pages[page_name + '/Hash']
+	hash_location = site.client.pages[page_name + '/Hash']
 	text = hash_location.text()
 	wikitext = mwparserfromhell.parse(text)
 	hashes_to_add = []
@@ -52,7 +53,7 @@ def check_page(site: GamepediaSite, page_name):
 		if not hash_template:
 			hashes_to_add.append(get_append_hash(ms_hash, data))
 		elif not verify_hash(hash_template, data['Team1'], data['Team2']):
-			site.error_content(title=page_name, text=get_error_text(data, hash_template))
+			site.client.error_content(title=page_name, text=get_error_text(data, hash_template))
 			hash_template.add('team1', data['Team1'])
 			hash_template.add('team2', data['Team2'])
 		else: # There could be a TBD that we need to replace
@@ -64,7 +65,7 @@ def check_page(site: GamepediaSite, page_name):
 	if text != new_text:
 		hash_location.save(new_text)
 
-def run(site, revs):
+def run(site: EsportsClient, revs):
 	done = {}
 	for rev in revs:
 		title = rev['title']
@@ -73,8 +74,9 @@ def run(site, revs):
 		done[title] = True
 		if title.startswith('Data:'):
 			check_page(site, title)
-	site.report_all_errors(ERROR_LOCATION)
+	site.client.report_all_errors(ERROR_LOCATION)
 
 if __name__ == '__main__':
-	site = login('me', 'lol')
-	run(site, site.recentchanges_by_interval(200))
+	credentials = AuthCredentials(user_file="me")
+	site = EsportsClient('lol', credentials=credentials)  # Set wiki
+	run(site, site.client.recentchanges_by_interval(200))

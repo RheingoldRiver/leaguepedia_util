@@ -1,12 +1,14 @@
-from log_into_wiki import *
+from river_mwclient.esports_client import EsportsClient
+from river_mwclient.auth_credentials import AuthCredentials
 import luacache_refresh, datetime
 
-site = login('me', 'lol')
+credentials = AuthCredentials(user_file="me")
+site = EsportsClient('lol', credentials=credentials) # Set wiki
 
 now = datetime.datetime.utcnow()
 then = now - datetime.timedelta(minutes=1)
 
-revisions = site.api('query',
+revisions = site.client.api('query',
 					 list="recentchanges",
 					 rcstart = now.isoformat(),
 					 rcend = then.isoformat(),

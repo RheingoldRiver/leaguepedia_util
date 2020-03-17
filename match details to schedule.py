@@ -1,8 +1,10 @@
 import mwparserfromhell
-from log_into_wiki import *
+from river_mwclient.esports_client import EsportsClient
+from river_mwclient.auth_credentials import AuthCredentials
 
 summary = 'Semi-automatically migrating MD pages to Data namespace (Python)'
-site = login('me', 'lol')
+credentials = AuthCredentials(user_file="me")
+site = EsportsClient('lol', credentials=credentials) # Set wiki
 limit = -1
 startat = -1
 
@@ -45,7 +47,7 @@ for pagename in pages_var:
 	if lmt < startat:
 		print("Skipping page %s" % pagename)
 	else:
-		page = site.pages[pagename + '/Match Details']
+		page = site.client.pages[pagename + '/Match Details']
 		text = page.text()
 		wikitext = mwparserfromhell.parse(text)
 		
@@ -100,7 +102,7 @@ for pagename in pages_var:
 				all_data.append(game_data)
 				add_to_matches.append(series)
 		
-		data_page = site.pages['Data:' + pagename]
+		data_page = site.client.pages['Data:' + pagename]
 		data_text = data_page.text()
 		data_wikitext = mwparserfromhell.parse(data_text)
 		

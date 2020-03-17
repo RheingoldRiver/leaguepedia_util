@@ -1,4 +1,5 @@
-from esportswiki_editing import *
+from river_mwclient.esports_client import EsportsClient
+from river_mwclient.auth_credentials import AuthCredentials
 
 
 class CronTasks(object):
@@ -18,10 +19,11 @@ class CronTasks(object):
 		self.all_revs = {}
 		self.all_logs = {}
 		for wiki in self.all_wikis:
-			site = login('me', wiki)
-			revs_gen = site.recentchanges_by_interval(interval)
+			credentials = AuthCredentials(user_file="me")
+			site = EsportsClient('lol', credentials=credentials)  # Set wiki
+			revs_gen = site.client.recentchanges_by_interval(interval)
 			revs = [_ for _ in revs_gen]
-			logs = site.logs_by_interval(interval)
+			logs = site.client.logs_by_interval(interval)
 			self.all_sites[wiki] = site
 			self.all_revs[wiki] = revs
 			self.all_logs[wiki] = logs
@@ -40,5 +42,5 @@ class CronTasks(object):
 			try:
 				fn(site, data[wiki], **kwargs)
 			except Exception as e:
-				site.error_script(error=e)
-			site.report_all_errors('Cron Errors (%s)' % fn.__module__)
+				site.client.error_script(error=e)
+			site.client.report_all_errors('Cron Errors (%s)' % fn.__module__)

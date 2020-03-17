@@ -1,11 +1,13 @@
-from esports_site import EsportsSite
+from river_mwclient.esports_client import EsportsClient
+from river_mwclient.auth_credentials import AuthCredentials
 
-archive = EsportsSite('me', 'lol-archive')
-live = EsportsSite('me', 'lol')
+credentials = AuthCredentials(user_file="me")
+archive = EsportsClient('lol-archive', credentials=credentials) #  set wiki
+live = EsportsClient('lol', credentials=credentials) #  set wiki
 
 pages = []
 
-for page in archive.allpages(namespace=0):
+for page in archive.client.allpages(namespace=0):
 	pages.append((page.name, live.pages[page.name].exists))
 
 text = []

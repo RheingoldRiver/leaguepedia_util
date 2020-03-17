@@ -1,7 +1,9 @@
-from esportswiki_editing import *
+from river_mwclient.esports_client import EsportsClient
+from river_mwclient.auth_credentials import AuthCredentials
 import mwparserfromhell, re
 
-site = login('me', 'lol')  # Set wiki
+credentials = AuthCredentials(user_file="me")
+site = EsportsClient('lol', credentials=credentials) # Set wiki
 summary = 'Discover & auto-add vods to SB'  # Set summary
 
 vod_params = ['vodpb', 'vodstart', 'vod']
@@ -15,10 +17,10 @@ def data_suffix(n):
 	return '/' + str(n)
 
 def process_pages(data_page_name, sb_page_name):
-	data_page = site.pages[data_page_name]
+	data_page = site.client.pages[data_page_name]
 	data_text = data_page.text()
 	data_wikitext = mwparserfromhell.parse(data_text)
-	sb_page = site.pages[sb_page_name]
+	sb_page = site.client.pages[sb_page_name]
 	sb_text = sb_page.text()
 	sb_wikitext = mwparserfromhell.parse(sb_text)
 	for template in sb_wikitext.filter_templates():
@@ -41,7 +43,7 @@ def process_pages(data_page_name, sb_page_name):
 	if str(sb_wikitext) != sb_text:
 		sb_page.save(str(sb_wikitext), summary = summary)
 
-result = site.cargoquery(
+result = site.cargo_client.query(
 	tables="MatchScheduleGame=MSG,ScoreboardGame=SG",
 	join_on="MSG.ScoreboardID_Wiki=SG.ScoreboardID_Wiki",
 	where="SG.VOD IS NULL AND SG._pageName IS NOT NULL AND (MSG.Vod IS NOT NULL OR MSG.VodPostgame IS NOT NULL OR MSG.VodPB IS NOT NULL) AND MSG.MatchHistory IS NOT NULL",

@@ -1,4 +1,5 @@
-from log_into_wiki import *
+from river_mwclient.esports_client import EsportsClient
+from river_mwclient.auth_credentials import AuthCredentials
 
 wikis = [ 'lol', 'cod-esports' ]
 
@@ -14,27 +15,27 @@ to_blank_edits = {
 	'lol' : ['Project:Korizon Standings']
 }
 
-def blank_edit_pages(site, ls):
+def blank_edit_pages(site: EsportsClient, ls):
 	for name in ls:
-		p = site.pages[name]
+		p = site.client.pages[name]
 		p.save(p.text(), summary='blank editing')
 
 for wiki in wikis:
-	site = login('me',wiki)
+	site = EsportsClient(wiki, user_file='me')
 	
 	blank_edit_pages(site, to_blank_edit)
 	if wiki in to_blank_edits.keys():
 		blank_edit_pages(site, to_blank_edits[wiki])
 	
 	for name in to_purges[wiki]:
-		site.pages[name].purge()
+		site.client.pages[name].purge()
 	
-	result = site.api('expandtemplates', format='json',
+	result = site.client.api('expandtemplates', format='json',
 					prop = 'wikitext',
 					text = '{{Project:Template/Current Tournaments Section}}'
 	)
 	
 	text = result['expandtemplates']['wikitext']
 	
-	p2 = site.pages['Project:Current Tournaments Section']
+	p2 = site.client.pages['Project:Current Tournaments Section']
 	p2.save(text, summary = 'Automatically updating Current Tournaments',tags='daily_errorfix')

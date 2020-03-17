@@ -1,14 +1,16 @@
-from log_into_wiki import *
+from river_mwclient.esports_client import EsportsClient
+from river_mwclient.auth_credentials import AuthCredentials
 import mwparserfromhell
 
-site = login('bot', 'lol')  # Set wiki
+credentials = AuthCredentials(user_file="me")
+site = EsportsClient('lol', credentials=credentials) # Set wiki
 summary = 'Bot Edit'  # Set summary
 
 limit = -1
 startat_page = None
 print(startat_page)
 startat_page = 'Hecarim'
-this_template = site.pages['Template:Infobox Champion']  # Set template
+this_template = site.client.pages['Template:Infobox Champion']  # Set template
 pages = this_template.embeddedin()
 
 # with open('pages.txt', encoding="utf-8") as f:
@@ -31,7 +33,7 @@ for page in pages:
 	wikitext = mwparserfromhell.parse(text)
 	skins = []
 	for template in wikitext.filter_templates():
-		if tl_matches(template, ['Infobox Champion']):
+		if template.name.matches(['Infobox Champion']):
 			i = 1
 			while template.has('skin' + str(i) + 'name'):
 				skin = mwparserfromhell.nodes.Template('ChampionSkinsLine')
@@ -40,5 +42,5 @@ for page in pages:
 						skin.add(param, template.get('skin' + str(i) + param).value.strip())
 				skins.append(str(skin))
 				i += 1
-	new_page = site.pages[page.name + '/Skins']
+	new_page = site.client.pages[page.name + '/Skins']
 	new_page.save('{{ChampionTabsHeader}}\n{{ChampionSkinsStart}}\n' + '\n'.join(skins) + '\n{{ChampionSkinsEnd}}')

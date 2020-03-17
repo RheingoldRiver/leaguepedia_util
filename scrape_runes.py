@@ -1,5 +1,6 @@
 import re, json, urllib.request, urllib.error, math, copy
-from esportswiki_editing import *
+from river_mwclient.esports_client import EsportsClient
+from river_mwclient.auth_credentials import AuthCredentials
 import requests
 
 def get_patch():
@@ -34,7 +35,7 @@ def get_rune_dict(site):
 				rune_dict['trees'][int(rune['id'])] = tree['key']
 	return rune_dict
 
-def get_champ_dict(site):
+def get_champ_dict(site: EsportsClient):
 	patch = get_patch()
 	champ_dict = {}
 	with urllib.request.urlopen('http://ddragon.leagueoflegends.com/cdn/{}/data/en_US/champion.json'.format(patch)) as url:
@@ -61,7 +62,7 @@ def get_token():
 	r = session.post(url, data=data)
 	return r.json()['id_token']
 
-def scrape(site, events, force):
+def scrape(site: EsportsClient, events, force):
 	player_data_keys = ["perkPrimaryStyle", "perkSubStyle", "perk0", "perk1", "perk2", "perk3", "perk4", "perk5",
 						 "statPerk0", "statPerk1", "statPerk2"]
 	player_positions = ['Top','Jungle','Mid','ADC','Support']
@@ -73,7 +74,7 @@ def scrape(site, events, force):
 	mh_riot_token = get_token()
 	for page_to_query in events:
 		print(page_to_query)
-		result = site.api('cargoquery', format = "json",
+		result = site.client.api('cargoquery', format = "json",
 						  limit = 'max',
 						  tables = "MatchScheduleGame=MSG,MatchSchedule=MS",
 						  fields = "MSG.OverviewPage,MSG.MatchHistory",
@@ -90,15 +91,15 @@ def scrape(site, events, force):
 			errors_http = []
 			errors_key = []
 			page_name = event + '/Runes' + suffix
-			page = site.pages[page_name]
+			page = site.client.pages[page_name]
 			text = page.text()
 			text_tbl = []
-			intro = ''
+			intro = None
 			if text != "":
 				text_tbl = text.split('\n')
 				intro = text_tbl.pop(0) + '\n' + text_tbl.pop(0)
 			else:
-				overview_page = site.pages[event]
+				overview_page = site.client.pages[event]
 				overview_text = overview_page.text()
 				overview_text_tbl = overview_text.split('\n')
 				tabs = overview_text_tbl[0]
@@ -159,7 +160,7 @@ def scrape(site, events, force):
 			for e in errors_key:
 				error_text = error_text + '\n' + e + ' (Key)'
 			if error_text != '':
-				error_page = site.pages['User:RheingoldRiver/Rune Errors']
+				error_page = site.client.pages['User:RheingoldRiver/Rune Errors']
 				error_page.save(error_text, summary='Reporting a Rune Error')
 
 def get_player_data(game, team_keys, j):
@@ -182,7 +183,7 @@ def get_this_teamname(teamnames, team_keys, j):
 	team_key = team_keys[math.floor(j / 5)]
 	return teamnames[team_key]
 
-def scrapeLPL(site, events, force):
+def scrapeLPL(site: EsportsClient, events, force):
 	player_positions = ['Top', 'Jungle', 'Mid', 'ADC', 'Support']
 	rune_dict = get_rune_dict(site)
 	champ_dict = get_champ_dict(site)
@@ -195,7 +196,7 @@ def scrapeLPL(site, events, force):
 		if please_escape:
 			break
 		print(page_to_query)
-		result = site.api('cargoquery', format="json",
+		result = site.client.api('cargoquery', format="json",
 						  limit='max',
 						  tables="MatchScheduleGame=MSG,MatchSchedule=MS",
 						  fields="MSG.OverviewPage,MSG.MatchHistory",
@@ -213,7 +214,7 @@ def scrapeLPL(site, events, force):
 			errors_http = []
 			errors_key = []
 			page_name = event + '/Runes' + suffix
-			page = site.pages[page_name]
+			page = site.client.pages[page_name]
 			text = page.text()
 			text_tbl = []
 			intro = ''
@@ -222,7 +223,7 @@ def scrapeLPL(site, events, force):
 				text_tbl = text.split('\n')
 				intro = text_tbl.pop(0) + '\n' + text_tbl.pop(0)
 			else:
-				overview_page = site.pages[event]
+				overview_page = site.client.pages[event]
 				overview_text = overview_page.text()
 				overview_text_tbl = overview_text.split('\n')
 				tabs = overview_text_tbl[0]
@@ -344,13 +345,12 @@ def scrapeLPL(site, events, force):
 			for e in errors_key:
 				error_text = error_text + '\n' + e + ' (Key)'
 			if error_text != '':
-				error_page = site.pages['User:RheingoldRiver/Rune Errors']
+				error_page = site.client.pages['User:RheingoldRiver/Rune Errors']
 				error_page.save(error_text, summary='Reporting a Rune Error')
 
 if __name__ == '__main__':
-	site = login('me', 'lol')
-	
-	pages = ['Data:LPL Online Scrims League 2020/Spring Season']
-	
-	# scrape(site, pages, False)
-	scrapeLPL(site, pages, False)
+	credentials = AuthCredentials(user_file="me")
+	site = EsportsClient('lol', credentials=credentials)  # Set wiki
+	pages = ['Data:Nordic Championship/2020 Season/Spring Season']
+	scrape(site, pages, False)
+	# scrapeLPL(site, pages, False)

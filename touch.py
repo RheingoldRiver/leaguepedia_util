@@ -1,12 +1,14 @@
-from log_into_wiki import *
+from river_mwclient.esports_client import EsportsClient
+from river_mwclient.auth_credentials import AuthCredentials
 import time
 limit = -1
-site = login('me','lol')
-t = site.pages["Template:TeamRoster"]
+credentials = AuthCredentials(user_file="me")
+site = EsportsClient('lol', credentials=credentials) # Set wiki
+t = site.client.pages["Template:TeamRoster"]
 
 pages = t.embeddedin()
 
-c = site.categories['Pages with script errors']
+c = site.client.categories['Pages with script errors']
 
 pages = t.embeddedin()
 

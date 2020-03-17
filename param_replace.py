@@ -1,7 +1,9 @@
-from log_into_wiki import *
+from river_mwclient.esports_client import EsportsClient
+from river_mwclient.auth_credentials import AuthCredentials
 import mwparserfromhell
 
-site = login('bot', 'lol')  # Set wiki
+credentials = AuthCredentials(user_file="me")
+site = EsportsClient('lol', credentials=credentials) # Set wiki
 
 template_name = 'PicksAndBansS7'
 orig_params = ['team1', 'team2']
@@ -14,7 +16,7 @@ summary = 'Param replacement: {}'.format(';'.join(param_summary)) # Set summary
 
 limit = -1
 startat_page = 'ESL A1 Adria/Season 2 Playoffs/Picks and Bans/Offline Playoffs'
-this_template = site.pages['Template:' + template_name]  # Set template
+this_template = site.client.pages['Template:' + template_name]  # Set template
 pages = this_template.embeddedin()
 
 pages_var = list(pages)

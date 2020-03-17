@@ -1,8 +1,11 @@
 import dateutil.parser, pytz, re, datetime, mwparserfromhell
 import dateutil
-from log_into_wiki import *
+from leaguepedia_validation.pickban import PickBanValidator
+from river_mwclient.esports_client import EsportsClient
+from river_mwclient.auth_credentials import AuthCredentials
 
-site = login('me','lol')
+credentials = AuthCredentials(user_file="me")
+site = EsportsClient('lol', credentials=credentials) # Set wiki
 
 typo_find = ['favourite','quater','partecipate','Portugese', 'Regelations']
 typo_replace = ['favorite','quarter','participate','Portuguese', 'Relegations']
@@ -89,7 +92,7 @@ def createResults(site, page, template, subpage, result_type, template_text):
 	if template.has('checkboxIsPersonality') and template.get('checkboxIsPersonality').value.strip() == 'Yes':
 		pass
 	else:
-		p = site.pages[page + '/' + subpage]
+		p = site.client.pages[page + '/' + subpage]
 		text = p.text()
 		if text == '':
 			p.save('{{{{{}TabsHeader}}}}\n{}'.format(result_type, template_text),tags='daily_errorfix')
@@ -132,43 +135,13 @@ def updateParams(template):
 	if template.has('post-match'):
 		template.get('post-match').name = 'reddit'
 
-pb_data = [
-	{
-		'data_type' : 'champion',
-		'args' : [ 'blueban1', 'blueban2', 'blueban3', 'blueban4', 'blueban5', 'red_ban1', 'red_ban2', 'red_ban3', 'red_ban4', 'red_ban5', 'bluepick1', 'bluepick2', 'bluepick3', 'bluepick4', 'bluepick5', 'red_pick1', 'red_pick2', 'red_pick3', 'red_pick4', 'red_pick5' ]
-	},
-	{
-		'data_type' : 'role',
-		'args' : [ 'bluerole1', 'bluerole2', 'bluerole3', 'bluerole4', 'bluerole5' ],
-	},
-	{
-		'data_type' : 'role',
-		'args' : [ 'red_role1', 'red_role2', 'red_role3', 'red_role4', 'red_role5' ]
-	}
-]
-pb_exceptions = ['', 'unknown', 'none', 'missing data', 'loss of ban']
+
 def fixPB(site, template):
-	for lookup in pb_data:
-		values = []
-		datatype = lookup['data_type']
-		for arg in lookup['args']:
-			if template.has(arg):
-				values.append(template.get(arg).value.strip())
-		query_text = '{{#invoke:PrintParsedText|unordered|type=' + datatype + '|' + '|'.join(values) + '}}'
-		query_result = site.api(
-			'parse',
-			format = 'json',
-			text = query_text,
-			prop = 'text',
-			disablelimitreport = 1,
-			wrapoutputclass = ''
-		)
-		result = query_result['parse']['text']['*']
-		result = result.replace('<p>','').replace('\n</p>','')
-		result_tbl = result.split(',')
-		result_parsed = [x for x in result_tbl if x.lower() not in pb_exceptions]
-		if len(result_parsed) != len(set(result_parsed)):
-			template.add('has' + datatype + 'error','Yes')
+	validator = PickBanValidator(site, template)
+	if validator.has_champion_error():
+		template.add('haschampionerror','Yes')
+	if validator.has_role_error():
+		template.add('hasroleerror','Yes')
 
 def set_initial_order(wikitext):
 	i = 0
@@ -207,7 +180,7 @@ DOC_PAGES_TO_MAKE = [
 	}
 ]
 
-def make_doc_pages(site, p):
+def make_doc_pages(site: EsportsClient, p):
 	for case in DOC_PAGES_TO_MAKE:
 		if 'matches' in case.keys():
 			if not re.findall(case['matches'], p.name):
@@ -216,5 +189,5 @@ def make_doc_pages(site, p):
 			if re.findall(case['notmatches'], p.name):
 				continue
 		for i, (k, v) in enumerate(case['pages'].items()):
-			site.pages[k.format(p.page_title)].save(v, summary='Automated error fixing (Python)',
+			site.client.pages[k.format(p.page_title)].save(v, summary='Automated error fixing (Python)',
 									   tags='daily_errorfix')

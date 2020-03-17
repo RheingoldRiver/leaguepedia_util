@@ -1,14 +1,16 @@
-from log_into_wiki import *
+from river_mwclient.esports_client import EsportsClient
+from river_mwclient.auth_credentials import AuthCredentials
 import mwparserfromhell
 
-site = login('me','lol') # Set wiki
+credentials = AuthCredentials(user_file="me")
+site = EsportsClient('lol', credentials=credentials) # Set wiki
 summary = 'Bot Edit' # Set summary
 
 limit = -1
 startat_page = None
 print(startat_page)
 #startat_page = 'asdf'
-this_template = site.pages['Template:TEMPLATE'] # Set template
+this_template = site.client.pages['Template:TEMPLATE'] # Set template
 pages = this_template.embeddedin()
 
 # with open('pages.txt', encoding="utf-8") as f:
@@ -28,7 +30,8 @@ for page in pages:
 	text = page.text()
 	wikitext = mwparserfromhell.parse(text)
 	for template in wikitext.filter_templates():
-		if tl_matches(template, ['TEMPLATEYOUCAREABOUT']):
+		if template.name.matches(['TEMPLATEYOUCAREABOUT']):
+			print(template) # here so it doesn't think there's an error
 			# TODO
 	
 	newtext = str(wikitext)

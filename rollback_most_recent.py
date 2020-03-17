@@ -1,7 +1,8 @@
-from log_into_wiki import *
+from river_mwclient.esports_client import EsportsClient
+from river_mwclient.auth_credentials import AuthCredentials
 limit = -1
 
-site = login('bot', 'cod-esports')
+site = EsportsClient('lol', user_file="cod") # Set wiki
 
 revisions = 2 # numver of revisions to roll back
 comment = None # require the comment on the edit you're rolling back to be this
@@ -17,7 +18,7 @@ for page in pages:
 	if lmt == limit:
 		break
 	lmt += 1
-	data = site.api('query',
+	data = site.client.api('query',
 		format = 'json',
 		prop = 'revisions',
 		titles = page,
@@ -35,7 +36,7 @@ for page in pages:
 		print(pg)
 		text = datapages[pg]['revisions'][revisions]['*']
 	if make_edit:
-		p = site.pages[page]
+		p = site.client.pages[page]
 		p.save(text,'Reverting oops')
 	else:
 		print("Skipping page %s because comment doesn't match" % page)

@@ -1,5 +1,6 @@
 import re, threading, mwparserfromhell
-from log_into_wiki import *
+from river_mwclient.esports_client import EsportsClient
+from river_mwclient.auth_credentials import AuthCredentials
 
 #################################################################################################
 
@@ -29,40 +30,27 @@ blank_edit_these = []
 
 #############################################################################################
 
+credentials = AuthCredentials(user_file="me")
+site = EsportsClient('lol', credentials=credentials) # Set wiki
+
 def savepage(targetpage, savetext):
 	targetpage.save(savetext, summary=summary, tags="bot_disambig")
 
 def blank_edit_page(page):
 	textname = str(page.name)
-	newpage = site.pages[textname]
+	newpage = site.client.pages[textname]
 	text = newpage.text(cache=False)
 	page.save(text, summary="Blank Editing")
 
 def move_page(from_page):
 	new_page_name = str(from_page.name).replace(original_name, new_name)
-	new_page = site.pages[new_page_name]
+	new_page = site.client.pages[new_page_name]
 	if new_page.exists:
 		print("{} already exists, cannot move!".format(from_page.name))
 	else:
 		print("Moving page {} to {}".format(from_page.name, new_page_name))
 		from_page.move(new_page_name, reason=summary, no_redirect=True)
 		blank_edit_these.append(new_page)
-
-def edit_concept(concept):
-	text = concept.text()
-	wikitext = mwparserfromhell.parse(text)
-	for template in wikitext.filter_templates():
-		if template.name.matches("PlayerGamesConcept"):
-			i = 1
-			while template.has(i):
-				if template.get(i).strip() == original_name:
-					template.add(i, new_name)
-				elif template.get(i).strip() == orig_name_lc:
-					template.add(i, new_name_lc)
-				i = i + 1
-	newtext = str(wikitext)
-	if newtext != text:
-		concept.save(newtext, summary=summary, tags="bot_disambig")
 
 def edit_subpage(subpage):
 	text = subpage.text()
@@ -210,27 +198,20 @@ def process_template(template):
 
 def make_disambig_page():
 	text = "{{DisambigPage\n|player1=" + new_name + "\n|player2=\n}}"
-	page = site.pages[original_name]
+	page = site.client.pages[original_name]
 	old_text = page.text()
 	if 'disambigpage' not in old_text.lower():
 		page.save(text, summary=summary)
 
-site = login('me','lol')
-
-thispage = site.pages[original_name]
-newpage = site.pages[new_name]
+thispage = site.client.pages[original_name]
+newpage = site.client.pages[new_name]
 
 if init_move:
 	move_page(thispage)
-	subpages = site.allpages(prefix=original_name + "/")
+	subpages = site.client.allpages(prefix=original_name + "/")
 	for subpage in subpages:
 		edit_subpage(subpage)
 		move_page(subpage)
-	concept = site.pages["Concept:{}/Games".format(original_name)]
-	if concept.exists:
-		edit_concept(concept)
-		move_page(concept)
-
 
 pages = thispage.backlinks()
 i = 0

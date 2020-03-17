@@ -1,18 +1,20 @@
-from log_into_wiki import *
+from river_mwclient.esports_client import EsportsClient
+from river_mwclient.auth_credentials import AuthCredentials
 import re
 
-site = login('me', 'lol')
+credentials = AuthCredentials(user_file="me")
+site = EsportsClient('lol', credentials=credentials) # Set wiki
 summary = 'Bot Edit - Automatically Forcing Sprite Cache Update'
 url_re_start = r'.*(\/.\/..\/)'
 url_re_end = r'(\?version=\w*)\".*'
 css_page_list = ['MediaWiki:Common.css', 'MediaWiki:Mobile.css']
 
-category_result = site.api('query', list = 'categorymembers', cmtitle = 'Category:Sprite Images', cmlimit = 50)
+category_result = site.client.api('query', list = 'categorymembers', cmtitle = 'Category:Sprite Images', cmlimit = 50)
 file_name_list = [_['title'] for _ in category_result['query']['categorymembers']]
 
 parse_text_list = ['[[%s|link=]]' % _ for _ in file_name_list]
 parse_text = '!!!'.join(parse_text_list)
-result = site.api('parse', text = parse_text, title = 'Main Page', disablelimitreport = 1)
+result = site.client.api('parse', text = parse_text, title = 'Main Page', disablelimitreport = 1)
 text = result['parse']['text']['*']
 
 css_texts_old = []
@@ -33,6 +35,6 @@ def replace_css_in_file(css_page):
 		css_page.save(css_page_text_new, summary = summary)
 
 for page_name in css_page_list:
-	replace_css_in_file(site.pages[page_name])
+	replace_css_in_file(site.client.pages[page_name])
 
 print('Ran!')

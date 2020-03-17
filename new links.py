@@ -1,20 +1,22 @@
-from log_into_wiki import *
+from river_mwclient.esports_client import EsportsClient
+from river_mwclient.auth_credentials import AuthCredentials
 import mwparserfromhell, re
 
-site = login('me', 'fortnite-esports')  # Set wiki
+credentials = AuthCredentials(user_file="me")
+site = EsportsClient('fortnite', credentials=credentials) #  set wiki
 summary = 'Changing links/display to be just 1 field, with link only'  # Set summary
 
 limit = -1
 startat_page = None
 print(startat_page)
 #startat_page = 'Data:LCK/2018 Season/Summer Playoffs'
-this_template = site.pages['Template:Infobox Tournament']  # Set template
+this_template = site.client.pages['Template:Infobox Tournament']  # Set template
 pages = this_template.embeddedin()
 
 # with open('pages.txt', encoding="utf-8") as f:
 # 	pages = f.readlines()
 
-#pages = [site.pages['Data:Challengers Korea/2019 Season/Spring Season']]
+#pages = [site.client.pages['Data:Challengers Korea/2019 Season/Spring Season']]
 
 params = ['player','player1']
 
@@ -56,7 +58,7 @@ for page in pages:
 	text = page.text()
 	wikitext = mwparserfromhell.parse(text)
 	for template in wikitext.filter_templates():
-		if tl_matches(template, ['TournamentResultsLineDuos', 'TournamentResultsLineSolo']):
+		if template.name.matches(['TournamentResultsLineDuos', 'TournamentResultsLineSolo']):
 			for param in params:
 				links_to_display(template, param)
 	

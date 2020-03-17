@@ -1,7 +1,9 @@
-from log_into_wiki import *
+from river_mwclient.esports_client import EsportsClient
+from river_mwclient.auth_credentials import AuthCredentials
 import mwparserfromhell
 
-site = login('bot', 'lol')  # Set wiki
+credentials = AuthCredentials(user_file="me")
+site = EsportsClient('lol', credentials=credentials) # Set wiki
 summary = 'Bot Edit'  # Set summary
 
 this_name = 'Daedalus'
@@ -11,7 +13,7 @@ limit = -1
 startat_page = None
 print(startat_page)
 # startat_page = 'File:ElogudenDanish.mp4'
-this_template = site.pages['Template:PlayerPronunciationFile']  # Set template
+this_template = site.client.pages['Template:PlayerPronunciationFile']  # Set template
 pages = this_template.embeddedin()
 
 # with open('pages.txt', encoding="utf-8") as f:
@@ -31,7 +33,7 @@ for page in pages:
 	text = page.text()
 	wikitext = mwparserfromhell.parse(text)
 	for template in wikitext.filter_templates():
-		if tl_matches(template, ['PlayerPronunciationFile']):
+		if template.name.matches(['PlayerPronunciationFile']):
 			if template.get('recordedby').value.strip() == this_name:
 				template.add('user', this_user)
 				template.add('language', 'Danish')
