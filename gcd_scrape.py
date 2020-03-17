@@ -14,10 +14,10 @@ ERRORS = []
 ERROR_REPORT_PAGE = 'User:RheingoldRiver/GCD Errors'
 
 def main():
-	# if int(now_localized().strftime('%H')) != 23:
-	# 	return
+	if int(now_localized().strftime('%H')) != 23:
+		return
 	credentials = AuthCredentials(user_file="me")
-	site = EsportsClient('lol', credentials=credentials, stg=True)  # Set wiki
+	site = EsportsClient('lol', credentials=credentials)  # Set wiki
 	pages = get_pages_to_make()
 	for k in pages.keys():
 		# print(k)
