@@ -5,7 +5,7 @@ from extended_page import ExtendedPage
 credentials = AuthCredentials(user_file="me")
 site = EsportsClient('fortnite', credentials=credentials) #  set wiki
 
-rc = site.client.recentchanges_by_interval(12 * 60, toponly=1)
+rc = site.recentchanges_by_interval(12 * 60, toponly=1)
 
 data_pages = []
 

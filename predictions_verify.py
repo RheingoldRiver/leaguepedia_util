@@ -18,5 +18,5 @@ def run(site, revs):
 if __name__ == '__main__':
 	site = EsportsClient('lol')
 	site.client.login_from_file('me')
-	revs = site.client.recentchanges_by_interval(100)
+	revs = site.recentchanges_by_interval(100)
 	run(site, revs)

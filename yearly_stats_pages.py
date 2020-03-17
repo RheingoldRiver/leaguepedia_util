@@ -26,7 +26,7 @@ site = EsportsClient('lol', credentials=credentials) # Set wiki
 		results = self.get_page_list()
 		for result in results:
 			if result['StatsPage'].endswith('Statistics'):
-				self.site.client.error_content(title=result['OverviewPage'])
+				self.site.log_error_content(title=result['OverviewPage'])
 				continue
 			stats_page = ExtendedPage(self.site.client.pages[result['StatsPage']])
 			if result['IsRedirect'] == '0':

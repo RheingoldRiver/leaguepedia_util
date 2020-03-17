@@ -10,7 +10,7 @@ pattern_run = r'Hook.run\([\'"](\w+).*\)'
 credentials = AuthCredentials(user_file="me")
 site = EsportsClient('lol', credentials=credentials) # Set wiki
 
-revisions = site.client.recentchanges_by_interval(interval, toponly=1)
+revisions = site.recentchanges_by_interval(interval, toponly=1)
 
 def add_missing_params(template, params_to_add):
 	n = 0

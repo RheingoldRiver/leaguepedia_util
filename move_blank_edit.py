@@ -17,4 +17,4 @@ def run(site: EsportsClient, logs):
 if __name__ == '__main__':
 	credentials = AuthCredentials(user_file="me")
 	site = EsportsClient('lol', credentials=credentials) # Set wiki
-	run(site, site.client.logs_by_interval(40))
+	run(site, site.logs_by_interval(40))

@@ -21,9 +21,9 @@ class CronTasks(object):
 		for wiki in self.all_wikis:
 			credentials = AuthCredentials(user_file="me")
 			site = EsportsClient('lol', credentials=credentials)  # Set wiki
-			revs_gen = site.client.recentchanges_by_interval(interval)
+			revs_gen = site.recentchanges_by_interval(interval)
 			revs = [_ for _ in revs_gen]
-			logs = site.client.logs_by_interval(interval)
+			logs = site.logs_by_interval(interval)
 			self.all_sites[wiki] = site
 			self.all_revs[wiki] = revs
 			self.all_logs[wiki] = logs
@@ -42,5 +42,5 @@ class CronTasks(object):
 			try:
 				fn(site, data[wiki], **kwargs)
 			except Exception as e:
-				site.client.error_script(error=e)
+				site.log_error_script(error=e)
 			site.client.report_all_errors('Cron Errors (%s)' % fn.__module__)

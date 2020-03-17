@@ -53,7 +53,7 @@ def check_page(site: EsportsClient, page_name):
 		if not hash_template:
 			hashes_to_add.append(get_append_hash(ms_hash, data))
 		elif not verify_hash(hash_template, data['Team1'], data['Team2']):
-			site.client.error_content(title=page_name, text=get_error_text(data, hash_template))
+			site.log_error_content(title=page_name, text=get_error_text(data, hash_template))
 			hash_template.add('team1', data['Team1'])
 			hash_template.add('team2', data['Team2'])
 		else: # There could be a TBD that we need to replace
@@ -79,4 +79,4 @@ def run(site: EsportsClient, revs):
 if __name__ == '__main__':
 	credentials = AuthCredentials(user_file="me")
 	site = EsportsClient('lol', credentials=credentials)  # Set wiki
-	run(site, site.client.recentchanges_by_interval(200))
+	run(site, site.recentchanges_by_interval(200))

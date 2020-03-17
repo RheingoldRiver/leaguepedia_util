@@ -26,4 +26,4 @@ def send_event(text, team):
 if __name__ == '__main__':
 	credentials = AuthCredentials(user_file="me")
 	site = EsportsClient('lol', credentials=credentials)  # Set wiki
-	run(site, site.client.recentchanges_by_interval(1))
+	run(site, site.recentchanges_by_interval(1))
