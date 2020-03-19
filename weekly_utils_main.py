@@ -3,11 +3,13 @@
 import mwparserfromhell, datetime
 import weekly_utils as utils
 import scrape_runes, luacache_refresh
+from pick_ban_validator import PickBanValidator
 from river_mwclient.esports_client import EsportsClient
 from river_mwclient.auth_credentials import AuthCredentials
 
 credentials = AuthCredentials(user_file="me")
 site = EsportsClient('lol', credentials=credentials) # Set wiki
+pick_ban_validator = PickBanValidator(site)
 
 limit = -1
 
@@ -87,7 +89,7 @@ for page in pages:
 					utils.fixDST(template)
 					utils.updateParams(template)
 				elif template.name.matches('PicksAndBansS7') or template.name.matches('PicksAndBans'):
-					utils.fixPB(site, template)
+					utils.fixPB(pick_ban_validator, template)
 				elif template.name.matches('Listplayer/Current/End'):
 					template.add(1, '')
 			except Exception as e:

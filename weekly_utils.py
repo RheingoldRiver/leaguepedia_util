@@ -1,6 +1,5 @@
 import dateutil.parser, pytz, re, datetime, mwparserfromhell
 import dateutil
-from leaguepedia_validation.pickban import PickBanValidator
 from river_mwclient.esports_client import EsportsClient
 from river_mwclient.auth_credentials import AuthCredentials
 
@@ -136,11 +135,10 @@ def updateParams(template):
 		template.get('post-match').name = 'reddit'
 
 
-def fixPB(site, template):
-	validator = PickBanValidator(site, template)
-	if validator.has_champion_error():
+def fixPB(validator, template):
+	if validator.has_champion_error(template):
 		template.add('haschampionerror','Yes')
-	if validator.has_role_error():
+	if validator.has_role_error(template):
 		template.add('hasroleerror','Yes')
 
 def set_initial_order(wikitext):
