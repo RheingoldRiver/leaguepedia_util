@@ -31,8 +31,8 @@ for item in result:
 	if lmt == limit:
 		break
 	lmt = lmt + 1
-	name = item['title']['name']
-	res = item['title']['res']
+	name = item['name']
+	res = item['res']
 	if name == '0':
 		continue
 	try:
