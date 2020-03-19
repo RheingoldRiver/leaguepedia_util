@@ -3,7 +3,6 @@
 import mwparserfromhell, datetime
 import weekly_utils as utils
 import scrape_runes, luacache_refresh
-from template_list import *
 from river_mwclient.esports_client import EsportsClient
 from river_mwclient.auth_credentials import AuthCredentials
 
