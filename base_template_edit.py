@@ -10,8 +10,7 @@ limit = -1
 startat_page = None
 print(startat_page)
 #startat_page = 'asdf'
-this_template = site.client.pages['Template:TEMPLATE'] # Set template
-pages = this_template.embeddedin()
+pages = site.pages_using('TEMPLATE')
 
 # with open('pages.txt', encoding="utf-8") as f:
 # 	pages = f.readlines()
