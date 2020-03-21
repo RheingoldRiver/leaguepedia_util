@@ -41,7 +41,7 @@ for item in result:
 			print('Page %s already exists, skipping' % name)
 			page.save(page.text())
 			continue
-		print('Processing page %s...' % name)
+		# print('Processing page %s...' % name)
 		this_template.add('residency', res)
 		this_template.add('id', name)
 		text = str(wikitext)

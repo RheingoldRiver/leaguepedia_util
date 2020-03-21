@@ -46,7 +46,7 @@ def get_player_squads(page:Page):
 	# print(','.join(table_list))
 	# print(','.join(join_list))
 	# print(' AND '.join(['(%s)' % _ for _ in where]))
-	result = site.cargo_client.cargoquery(
+	result = site.cargo_client.query(
 		tables=','.join(table_list),
 		join_on = ','.join(join_list),
 		group_by = 'PR._pageName',
