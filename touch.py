@@ -4,13 +4,11 @@ import time
 limit = -1
 credentials = AuthCredentials(user_file="me")
 site = EsportsClient('lol', credentials=credentials) # Set wiki
-t = site.client.pages["Template:TeamRoster"]
 
-pages = t.embeddedin()
 
-c = site.client.categories['Pages with script errors']
+pages = site.pages_using('Scoreboard/Header')
 
-pages = t.embeddedin()
+# c = site.client.categories['Pages with script errors']
 
 startat_page = None
 passed_startat = True

@@ -2,7 +2,7 @@ from river_mwclient.esports_client import EsportsClient
 from river_mwclient.auth_credentials import AuthCredentials
 import mwparserfromhell
 
-credentials = AuthCredentials(user_file="me")
+credentials = AuthCredentials(user_file="bot")
 site = EsportsClient('lol', credentials=credentials) # Set wiki
 summary = 'Importing skin info from pre-existing pages'  # Set summary
 
@@ -19,6 +19,7 @@ def get_and_add_info_to_infobox(name, template):
 	)[0]['Champion']
 	data_page = site.client.pages['%s/Skins' % champion]
 	locate_old_template_and_add_data_to_new(name, template, data_page)
+	template.add('champion', champion + '\n')
 
 def locate_old_template_and_add_data_to_new(name, template, data_page):
 	for tl in mwparserfromhell.parse(data_page.text()).filter_templates(recursive=False):

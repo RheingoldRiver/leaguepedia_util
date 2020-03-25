@@ -79,10 +79,10 @@ def update_and_save(page, lookup):
 	
 	newtext = str(wikitext)
 	if text != newtext:
-		print('Saving page %s...' % page.name)
+		# print('Saving page %s...' % page.name)
 		page.save(newtext, summary=summary)
 	else:
-		print('Skipping page %s...' % page.name)
+		# print('Skipping page %s...' % page.name)
 
 if __name__ == '__main__':
 	run()
