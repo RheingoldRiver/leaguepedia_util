@@ -82,6 +82,7 @@ def update_and_save(page, lookup):
 		# print('Saving page %s...' % page.name)
 		page.save(newtext, summary=summary)
 	else:
+		pass
 		# print('Skipping page %s...' % page.name)
 
 if __name__ == '__main__':
