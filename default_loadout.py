@@ -2,17 +2,17 @@ from river_mwclient.esports_client import EsportsClient
 from river_mwclient.auth_credentials import AuthCredentials
 
 credentials = AuthCredentials(user_file="me")
-loadout = EsportsClient('lol', credentials=credentials) #  set wiki
-target = EsportsClient('splatoon2', credentials=credentials) #  set wiki
-summary = 'Backing up spyro'  # Set summary
+loadout = EsportsClient('default-loadout', credentials=credentials) #  set wiki
+target = EsportsClient('legendsofruneterra-esports', credentials=credentials) #  set wiki
+summary = 'Default loadout of pages'  # Set summary
 
 startat_namespace = None
 print(startat_namespace)
-startat_namespace = 274
+# startat_namespace = 274
 
 startat_page = None
 print(startat_page)
-startat_page = 'Module:Navbox/Aether II/en'
+# startat_page = 'Module:Navbox/Aether II/en'
 
 startat_comparison = startat_namespace - 1 if startat_namespace else -1
 

@@ -10,40 +10,29 @@ credentials = AuthCredentials(user_file="bot")
 site = EsportsClient('lol', credentials=credentials)  # Set wiki
 summary = 'Split gallery pages into multiple tabs'  # Set summary
 
+TABS = [ 'Splash Screens', 'Portraits', 'In-Game Screenshots', 'Concept Art' ]
+
 for champion_page in site.client.categories['Champions']:
     champion = champion_page.name
-    if champion_page.name < 'Senna':
-        continue
+    # if champion_page.name < 'Braum':
+    #     continue
     print(champion)
-    gallery_page = site.client.pages[champion + '/Gallery/Loading Screens']
-    text = gallery_page.text()
-    wikitext = parse(text)
-    for template in wikitext.filter_templates():
-        template: Template
-        if template.name.matches('TabsDynamic'):
-            i = 1
-            while template.has('name' + str(i)):
-                if template.get('name' + str(i)).value.strip() == 'Chromas':
-                    print(i)
-                    text = str(template.get('content' + str(i)).value.strip())
-                    break
-                i += 1
-    matches = re.findall('\[\[Image:.+?\]\]', text)
-    for match in matches:
-        print(match)
-        original_file_name = 'File:{}'.format(re.search('Image:(.+?)\|', match)[1])
-        original_file = site.client.pages[original_file_name]
-        if 'redirect' in original_file.text().lower():
+    for tab in TABS:
+        gallery_page = site.client.pages[champion + '/Gallery/{}'.format(tab)]
+        text = gallery_page.text()
+        wikitext = parse(text)
+        sections = []
+        for template in wikitext.filter_templates():
+            template: Template
+            if template.name.matches('TabsDynamic'):
+                i = 1
+                while template.has('name' + str(i)):
+                    name = template.get('name' + str(i)).value.strip()
+                    if re.search(name, 'nowrap'):
+                        name = re.search('nowrap\|(\w+)', name)[1]
+                    sections.append('== {} ==\n{}'.format(name, template.get('content' + str(i)).value.strip()))
+                    i += 1
+        if not sections:
             continue
-        extension = re.search('[.](.*)', original_file_name)[1]
-        new_name = re.search("\|([^|]*)\]\]", match)[1].strip("' ")
-        if '}' in new_name:
-            new_name = re.search('abbr\|([^|]*)', match)[1].strip("' ")
-        print(new_name)
-        if '=' in new_name or '{' in new_name or '}' in new_name or ':' in new_name or '/' in new_name:
-            continue
-        if 'Classic' in new_name:
-            continue
-        print(new_name)
-        new_file = 'File:{}.{}'.format(new_name, extension)
-        original_file.move(new_file)
+        new_text = '{{ChampTabsHeader}}\n{{TOCFlat}}\n' + '\n'.join(sections)
+        gallery_page.save(new_text, summary=summary)
