@@ -3,6 +3,12 @@ from river_mwclient.esports_client import EsportsClient
 from river_mwclient.auth_credentials import AuthCredentials
 import requests
 
+SILENT = True
+
+def print_if_not_silent(str):
+	if not SILENT:
+		print(str)
+
 def get_patch():
 	with urllib.request.urlopen('http://ddragon.leagueoflegends.com/api/versions.json') as url:
 		data = json.loads(url.read().decode())
@@ -68,12 +74,12 @@ def scrape(site: EsportsClient, events, force):
 	player_positions = ['Top','Jungle','Mid','ADC','Support']
 	rune_dict = get_rune_dict(site)
 	champ_dict = get_champ_dict(site)
-	print(events)
+	print_if_not_silent(events)
 	with open('mh_riot_endpoint.txt') as f:
 		mh_riot_endpoint = f.read().strip()
 	mh_riot_token = get_token()
 	for page_to_query in events:
-		print(page_to_query)
+		print_if_not_silent(page_to_query)
 		result = site.client.api('cargoquery', format = "json",
 						  limit = 'max',
 						  tables = "MatchScheduleGame=MSG,MatchSchedule=MS",
@@ -107,13 +113,13 @@ def scrape(site: EsportsClient, events, force):
 			lines= [intro]
 			for i, cargo_game in enumerate(result['cargoquery']):
 				mh = (cargo_game['title']['MatchHistory']).replace('&amp;','&')
-				print(mh)
+				print_if_not_silent(mh)
 				location = re.match(r'.*details/([^&]*)', mh)[1]
 				if len(text_tbl) > 10 * i and (location in text_tbl[10 * i]) and not force:
 					for j in range(0,10):
 						lines.append(text_tbl[j + 10 * i])
 				else:
-					print('Querying match %s' % mh)
+					print_if_not_silent('Querying match %s' % mh)
 					json_loc = mh_riot_endpoint + location
 					try:
 						game = requests.Session().get(
@@ -150,10 +156,10 @@ def scrape(site: EsportsClient, events, force):
 			lines.append('{{RunesEnd}}')
 			new_text = '\n'.join(lines)
 			if new_text != text and len(lines) > 3:
-				print('Saving page %s...' % page_name)
+				print_if_not_silent('Saving page %s...' % page_name)
 				page.save(new_text, summary = 'Automatically updating Runes (python)')
 			else:
-				print('Skipping page %s, no changes' % page_name)
+				print_if_not_silent('Skipping page %s, no changes' % page_name)
 			error_text = ''
 			for e in errors_http:
 				error_text = error_text + ' <br>\n' + page_to_query + ': ' + e + ' (HTTP)'
@@ -195,7 +201,7 @@ def scrapeLPL(site: EsportsClient, events, force):
 		lmt = 0
 		if please_escape:
 			break
-		print(page_to_query)
+		print_if_not_silent(page_to_query)
 		result = site.client.api('cargoquery', format="json",
 						  limit='max',
 						  tables="MatchScheduleGame=MSG,MatchSchedule=MS",
@@ -237,27 +243,27 @@ def scrapeLPL(site: EsportsClient, events, force):
 			# 	please_escape = True
 			# 	break
 			mh = (cargo_game['title']['MatchHistory']).replace('&amp;', '&')
-			print(mh)
+			print_if_not_silent(mh)
 			location = re.match(r'.*bmid=([0-9]*)', mh)[1]
 			if len(text_tbl) > 10 * counter and (location in text_tbl[10 * counter]) and not force:
-				print('Skipping %s' % location)
+				print_if_not_silent('Skipping %s' % location)
 				for j in range(0, 10):
 					lines.append(text_tbl[j + 10 * counter])
 				counter = counter + 1
 				if len(text_tbl) > 10 * counter and (location in text_tbl[10 * counter]) and not force:
-					print('Skipping %s (2)' % location)
+					print_if_not_silent('Skipping %s (2)' % location)
 					for j in range(0, 10):
 						lines.append(text_tbl[j + 10 * counter])
 					counter = counter + 1
 					if len(text_tbl) > 10 * counter and (location in text_tbl[10 * counter]) and not force:
-						print('Skipping %s (3)' % location)
+						print_if_not_silent('Skipping %s (3)' % location)
 						for j in range(0, 10):
 							lines.append(text_tbl[j + 10 * counter])
 						counter = counter + 1
 			else:
-				print('Querying match %s' % mh)
+				print_if_not_silent('Querying match %s' % mh)
 				json_loc = mh_qq_endpoint[0] + location
-				print(json_loc)
+				print_if_not_silent(json_loc)
 				try:
 					with urllib.request.urlopen(json_loc) as url:
 						series = json.loads(url.read().decode())
@@ -265,13 +271,13 @@ def scrapeLPL(site: EsportsClient, events, force):
 						counter = counter + 1
 						gameId = game['sMatchId']
 						json_loc_2 = mh_qq_endpoint[1] + gameId
-						print(json_loc_2)
+						print_if_not_silent(json_loc_2)
 						with urllib.request.urlopen(json_loc_2) as url:
 							game = json.loads(url.read().decode())
 						areaId = game['msg']['sMatchInfo']['AreaId']
 						battleId = game['msg']['battleInfo']['BattleId']
 						json_loc_3 = mh_qq_endpoint[2] + battleId + mh_qq_endpoint[3] + areaId
-						print(json_loc_3)
+						print_if_not_silent(json_loc_3)
 						with urllib.request.urlopen(json_loc_3) as url:
 							worldLookup = json.loads(url.read().decode())
 						worldLookupJSON = json.loads(worldLookup['msg'])
@@ -282,7 +288,7 @@ def scrapeLPL(site: EsportsClient, events, force):
 						else:
 							worldId = worldLookupJSON['battle_list_'][0]['world_']
 							json_loc_4 = mh_qq_endpoint[4] + str(worldId) + mh_qq_endpoint[5] + str(battleId)
-							print(json_loc_4)
+							print_if_not_silent(json_loc_4)
 							with urllib.request.urlopen(json_loc_4) as url:
 								rune_data_unsorted_init = json.loads(url.read().decode())
 							rune_data_unsorted = json.loads(rune_data_unsorted_init['msg'])
@@ -334,14 +340,14 @@ def scrapeLPL(site: EsportsClient, events, force):
 				except KeyError:
 					errors_key.append(mh)
 				except Exception as e:
-					print(e)
+					print_if_not_silent(e)
 		lines.append('{{RunesEnd}}')
 		new_text = '\n'.join(lines)
 		if new_text != text and len(lines) > 3:
-			print('Saving page %s...' % page_name)
+			print_if_not_silent('Saving page %s...' % page_name)
 			page.save(new_text, summary='Automatically updating Runes (python)')
 		else:
-			print('Skipping page %s, no changes' % page_name)
+			print_if_not_silent('Skipping page %s, no changes' % page_name)
 		error_text = ''
 		for e in errors_http:
 			error_text = error_text + ' <br>\n' + page_to_query + ': ' + e + ' (HTTP)'
@@ -352,6 +358,7 @@ def scrapeLPL(site: EsportsClient, events, force):
 			error_page.save(error_text, summary='Reporting a Rune Error')
 
 if __name__ == '__main__':
+	SILENT = False
 	credentials = AuthCredentials(user_file="me")
 	site = EsportsClient('lol', credentials=credentials)  # Set wiki
 	pages = ['Data:LPL/2020 Season/Spring Season']

@@ -53,10 +53,8 @@ for page in pages:
 	try:
 		p = site.client.pages[page]
 	except KeyError:
-		print(page)
+		# print(page)
 		continue
-	if '/Edit Conflict/' in page and p.namespace == 2 and p.text() != '':
-		p.delete(reason='Deleting old edit conflict')
 	else:
 		text = p.text()
 		wikitext = mwparserfromhell.parse(text)
@@ -85,7 +83,7 @@ for page in pages:
 				errors.append(e)
 		newtext = str(wikitext)
 		if text != newtext:
-			print('Saving page %s...' % page)
+			# print('Saving page %s...' % page)
 			p.save(newtext,summary='Automated error fixing (Python)',tags='daily_errorfix')
 		if len(errors) > 0:
 			report_page = site.client.pages['User talk:RheingoldRiver']
