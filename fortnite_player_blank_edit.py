@@ -1,6 +1,6 @@
 from river_mwclient.esports_client import EsportsClient
 from river_mwclient.auth_credentials import AuthCredentials
-from extended_page import ExtendedPage
+from river_mwclient.extended_page import ExtendedPage
 
 credentials = AuthCredentials(user_file="me")
 site = EsportsClient('fortnite', credentials=credentials) #  set wiki

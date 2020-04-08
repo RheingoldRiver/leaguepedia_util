@@ -13,14 +13,6 @@ pick_ban_validator = PickBanValidator(site)
 
 limit = -1
 
-site.standard_name_redirects()
-
-# Blank edit pages we need to
-blank_edit_pages = ['Leaguepedia:Top Schedule']
-for page in blank_edit_pages:
-	p = site.client.pages[page]
-	p.save(p.text(), summary = 'blank editing')
-
 now_timestamp = datetime.datetime.utcnow().isoformat()
 with open('daily_last_run.txt','r') as f:
 	last_timestamp = f.read()
@@ -63,7 +55,6 @@ for page in pages:
 	except KeyError:
 		print(page)
 		continue
-	utils.make_doc_pages(site, p)
 	if '/Edit Conflict/' in page and p.namespace == 2 and p.text() != '':
 		p.delete(reason='Deleting old edit conflict')
 	else:
@@ -85,8 +76,6 @@ for page in pages:
 						utils.createResults(site, page, template, 'Schedule History', 'Team', '{{TeamScheduleHistory}}')
 						tooltip = site.client.pages['Tooltip:%s' % page]
 						tooltip.save('{{RosterTooltip}}',tags='daily_errorfix')
-				elif template.name.matches(['MatchSchedule','MatchSchedule/Game']):
-					utils.fixDST(template)
 					utils.updateParams(template)
 				elif template.name.matches('PicksAndBansS7') or template.name.matches('PicksAndBans'):
 					utils.fixPB(pick_ban_validator, template)
@@ -94,8 +83,6 @@ for page in pages:
 					template.add(1, '')
 			except Exception as e:
 				errors.append(e)
-		if p.namespace == 10008: # Data namespace
-			utils.set_initial_order(wikitext)
 		newtext = str(wikitext)
 		if text != newtext:
 			print('Saving page %s...' % page)

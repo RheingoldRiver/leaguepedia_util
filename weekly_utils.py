@@ -1,5 +1,4 @@
-import dateutil.parser, pytz, re, datetime, mwparserfromhell
-import dateutil
+import re
 from river_mwclient.esports_client import EsportsClient
 from river_mwclient.auth_credentials import AuthCredentials
 
@@ -97,34 +96,6 @@ def createResults(site, page, template, subpage, result_type, template_text):
 			p.save('{{{{{}TabsHeader}}}}\n{}'.format(result_type, template_text),tags='daily_errorfix')
 
 
-pst = pytz.timezone('America/Los_Angeles')
-est = pytz.timezone('America/New_York')
-cet = pytz.timezone('Europe/Berlin')
-kst = pytz.timezone('Asia/Seoul')
-tz_lookup = {
-	'PST' : pst,
-	'EST' : est,
-	'CET' : cet,
-	'KST' : kst
-}
-
-def fixDST(template):
-	if template.has('date') and template.has('time'):
-		date = template.get("date").value.strip()
-		time = template.get("time").value.strip()
-		tz_local_str = template.get('timezone').value.strip()
-		tz_local = tz_lookup[tz_local_str]
-		date_time = dateutil.parser.parse(date + " " + time)
-		date_time_local = tz_local.localize(date_time)
-		isDST_PST = bool(date_time_local.astimezone(pst).dst())
-		isDST_CET = bool(date_time_local.astimezone(cet).dst())
-		if isDST_PST and isDST_CET:
-			template.add('dst','yes')
-		elif isDST_PST:
-			template.add('dst','spring')
-		else:
-			template.add('dst','no')
-
 def updateParams(template):
 	# update gameschedule params for new conventions
 	if template.has('t1score'):
@@ -140,52 +111,3 @@ def fixPB(validator, template):
 		template.add('haschampionerror','Yes')
 	if validator.has_role_error(template):
 		template.add('hasroleerror','Yes')
-
-def set_initial_order(wikitext):
-	i = 0
-	for template in wikitext.filter_templates():
-		if template.name.matches('MatchSchedule/Start'):
-			i = 0
-			continue
-		if template.name.matches('MatchSchedule'):
-			i += 1
-			if template.has('initialorder'):
-				continue
-			template.add('initialorder', str(i), before = 'team1')
-
-DOC_PAGES_TO_MAKE = [
-	{
-		'matches': r'^Module:Bracket/',
-		'notmatches': r'(doc|Wiki)$',
-		'pages': {
-			'Tooltip:Module:{}' : '{{BracketTooltip}}',
-			'Module:{}/doc' : '{{BracketDoc}}'
-		}
-	},
-	{
-		'matches': r'^Module:.*/i18n$',
-		'notmatches': r'doc$',
-		'pages': {
-			'Module:{}/doc': '{{i18ndoc}}'
-		}
-	},
-	{
-		'matches': r'^Module:CargoDeclare/',
-		'notmatches': r'doc$',
-		'pages': {
-			'Module:{}/doc': '{{CargodocModule}}'
-		}
-	}
-]
-
-def make_doc_pages(site: EsportsClient, p):
-	for case in DOC_PAGES_TO_MAKE:
-		if 'matches' in case.keys():
-			if not re.findall(case['matches'], p.name):
-				continue
-		if 'notmatches' in case.keys():
-			if re.findall(case['notmatches'], p.name):
-				continue
-		for i, (k, v) in enumerate(case['pages'].items()):
-			site.client.pages[k.format(p.page_title)].save(v, summary='Automated error fixing (Python)',
-									   tags='daily_errorfix')
