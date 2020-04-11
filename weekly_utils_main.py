@@ -63,18 +63,8 @@ for page in pages:
 			try:
 				if template.name.matches('Infobox Player'):
 					utils.fixInfoboxPlayer(template)
-					if p.namespace == 0:
-						if template.has('checkboxIsPersonality'):
-							if template.get('checkboxIsPersonality').value.strip() != 'Yes':
-								utils.createResults(site, page, template, 'Tournament Results', 'Player', '{{PlayerResults|show=everything}}')
 				elif template.name.matches('Infobox Team'):
 					utils.fixInfoboxTeam(template)
-					if p.namespace == 0:
-						utils.createResults(site, page, template, 'Tournament Results', 'Team', '{{TeamResults|show=everything}}')
-						utils.createResults(site, page, template, 'Schedule History', 'Team', '{{TeamScheduleHistory}}')
-						tooltip = site.client.pages['Tooltip:%s' % page]
-						tooltip.save('{{RosterTooltip}}',tags='daily_errorfix')
-					utils.updateParams(template)
 				elif template.name.matches('PicksAndBansS7') or template.name.matches('PicksAndBans'):
 					utils.fixPB(pick_ban_validator, template)
 				elif template.name.matches('Listplayer/Current/End'):

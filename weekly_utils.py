@@ -5,15 +5,6 @@ from river_mwclient.auth_credentials import AuthCredentials
 credentials = AuthCredentials(user_file="me")
 site = EsportsClient('lol', credentials=credentials) # Set wiki
 
-typo_find = ['favourite','quater','partecipate','Portugese', 'Regelations']
-typo_replace = ['favorite','quarter','participate','Portuguese', 'Relegations']
-
-def typoFixes(text):
-	i = 0
-	while i < len(typo_find):
-		text = text.replace(typo_find,typo_replace)
-	return text
-
 
 teamhist_find = [r"(\d+)(\s*)-(\s*)(\"?Present\"?|''Present'')",
 			   r'^\s*(.*)(\d+)\s*-\s*(\w+)',
@@ -85,26 +76,6 @@ def fixInfoboxTeam(template):
 		if template.get('isdisbanded').value.strip().lower() == 'no':
 			template.remove('isdisbanded')
 	return
-
-def createResults(site, page, template, subpage, result_type, template_text):
-	if template.has('checkboxIsPersonality') and template.get('checkboxIsPersonality').value.strip() == 'Yes':
-		pass
-	else:
-		p = site.client.pages[page + '/' + subpage]
-		text = p.text()
-		if text == '':
-			p.save('{{{{{}TabsHeader}}}}\n{}'.format(result_type, template_text),tags='daily_errorfix')
-
-
-def updateParams(template):
-	# update gameschedule params for new conventions
-	if template.has('t1score'):
-		template.get('t1score').name = 'team1score'
-	if template.has('t2score'):
-		template.get('t2score').name = 'team2score'
-	if template.has('post-match'):
-		template.get('post-match').name = 'reddit'
-
 
 def fixPB(validator, template):
 	if validator.has_champion_error(template):
