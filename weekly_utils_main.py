@@ -2,7 +2,7 @@
 
 import mwparserfromhell, datetime
 import weekly_utils as utils
-import scrape_runes, luacache_refresh
+import scrape_runes
 from pick_ban_validator import PickBanValidator
 from river_mwclient.esports_client import EsportsClient
 from river_mwclient.auth_credentials import AuthCredentials
@@ -78,7 +78,6 @@ for page in pages:
 		if len(errors) > 0:
 			report_page = site.client.pages['User talk:RheingoldRiver']
 			report_errors(report_page, page, errors)
-luacache_refresh.teamnames(site)
 
 success_page = site.client.pages['User:RheingoldRiver/Maint Log']
 text = success_page.text()

@@ -72,10 +72,6 @@ def fixInfoboxPlayer(template):
 def fixInfoboxTeam(template):
 	for item in social_fr:
 		fixSocialField(template, item)
-	if template.has('isdisbanded'):
-		if template.get('isdisbanded').value.strip().lower() == 'no':
-			template.remove('isdisbanded')
-	return
 
 def fixPB(validator, template):
 	if validator.has_champion_error(template):
