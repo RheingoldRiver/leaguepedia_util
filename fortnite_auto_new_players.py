@@ -38,7 +38,7 @@ for item in result:
 	try:
 		page = site.client.pages[name]
 		if page.text() != '':
-			print('Page %s already exists, skipping' % name)
+			# print('Page %s already exists, skipping' % name)
 			page.save(page.text())
 			continue
 		# print('Processing page %s...' % name)
