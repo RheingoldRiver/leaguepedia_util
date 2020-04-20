@@ -49,18 +49,24 @@ class PickBanValidator(object):
 	
 	def _check_for_duplicates(self, values, file, length="link"):
 		already_seen = []
-		for value in values:
+		for i, value in enumerate(values):
 			new = self.cache.get(file, value, length)
 			if new in already_seen:
 				return True
-			already_seen.append(new)
+			already_seen.append(self._escape_value(value, i))
 		return False
+	
+	@staticmethod
+	def _escape_value(value, i):
+		if value in ["none", "loss of ban", "unknown", "missing data"]:
+			return value + "_" + str(i)
+		return value
 
 if __name__ == '__main__':
 	credentials = AuthCredentials(user_file="me")
 	site = EsportsClient('lol', credentials=credentials) # Set wiki
 	validator = PickBanValidator(site)
-	page = site.client.pages['LCL/2020 Season/Spring Open Cup/Picks and Bans/Individual Games']
+	page = site.client.pages['LPLOL/2020 Season/Spring Playoffs/Picks and Bans/Individual Games']
 	text = page.text()
 	wikitext = parse(text)
 	for template in wikitext.filter_templates():

@@ -16,7 +16,7 @@ print(startat_page)
 
 overwrite_existing = True
 
-startat_comparison = startat_namespace - 1 if startat_namespace else -1
+startat_comparison = -1 if startat_namespace is None else startat_namespace - 1
 
 passed_startat = False
 
