@@ -6,33 +6,32 @@ from river_mwclient.page_modifier import PageModifierBase
 from mwparserfromhell import parse
 from mwparserfromhell.nodes.template import Template
 
-credentials = AuthCredentials(user_file="bot")
-site = EsportsClient('lol', credentials=credentials)  # Set wiki
-summary = 'Split gallery pages into multiple tabs'  # Set summary
+credentials = AuthCredentials(user_file="me")
+site = EsportsClient('valorant', credentials=credentials)  # Set wiki
+summary = 'Move round totals to actual rounds param'  # Set summary
 
-TABS = [ 'Splash Screens', 'Portraits', 'In-Game Screenshots', 'Concept Art' ]
+class TemplateModifier(TemplateModifierBase):
+    def update_template(self):
+        template = self.current_template
+        if not (template.has('team1score') and template.has('team2score')):
+            return
+        if template.get('team1score').value.strip() == '':
+            return
+        if template.get('team2score').value.strip() == '':
+            return
+        rounds1 = int(template.get('team1score').value.strip())
+        rounds2 = int(template.get('team2score').value.strip())
+        if rounds1 != 13 and rounds2 != 13:
+            return
+        template.add('team1rounds', rounds1, before="team1score")
+        template.add('team2rounds', rounds2, before="team2score")
+        if rounds1 == 13:
+            template.add('team1score', 1)
+            template.add('team2score', 0)
+        elif rounds2 == 13:
+            template.add('team2score', 1)
+            template.add('team1score', 0)
 
-for champion_page in site.client.categories['Champions']:
-    champion = champion_page.name
-    # if champion_page.name < 'Braum':
-    #     continue
-    print(champion)
-    for tab in TABS:
-        gallery_page = site.client.pages[champion + '/Gallery/{}'.format(tab)]
-        text = gallery_page.text()
-        wikitext = parse(text)
-        sections = []
-        for template in wikitext.filter_templates():
-            template: Template
-            if template.name.matches('TabsDynamic'):
-                i = 1
-                while template.has('name' + str(i)):
-                    name = template.get('name' + str(i)).value.strip()
-                    if re.search(name, 'nowrap'):
-                        name = re.search('nowrap\|(\w+)', name)[1]
-                    sections.append('== {} ==\n{}'.format(name, template.get('content' + str(i)).value.strip()))
-                    i += 1
-        if not sections:
-            continue
-        new_text = '{{ChampTabsHeader}}\n{{TOCFlat}}\n' + '\n'.join(sections)
-        gallery_page.save(new_text, summary=summary)
+TemplateModifier(site, 'MatchSchedule',
+                 # title_list=['Data:100 Thieves Invitational 2020'],
+                 summary=summary).run()

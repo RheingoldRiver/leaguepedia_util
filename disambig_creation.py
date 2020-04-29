@@ -4,10 +4,10 @@ from river_mwclient.auth_credentials import AuthCredentials
 
 #################################################################################################
 
-original_name = 'Emperor'
-irl_name = "Emperor (Kim Jin-hyun)"
+original_name = 'Se7en'
+irl_name = "Kuo Yi-Chiun"
 new_name = '{} ({})'.format(original_name, irl_name.strip())
-init_move = False
+init_move = True
 blank_edit = False
 limit = -1
 timeout_limit = 30
