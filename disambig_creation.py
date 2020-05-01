@@ -4,27 +4,24 @@ from river_mwclient.auth_credentials import AuthCredentials
 
 #################################################################################################
 
-original_name = 'Se7en'
-irl_name = "Kuo Yi-Chiun"
+original_name = 'bono'
+irl_name = "Kim Gi-beom"
 new_name = '{} ({})'.format(original_name, irl_name.strip())
 init_move = True
 blank_edit = False
 limit = -1
 timeout_limit = 30
 
-listplayer_templates = ["listplayer", "listplayer/Current"]
 roster_templates = ["ExtendedRosterLine", "ExtendedRosterLine/MultipleRoles"]
 scoreboard_templates = ["MatchRecapS8/Player","Scoreboard/Player"]
-stat_templates = ["IPS", "CareerPlayerStats", "MatchHistoryPlayer"]
-player_line_templates = ["LCKPlayerLine", "LCSPlayerLine"]
+stat_templates = ["CareerPlayerStats", "MatchHistoryPlayer"]
 roster_change_templates = ["RosterChangeLine", "RosterRumorLine2",
 						   "RosterRumorLineStay", "RosterRumorLineNot", "RosterRumorLine"]
 summary = "Disambiguating {} to {}".format(original_name, new_name)
 
-css_style = " {\n    color:orange!important;\n    font-weight:bold;\n}"
-
 orig_name_lc = original_name[0].lower() + original_name[1:]
 new_name_lc = new_name[0].lower() + new_name[1:]
+orig_name_uc = original_name[0].upper() + original_name[1:]
 
 blank_edit_these = []
 
@@ -43,7 +40,7 @@ def blank_edit_page(page):
 	page.save(text, summary="Blank Editing")
 
 def move_page(from_page):
-	new_page_name = str(from_page.name).replace(original_name, new_name)
+	new_page_name = str(from_page.name).replace(orig_name_uc, new_name)
 	new_page = site.client.pages[new_page_name]
 	if new_page.exists:
 		print("{} already exists, cannot move!".format(from_page.name))
@@ -133,8 +130,9 @@ def process_template(template):
 		template.add(1, new_name)
 		template.add(2, original_name)
 
-	elif tl_matches(listplayer_templates, field=1) and not template.has("link"):
-		template.add("link", new_name, before=1)
+	elif tl_matches(["listplayer", "listplayer/Current"], field=1):
+		if not template.has("link"):
+			template.add("link", new_name, before=1)
 	
 	elif tl_matches(roster_templates, field='player') and not template.has('link'):
 		template.add("link", new_name, before="name")
@@ -147,9 +145,6 @@ def process_template(template):
 	
 	elif tl_matches(['TeamRoster/Line', 'RosterLineOld'], field='player'):
 		template.add('link', new_name)
-	
-	elif tl_matches(player_line_templates, field=1):
-		template.add(2, new_name)
 	
 	elif tl_matches(['Player', 'RSRR/Player'], field=1):
 		template.add('link', new_name)
@@ -212,6 +207,8 @@ if init_move:
 	for subpage in subpages:
 		edit_subpage(subpage)
 		move_page(subpage)
+	tooltip_page = site.client.pages['Tooltip:' + original_name]
+	move_page(tooltip_page)
 
 pages = thispage.backlinks()
 i = 0

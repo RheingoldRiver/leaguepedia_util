@@ -1,11 +1,10 @@
 from river_mwclient.esports_client import EsportsClient
 from river_mwclient.auth_credentials import AuthCredentials
-from river_mwclient.template_modifier import TemplateModifierBase
 from river_mwclient.page_modifier import PageModifierBase
 
 credentials = AuthCredentials(user_file="me")
 site = EsportsClient('lol', credentials=credentials)  # Set wiki
-summary = 'Clean up bundle/loot exclusive to their own args'  # Set summary
+summary = 'Bot edit'  # Set summary
 
 
 class PageModifier(PageModifierBase):
@@ -16,10 +15,5 @@ class PageModifier(PageModifierBase):
 		return
 
 
-class TemplateModifier(TemplateModifierBase):
-	def update_template(self):
-		return
-
-
-TemplateModifier(site, 'TEMPLATEYOUCAREABOUT',
+PageModifier(site,
 				 summary=summary).run()
