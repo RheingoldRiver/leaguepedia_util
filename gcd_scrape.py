@@ -23,6 +23,7 @@ def main():
 		# print(k)
 		try:
 			site.client.pages[k].save(pages[k], summary="Automatic GCD Backup")
+			site.client.pages[k].touch()
 		except Exception as e:
 			ERRORS.append(str(e))
 	
