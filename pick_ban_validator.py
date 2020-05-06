@@ -58,7 +58,7 @@ class PickBanValidator(object):
 	
 	@staticmethod
 	def _escape_value(value, i):
-		if value in ["none", "loss of ban", "unknown", "missing data"]:
+		if value.lower() in ["none", "loss of ban", "unknown", "missing data"]:
 			return value + "_" + str(i)
 		return value
 
@@ -66,7 +66,7 @@ if __name__ == '__main__':
 	credentials = AuthCredentials(user_file="me")
 	site = EsportsClient('lol', credentials=credentials) # Set wiki
 	validator = PickBanValidator(site)
-	page = site.client.pages['LPLOL/2020 Season/Spring Playoffs/Picks and Bans/Individual Games']
+	page = site.client.pages['Brazilian Challenger Circuit/2020 Season/Split 1/Picks and Bans/Week 5-7']
 	text = page.text()
 	wikitext = parse(text)
 	for template in wikitext.filter_templates():
