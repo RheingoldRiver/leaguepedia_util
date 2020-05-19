@@ -34,7 +34,7 @@ social_fr = [
 	{ "field" : "instagram", "find" : r'/$', "replace" : r'' },
 	{ "field" : "facebook", "find" : r'\[?(?:https?://)?(.*)/([^ \n]+).*', "replace" : r'https://\1/\2' },
 	{ "field" : "facebook", "find" : r'/$', "replace" : r'' },
-	{ "field" : "youtube", "find" : r'\[?(?:https?://)?([^ \n]+)(.*\])?', "replace" : r'https://\1' },
+	{ "field" : "youtube", "find" : r'\[?(?:https?://)?([^ \n]+)(.+\])?', "replace" : r'https://\1' },
 	{ "field" : "website", "find" : r'\[?([^ \n]*)(.*\])?', "replace" : r'\1' },
 	{ "field" : "vk", "find": r'(?:\[?https?://)?(?:www\.)?(?:vk\.com/)?([^/ \n]+)(.*\])?', "replace": r'https://vk.com/\1'},
 	{ "field" : "vk", "find" : r'/$', "replace" : r'' },
