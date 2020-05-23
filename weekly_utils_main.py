@@ -24,14 +24,12 @@ revisions = site.client.api('query', format='json',
 					 rcdir = 'older'
 					 )
 
-pages = []
 pages_for_runes = []
 
 for revision in revisions['query']['recentchanges']:
 	title = revision['title']
-	if title not in pages:
-		pages.append(title)
-		if title.startswith('Data:'):
+	if title.startswith('Data:'):
+		if title not in pages_for_runes:
 			pages_for_runes.append(title)
 
 success_page = site.client.pages['User:RheingoldRiver/Maint Log']
