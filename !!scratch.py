@@ -4,90 +4,95 @@ from river_mwclient.template_modifier import TemplateModifierBase
 
 credentials = AuthCredentials(user_file="bot")
 site = EsportsClient('lol', credentials=credentials)
-summary = 'Adding region to international tournaments by querying pages'
+summary = 'guess local timezone'
 
-# page_list = site.cargo_client.page_list(
-# 	tables="Tournaments",
-# 	where="Region=\"International\"",
-# 	fields="_pageName=Page",
-# 	limit=5000
-# )
-
-title_list = [
-	"International e-Culture Festival 2015",
-	"International E-sports Festival 2019",
-	"International Invitational Tournament 1",
-	"International Invitational Tournament 2",
-	"International Invitational Tournament 3",
-	"International Invitational Tournament 4",
-	"IPL LoLympics",
-	"IPL Royale",
-	"ISF 2019",
-	"KCON 2014 Champions Festival",
-	"Kung Fu Cup",
-	"League of Legends International College Cup/2017 Season",
-	"League of Legends International College Cup/2018 Season",
-	"League of Legends International College Cup/2019 Season",
-	"Legendary Gaming Easter Cup",
-	"Legendary Gaming New Year's Cup",
-	"Lone Star Clash 2",
-	"Rampage King of The Hill Series",
-	"Red Bull Player One 2019",
-	"Reign of Gaming International Invitational",
-	"Return of the Legends 2017",
-	"Return of the Legends 2018",
-	"Rift Rivals 2017",
-	"Rift Rivals 2017/GPL-LJL-OPL",
-	"Rift Rivals 2017/LCK-LPL-LMS",
-	"Rift Rivals 2017/LCL-TCL",
-	"Rift Rivals 2017/LLN-CLS-CBLOL",
-	"Rift Rivals 2017/NA-EU",
-	"Rift Rivals 2018",
-	"Rift Rivals 2018/LCK-LPL-LMS",
-	"Rift Rivals 2018/LCL-TCL-VCS",
-	"Rift Rivals 2018/LLN-CLS-CBLOL",
-	"Rift Rivals 2018/NA-EU",
-	"Rift Rivals 2018/SEA-LJL-OPL",
-	"Rift Rivals 2019",
-	"Rift Rivals 2019/LCK-LPL-LMS-VCS",
-	"Rift Rivals 2019/NA-EU",
-	"Rift Rivals 2019/NA-EU/Showmatches",
-	"Season 1 World Championship",
-	"Season 2 World Championship",
-	"Season 3 World Championship",
-	"SL i-League LoL Invitational",
-	"Sound Blaster Nations Championship",
-	"Sweden vs. South Korea Friendly Match",
-	"World e-Sports Masters 2012",
-	"World GameMaster Tournament/2013",
-	"Zona Esports - Movistar Riders Showmatch",
-]
+leagues = {
+	"2015 All-Star Event": "PST",
+	"2015 International Wildcard Invitational": "CET",
+	"2015 International Wildcard Tournament": "CET",
+	"2016 International Wildcard Qualifier": "CET",
+	"All-Star": "International",
+	"Battle of the Atlantic": "International",
+	"BGS": "CET",
+	"Brasil Mega Arena": "CET",
+	"Brazil Mega Cup": "CET",
+	"Brazilian Championship Series": "CET",
+	"Brazilian Challenger Circuit": "CET",
+	"Challengers Korea": "KST",
+	"Circuit Brazilian League of Legends": "CET",
+	"Circuito de Leyendas Norte": "PST",
+	"Circuito de Leyendas Sur": "PST",
+	"CIS Challenger League": "CET",
+	"Copa Latinoamérica Sur": "PST",
+	"Demacia Cup": "KST",
+	"DreamHack": "CET",
+	"Elite Challenger Series": "KST",
+	"ESL Brasil Premier League": "CET",
+	"Europe League Championship Series": "CET",
+	"Europe Challenger Series": "CET",
+	"European Masters": "CET",
+	"Garena Premier League": "KST",
+	"IGN Pro League": "PST",
+	"Intel Extreme Masters": "International",
+	"KeSPA": "KST",
+	"League of Legends Championship Series": "PST",
+	"League of Legends Nova League": "KST",
+	"League of Origin 2017": "KST",
+	"Liga Latinoamérica Norte": "PST",
+	"Liga Latinoamérica": "PST",
+	"Logitech Challenge Brasil": "CET",
+	"LoL Champions Korea": "KST",
+	"LoL Continental League": "CET",
+	"LoL Development League": "KST",
+	"LoL European Championship": "CET",
+	"LoL Japan League": "KST",
+	"LoL Master Series": "KST",
+	"LoL Secondary Pro League": "KST",
+	"LoL The Champions": "KST",
+	"Major League Gaming": "PST",
+	"Mid-Season Cup 2020": "KST",
+	"Mid-Season Invitational": "International",
+	"NA Academy League": "PST",
+	"National Electronic Sports Tournament": "KST",
+	"NiceGameTV LoL Battle": "KST",
+	"North America Challenger Series": "PST",
+	"North America League Championship Series": "PST",
+	"Oceanic Challenger Series": "KST",
+	"Oceanic Pro League": "KST",
+	"PCS": "KST",
+	"PGL": "CET",
+	"Rift Rivals 2017 LLN-CLS-CBLOL": "PST",
+	"Rift Rivals 2017 GPL-LJL-OPL": "KST",
+	"Rift Rivals 2017 LCL-TCL": "CET",
+	"Rift Rivals 2017 LCK-LPL-LMS": "KST",
+	"Rift Rivals 2017 NA-EU": "International",
+	"Riot Games": "International",
+	"SK Telecom LTE-A LoL Masters": "KST",
+	"SLTV StarSeries": "CET",
+	"Tencent LoL Pro League": "KST",
+	"Turkish Championship League": "CET",
+	"Turkish Promotion League": "CET",
+	"Turkey Academy League": "CET",
+	"Vietnam Championship Series": "KST",
+	"World Championship": "International",
+	"World Cyber Arena": "KST",
+	"Xtreme League": "CET",
+}
 
 class TemplateModifier(TemplateModifierBase):
 	def update_template(self, template):
-		if not template.has('team'):
+		if template.has('closest_timezone'):
 			return
-		if template.has('region'):
+		if not template.has('CM_StandardLeague'):
 			return
-		team = template.get('team').value.strip()
-		team_page = site.client.pages[team].resolve_redirect()
-		team = team_page.name
-		result = site.cargo_client.query(
-			tables="Teams",
-			where="_pageName=\"{}\"".format(
-				site.cache.get('Team', team, 'link')
-			),
-			fields="Region"
-		)
-		if not result:
+		league_input = template.get('CM_StandardLeague').value.strip()
+		self.site: EsportsClient
+		league = self.site.cache.get('League', league_input, 'long')
+		if league not in leagues:
 			return
-		region = result[0]['Region']
-		template.add('region', region, before='team')
-		template.remove('team')
-		template.add('team', team, before='region')
+		template.add('closest_timezone', leagues[league])
 
 
-TemplateModifier(site, 'TeamRoster',
-                 title_list=title_list,
-                 tags="regions_in_intl_tournaments",
+TemplateModifier(site, 'Infobox Tournament',
+                 startat_page='Challengers Korea/2015 Season/Summer',
                  summary=summary).run()

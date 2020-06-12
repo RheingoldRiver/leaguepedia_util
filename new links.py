@@ -3,7 +3,7 @@ from river_mwclient.auth_credentials import AuthCredentials
 import mwparserfromhell, re
 
 credentials = AuthCredentials(user_file="me")
-site = EsportsClient('fortnite', credentials=credentials) #  set wiki
+site = EsportsClient('cod-esports', credentials=credentials) #  set wiki
 summary = 'Changing links/display to be just 1 field, with link only'  # Set summary
 
 limit = -1

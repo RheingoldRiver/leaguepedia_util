@@ -8,7 +8,6 @@ original_name = 'Ali'
 irl_name = "Liu Xu-Dong"
 new_name = '{} ({})'.format(original_name, irl_name.strip())
 init_move = True
-blank_edit = False
 limit = -1
 timeout_limit = 30
 
@@ -74,7 +73,7 @@ class PageProcessor(object):
 		for template in wikitext.filter_templates():
 			self.process_template(template)
 		newtext = str(wikitext)
-		if origtext != newtext or blank_edit:
+		if origtext != newtext:
 			print("Saving...")
 			t = threading.Thread(target=savepage, kwargs={"targetpage": page, "savetext": newtext})
 			t.start()
@@ -142,7 +141,7 @@ class PageProcessor(object):
 			template.add("player", self.new_name + "{{!}}" + self.original_name)
 		
 		elif tl_matches(
-				['TeamRoster/Line', 'RosterLineOld', 'ExtendedRosterLine'],
+				['TeamRoster/Line', 'RosterLineOld', 'ExtendedRosterLine', 'ResidencyChange'],
 				field='player'
 		):
 			template.add('player', self.new_name)
