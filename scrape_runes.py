@@ -387,6 +387,6 @@ if __name__ == '__main__':
     SILENT = False
     credentials = AuthCredentials(user_file="me")
     esc_main = EsportsClient('lol', credentials=credentials)  # Set wiki
-    pages = ['Data:LLA/2020 Season/Opening Season']
+    pages = ['Data:LCL/2020 Season/Summer Season']
     scrape(esc_main, pages, False)
     # scrapeLPL(esc_main, pages, False)
