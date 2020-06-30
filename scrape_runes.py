@@ -78,8 +78,8 @@ def get_token():
                              '-DNsTwer0UI4YN2TDmmSifAtWou3lMbqmiQIsIHaRuDlcZbNEv_b6XuzUhi_lRzYCwE4IKSR-AwX_8mLNBLTVb8Qz'
                              'IJCPR-MGaPL8hKPdprgjxT0m96gw'),
         'grant_type': 'password',
-        'username': auth.username,
-        'password': auth.password,
+        'username': auth['username'],
+        'password': auth['password'],
         'scope': 'openid offline_access lol ban profile email phone'
     }
     session = requests.Session()
@@ -387,6 +387,6 @@ if __name__ == '__main__':
     SILENT = False
     credentials = AuthCredentials(user_file="me")
     esc_main = EsportsClient('lol', credentials=credentials)  # Set wiki
-    pages = ['Data:LPL/2020 Season/Spring Season']
-    # scrape(esc_main, pages, False)
-    scrapeLPL(esc_main, pages, False)
+    pages = ['Data:LLA/2020 Season/Opening Season']
+    scrape(esc_main, pages, False)
+    # scrapeLPL(esc_main, pages, False)
