@@ -2,34 +2,32 @@ from river_mwclient.esports_client import EsportsClient
 from river_mwclient.auth_credentials import AuthCredentials
 import mwparserfromhell, re
 
-credentials = AuthCredentials(user_file="me")
-site = EsportsClient('cod-esports', credentials=credentials) #  set wiki
+credentials = AuthCredentials(user_file="bot")
+site = EsportsClient('lol', credentials=credentials) #  set wiki
 summary = 'Changing links/display to be just 1 field, with link only'  # Set summary
 
 limit = -1
 startat_page = None
 print(startat_page)
-#startat_page = 'Data:LCK/2018 Season/Summer Playoffs'
-this_template = site.client.pages['Template:Infobox Tournament']  # Set template
+startat_page = 'Challengers Korea/2017 Season/Spring Season/Scoreboards/Week 3'
+this_template = site.client.pages['Module:Scoreboard']  # Set template
 pages = this_template.embeddedin()
 
-# with open('pages.txt', encoding="utf-8") as f:
-# 	pages = f.readlines()
+#pages = [site.pages['Data:Challengers Korea/2019 Season/Spring Season']]
 
-#pages = [site.client.pages['Data:Challengers Korea/2019 Season/Spring Season']]
-
-params = ['player','player1']
-
-def links_to_display(template, param):
-	if not template.has(param):
+def links_to_display(template):
+	if not template.has('name'):
 		return
-	if (not template.has(param + 'link')) and (not template.has(param + 'links')):
+	name = template.get('name').value.strip()
+	if '{{!}}' in name:
+		template.add('name', name.split('{{!}}')[0])
+	name = template.get('name').value.strip()
+	if not template.has('link'):
+		template.add('link', name, before='name')
+		template.remove('name')
 		return
-	suffix = 'link'
-	if not template.has(param + suffix):
-		suffix = 'links'
-	display_str = template.get(param).value.strip()
-	link_str = template.get(param + suffix).value.strip()
+	display_str = template.get('name').value.strip()
+	link_str = template.get('link').value.strip()
 	displays = display_str.split(',')
 	links = link_str.split(',')
 	new = []
@@ -41,8 +39,8 @@ def links_to_display(template, param):
 			new.append(link)
 			continue
 		new.append(v)
-	template.add(param, ','.join(new))
-	template.remove(param + suffix)
+	template.add('link', ','.join(new))
+	template.remove('name')
 
 passed_startat = False if startat_page else True
 lmt = 0
@@ -58,9 +56,8 @@ for page in pages:
 	text = page.text()
 	wikitext = mwparserfromhell.parse(text)
 	for template in wikitext.filter_templates():
-		if template.name.matches(['TournamentResultsLineDuos', 'TournamentResultsLineSolo']):
-			for param in params:
-				links_to_display(template, param)
+		if template.name.matches(['Scoreboard/Player']):
+			links_to_display(template)
 	
 	newtext = str(wikitext)
 	if text != newtext:
