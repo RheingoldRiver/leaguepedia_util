@@ -134,8 +134,8 @@ class PageProcessor(object):
 			if not template.has("link"):
 				template.add(1, self.new_name)
 		
-		elif tl_matches(scoreboard_templates, field='name'):
-			template.add("link", self.new_name, before="kills")
+		elif tl_matches(scoreboard_templates, field='link'):
+			template.add("link", self.new_name)
 		
 		elif tl_matches(roster_change_templates, field='player'):
 			template.add("player", self.new_name + "{{!}}" + self.original_name)
