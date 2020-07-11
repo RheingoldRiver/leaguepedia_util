@@ -1,19 +1,37 @@
 from river_mwclient.esports_client import EsportsClient
 from river_mwclient.auth_credentials import AuthCredentials
-from river_mwclient.page_modifier import PageModifierBase
-from river_mwclient.wiki_time_parser import time_from_template
+from river_mwclient.template_modifier import TemplateModifierBase
+from mwparserfromhell import parse
+
+credentials = AuthCredentials(user_file="me")
+site = EsportsClient('lol', credentials=credentials)
+summary = 'Moving QQ links to outside of the games since they\'re for the entire series'
 
 
-class PageModifier(PageModifierBase):
-	def update_wikitext(self, wikitext):
-		for template in wikitext.filter_templates():
-			if not template.name.matches(['MatchRecapS8', 'Scoreboard/Season 3', 'Scoreboard/Season 4', 'Scoreboard/Season 5', 'Scoreboard/Season 5', 'Scoreboard/Season 6', 'Scoreboard/Season 7', 'Scoreboard/Season 8']):
-				continue
-			date_time = time_from_template(template)
-			if date_time is not None:
-				template.add('dst', date_time.dst)
+class TemplateModifier(TemplateModifierBase):
+	def update_template(self, template):
+		if template.has('qq'):
+			return
+		i = 1
+		s = str(i)
+		mh = None
+		while template.has('game{}'.format(s)):
+			game_text = template.get('game{}'.format(s)).value.strip()
+			for tl in parse(game_text).filter_templates():
+				if tl.name.matches('MatchSchedule/Game'):
+					if not tl.has('mh'):
+						continue
+					mh = tl.get('mh').value.strip()
+					if 'qq.com' in mh:
+						break
+					else:
+						mh = None
+			if mh is not None:
+				break
+			i += 1
+			s = str(i)
+		if mh is not None:
+			template.add('qq', mh + '\n', before = 'game1')
 
-if __name__ == '__main__':
-	credentials = AuthCredentials(user_file='bot')
-	site = EsportsClient('lol', credentials=credentials)  # Set wiki
-	PageModifier(site, page_list=site.pages_using('Scoreboard/Button'), summary="Fix dst").run()
+TemplateModifier(site, 'MatchSchedule', recursive=False,
+                 summary=summary).run()

@@ -9,7 +9,7 @@ summary = 'Changing links/display to be just 1 field, with link only'  # Set sum
 limit = -1
 startat_page = None
 print(startat_page)
-startat_page = 'Challengers Korea/2017 Season/Spring Season/Scoreboards/Week 3'
+# startat_page = 'Challengers Korea/2017 Season/Spring Season/Scoreboards/Week 3'
 this_template = site.client.pages['Module:Scoreboard']  # Set template
 pages = this_template.embeddedin()
 
@@ -56,7 +56,7 @@ for page in pages:
 	text = page.text()
 	wikitext = mwparserfromhell.parse(text)
 	for template in wikitext.filter_templates():
-		if template.name.matches(['Scoreboard/Player']):
+		if template.name.matches(['MatchRecapS8/Player']):
 			links_to_display(template)
 	
 	newtext = str(wikitext)
