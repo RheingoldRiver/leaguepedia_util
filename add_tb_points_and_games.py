@@ -13,7 +13,7 @@ startat = -1
 #################################
 
 #pagename = 'LPL/2019 Season/Spring Season'
-pointstype = 'bot' # none, bo3points, bo2, bo3pointsopl
+pointstype = 'none' # none, bo3points, bo2, bo3pointsopl
 
 remove_params = ['round','start','end','hide', 'nosemantics']
 tb_names = ['tb', 'tiebreakers', 'tiebreaker']
@@ -24,6 +24,9 @@ max_scores = {
 	'none' : 1,
 	'bo2' : 2
 }
+
+if pointstype not in max_scores:
+	raise IndexError
 
 # pages_var = [site.client.pages['Data:' + pagename]]
 

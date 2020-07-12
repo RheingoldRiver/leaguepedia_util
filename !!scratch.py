@@ -1,37 +1,29 @@
 from river_mwclient.esports_client import EsportsClient
 from river_mwclient.auth_credentials import AuthCredentials
 from river_mwclient.template_modifier import TemplateModifierBase
-from mwparserfromhell import parse
+import csv
 
-credentials = AuthCredentials(user_file="me")
+with open('qq to wp.csv', mode='r') as infile:
+	reader = csv.reader(infile)
+	qq_dict = {rows[0]:rows[1] for rows in reader}
+		
+credentials = AuthCredentials(user_file="bot")
 site = EsportsClient('lol', credentials=credentials)
-summary = 'Moving QQ links to outside of the games since they\'re for the entire series'
+summary = 'Automatically adding Wanplus URLs'
 
 
 class TemplateModifier(TemplateModifierBase):
 	def update_template(self, template):
-		if template.has('qq'):
+		if not template.has('qq'):
 			return
-		i = 1
-		s = str(i)
-		mh = None
-		while template.has('game{}'.format(s)):
-			game_text = template.get('game{}'.format(s)).value.strip()
-			for tl in parse(game_text).filter_templates():
-				if tl.name.matches('MatchSchedule/Game'):
-					if not tl.has('mh'):
-						continue
-					mh = tl.get('mh').value.strip()
-					if 'qq.com' in mh:
-						break
-					else:
-						mh = None
-			if mh is not None:
-				break
-			i += 1
-			s = str(i)
-		if mh is not None:
-			template.add('qq', mh + '\n', before = 'game1')
+		qq = template.get('qq').value.strip()
+		if qq not in qq_dict:
+			print('Missing entry for {} on page {}'.format(qq, self.current_page.name))
+			return
+		template.add('wanplus', qq_dict[qq], before='qq')
 
-TemplateModifier(site, 'MatchSchedule', recursive=False,
+
+TemplateModifier(site, 'MatchSchedule',
+                 quiet=True,
+                 startat_page="Data:Rift Rivals 2018/LCK-LPL-LMS",
                  summary=summary).run()
