@@ -15,6 +15,10 @@ scoreboard_templates = ["MatchRecapS8/Player","Scoreboard/Player"]
 stat_templates = ["CareerPlayerStats", "MatchHistoryPlayer"]
 roster_change_templates = ["RosterChangeLine", "RosterRumorLine2",
 						   "RosterRumorLineStay", "RosterRumorLineNot", "RosterRumorLine"]
+SUBPAGES_TO_DELETE = [
+	'{}/Tournament Results',
+	'Tooltip:{}'
+]
 summary = "Disambiguating {} to {}".format(original_name, new_name)
 
 orig_name_lc = original_name[0].lower() + original_name[1:]
@@ -226,4 +230,9 @@ if init_move:
 	for page in blank_edit_these:
 		page.touch()
 	make_disambig_page()
+for p in SUBPAGES_TO_DELETE:
+	page = site.client.pages[p.format(original_name)]
+	if page.exists():
+		page.delete('Deleting a disambiguation subpage left behind')
+	
 print("Done! If some pages stalled out you may still need to abort manually.")
