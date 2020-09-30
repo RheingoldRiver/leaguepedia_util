@@ -9,6 +9,8 @@ import requests
 from river_mwclient.esports_client import EsportsClient
 from river_mwclient.auth_credentials import AuthCredentials
 
+from lol_esports_parser.parsers.riot.acs_access import get_id_token
+
 SILENT = True
 
 
@@ -63,30 +65,6 @@ def get_champ_dict():
     return champ_dict
 
 
-def get_token():
-    auth = json.load(open('riot_auth.json'))
-
-    url = 'https://auth.riotgames.com/token'
-
-    data = {
-        'client_assertion_type': 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
-        'client_assertion': ('eyJhbGciOiJSUzI1NiJ9.eyJhdWQiOiJodHRwczpcL1wvYXV0aC5yaW90Z2FtZXMuY29tXC90b2tlbiIsInN1YiI6'
-                             'ImxvbCIsImlzcyI6ImxvbCIsImV4cCI6MTYwMTE1MTIxNCwiaWF0IjoxNTM4MDc5MjE0LCJqdGkiOiIwYzY3OThmN'
-                             'i05YTgyLTQwY2ItOWViOC1lZTY5NjJhOGUyZDcifQ.dfPcFQr4VTZpv8yl1IDKWZz06yy049ANaLt-AKoQ53GpJrd'
-                             'ITU3iEUcdfibAh1qFEpvVqWFaUAKbVIxQotT1QvYBgo_bohJkAPJnZa5v0-vHaXysyOHqB9dXrL6CKdn_QtoxjH2k'
-                             '58ZgxGeW6Xsd0kljjDiD4Z0CRR_FW8OVdFoUYh31SX0HidOs1BLBOp6GnJTWh--dcptgJ1ixUBjoXWC1cgEWYfV00'
-                             '-DNsTwer0UI4YN2TDmmSifAtWou3lMbqmiQIsIHaRuDlcZbNEv_b6XuzUhi_lRzYCwE4IKSR-AwX_8mLNBLTVb8Qz'
-                             'IJCPR-MGaPL8hKPdprgjxT0m96gw'),
-        'grant_type': 'password',
-        'username': auth['username'],
-        'password': auth['password'],
-        'scope': 'openid offline_access lol ban profile email phone'
-    }
-    session = requests.Session()
-    r = session.post(url, data=data)
-    return r.json()['id_token']
-
-
 def scrape(esc: EsportsClient, events, force):
     player_data_keys = ["perkPrimaryStyle", "perkSubStyle", "perk0", "perk1", "perk2", "perk3", "perk4", "perk5",
                         "statPerk0", "statPerk1", "statPerk2"]
@@ -96,7 +74,7 @@ def scrape(esc: EsportsClient, events, force):
     print_if_not_silent(events)
     with open('mh_riot_endpoint.txt') as f:
         mh_riot_endpoint = f.read().strip()
-    mh_riot_token = get_token()
+    mh_riot_token = get_id_token()
     for page_to_query in events:
         print_if_not_silent(page_to_query)
         result = esc.client.api('cargoquery', format="json",
@@ -387,6 +365,6 @@ if __name__ == '__main__':
     SILENT = False
     credentials = AuthCredentials(user_file="me")
     esc_main = EsportsClient('lol', credentials=credentials)  # Set wiki
-    pages = ['Data:LCL/2020 Season/Summer Season']
+    pages = ['Data:2020 Season World Championship/Play-In']
     scrape(esc_main, pages, False)
     # scrapeLPL(esc_main, pages, False)

@@ -8,7 +8,7 @@ live = EsportsClient('lol', credentials=credentials) #  set wiki
 pages = []
 
 for page in archive.client.allpages(namespace=0):
-	pages.append((page.name, live.pages[page.name].exists))
+	pages.append((page.name, live.client.pages[page.name].exists))
 
 text = []
 

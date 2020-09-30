@@ -23,8 +23,11 @@ class TemplateModifier(TemplateModifierBase):
 		for param in ['team', 'team2']:
 			if template.has(param):
 				template.remove(param)
+		for i in range(26, 31):
+			if template.has('issub' + str(i)):
+				template.remove('issub' + str(i))
 
 
 TemplateModifier(site, 'Infobox Player',
-                 startat_page="PrZo",
+                 # startat_page="PrZo",
                  summary=summary).run()

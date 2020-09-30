@@ -10,8 +10,8 @@ summary = 'Forcing blank edit'  # Set summary
 limit = -1
 startat_page = None
 print(startat_page)
-startat_page = 'Swathe'
-this_template = site.client.pages['Template:PlayerResults']  # Set template
+# startat_page = 'Swathe'
+this_template = site.client.pages['Template:Infobox Player']  # Set template
 pages = this_template.embeddedin()
 
 # pages = site.client.categories['Pages with script errors']
