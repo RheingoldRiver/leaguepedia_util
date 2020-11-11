@@ -155,7 +155,7 @@ def scrape(esc: EsportsClient, events, force):
             new_text = '\n'.join(lines)
             if new_text != text and len(lines) > 3:
                 print_if_not_silent('Saving page %s...' % page_name)
-                page.save(new_text, summary='Automatically updating Runes (python)')
+                esc.save(page, new_text, summary='Automatically updating Runes (python)')
             else:
                 print_if_not_silent('Skipping page %s, no changes' % page_name)
             error_text = ''
@@ -165,7 +165,7 @@ def scrape(esc: EsportsClient, events, force):
                 error_text = error_text + '\n' + e + ' (Key)'
             if error_text != '':
                 error_page = esc.client.pages['User:RheingoldRiver/Rune Errors']
-                error_page.save(error_text, summary='Reporting a Rune Error')
+                esc.save(error_page, error_text, summary='Reporting a Rune Error')
 
 
 def get_player_data(game, team_keys, j):
@@ -348,7 +348,7 @@ def scrapeLPL(esc: EsportsClient, events, force):
         new_text = '\n'.join(lines)
         if new_text != text and len(lines) > 3:
             print_if_not_silent('Saving page %s...' % page_name)
-            page.save(new_text, summary='Automatically updating Runes (python)')
+            esc.save(page, new_text, summary='Automatically updating Runes (python)')
         else:
             print_if_not_silent('Skipping page %s, no changes' % page_name)
         error_text = ''
@@ -358,13 +358,13 @@ def scrapeLPL(esc: EsportsClient, events, force):
             error_text = error_text + '\n' + e + ' (Key)'
         if error_text != '':
             error_page = esc.client.pages['User:RheingoldRiver/Rune Errors']
-            error_page.save(error_text, summary='Reporting a Rune Error')
+            esc.save(error_page, error_text, summary='Reporting a Rune Error')
 
 
 if __name__ == '__main__':
     SILENT = False
     credentials = AuthCredentials(user_file="me")
     esc_main = EsportsClient('lol', credentials=credentials)  # Set wiki
-    pages = ['Data:2020 Season World Championship/Play-In']
+    pages = ['Data:Prime League Pro Division/2021 Season/Spring Promotion']
     scrape(esc_main, pages, False)
     # scrapeLPL(esc_main, pages, False)
