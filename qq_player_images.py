@@ -71,3 +71,5 @@ def get_images(teams: list = None, season="", low_res=False):
             else:
                 image250px = ""
             _download_images(player_name, team_name, season, image550px, image250px)
+
+# don't ask why this comment is here
