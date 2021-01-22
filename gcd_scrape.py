@@ -24,7 +24,7 @@ def main():
 		# print(k)
 		try:
 			site.save_tile(k, text=pages[k], summary="Automatic GCD Backup")
-			site.touch(site.client.pages[k])
+			site.touch_title(k)
 		except Exception as e:
 			ERRORS.append(str(e))
 	
