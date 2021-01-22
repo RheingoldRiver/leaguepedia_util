@@ -139,8 +139,10 @@ def check_and_make_redirects(d, page_prefix, redirect_text):
 
 if __name__ == "__main__":
 	page_type = 'news'
-	years = range(2010,2020)
+	years = range(2021,2022)
 	credentials = AuthCredentials(user_file="bot")
-	site = EsportsClient('valorant', credentials=credentials)  # Set wiki
-	make_templates(page_type)
+	site = EsportsClient('lol', credentials=credentials)  # Set wiki
+	# make_templates(page_type)
 	make_data_pages(years, page_type)
+	make_data_pages(years, 'ec')
+	make_data_pages(years, 'rumors')
