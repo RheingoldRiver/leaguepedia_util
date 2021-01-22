@@ -1,14 +1,17 @@
+import time
+
 from river_mwclient.esports_client import EsportsClient
 from river_mwclient.auth_credentials import AuthCredentials
+from mwclient.errors import AssertUserFailedError
 
 credentials = AuthCredentials(user_file="me")
-loadout = EsportsClient('default-loadout', credentials=credentials) #  set wiki
-target = EsportsClient('legendsofruneterra-esports', credentials=credentials) #  set wiki
+loadout = EsportsClient('default-loadout') #  set wiki
+target = EsportsClient('wildrift-esports', credentials=credentials) #  set wiki
 summary = 'Default loadout of pages'  # Set summary
 
 startat_namespace = None
 print(startat_namespace)
-# startat_namespace = 274
+startat_namespace = 7
 
 startat_page = None
 print(startat_page)
@@ -24,6 +27,8 @@ for ns in loadout.client.namespaces:
 	print(ns)
 	if ns > startat_comparison: # ns 4 is Project ns
 		for page in loadout.client.allpages(namespace=ns):
+			# time.sleep(1)
+			print(page.name)
 			new_title = page.name
 			if ns == 4:
 				new_title = 'Project:{}'.format(page.page_title)
@@ -32,4 +37,8 @@ for ns in loadout.client.namespaces:
 			if startat_page and not passed_startat:
 				continue
 			if overwrite_existing or not target.client.pages[new_title].exists:
-				target.client.pages[new_title].save(page.text(), summary=summary)
+				try:
+					target.client.pages[new_title].save(page.text(), summary=summary)
+				except AssertUserFailedError:
+					target.login()
+					target.client.pages[new_title].save(page.text(), summary=summary)
