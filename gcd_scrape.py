@@ -1,5 +1,6 @@
 import requests, datetime, pytz, time
 from river_mwclient.esports_client import EsportsClient
+from river_mwclient.gamepedia_client import GamepediaClient
 from river_mwclient.auth_credentials import AuthCredentials
 
 GCD_URL = "https://spreadsheets.google.com/feeds/cells/1Y7k5kQ2AegbuyiGwEPsa62e883FYVtHqr6UVut9RC4o/{}/public/values?alt=json"
@@ -22,7 +23,7 @@ def main():
 	for k in pages.keys():
 		# print(k)
 		try:
-			site.save(site.client.pages[k], text=pages[k], summary="Automatic GCD Backup")
+			site.save_tile(k, text=pages[k], summary="Automatic GCD Backup")
 			site.touch(site.client.pages[k])
 		except Exception as e:
 			ERRORS.append(str(e))
@@ -30,7 +31,7 @@ def main():
 	if len(ERRORS) > 0:
 		# for sure wait out any rate limiting
 		time.sleep(30)
-		site.save(site.client.pages[ERROR_REPORT_PAGE], text='<br>'.join(ERRORS))
+		site.save_tile(ERROR_REPORT_PAGE, text='<br>'.join(ERRORS))
 
 def get_pages_to_make():
 	league_dict = get_league_jsons()
