@@ -3,10 +3,10 @@ from river_mwclient.auth_credentials import AuthCredentials
 import time
 limit = -1
 credentials = AuthCredentials(user_file="me")
-site = EsportsClient('lol', credentials=credentials) # Set wiki
+site = EsportsClient('fortnite', credentials=credentials) # Set wiki
 
 
-pages = site.pages_using('Scoreboard/Header')
+pages = site.pages_using('Infobox Player')
 
 # c = site.client.categories['Pages with script errors']
 
@@ -24,10 +24,4 @@ for p in pages:
 		continue
 	lmt += 1
 	print(p.name)
-	text = p.text()
-	try:
-		p.save(text,'blank editing')
-	except Exception as e:
-		print('uh oh!!!!!!!!')
-		time.sleep(10)
-		p.save(text, 'blank editing')
+	site.touch(p)
