@@ -22,15 +22,15 @@ def main():
 	for k in pages.keys():
 		# print(k)
 		try:
-			site.client.pages[k].save(pages[k], summary="Automatic GCD Backup")
-			site.client.pages[k].touch()
+			site.save(site.client.pages[k], text=pages[k], summary="Automatic GCD Backup")
+			site.touch(site.client.pages[k])
 		except Exception as e:
 			ERRORS.append(str(e))
 	
 	if len(ERRORS) > 0:
 		# for sure wait out any rate limiting
 		time.sleep(30)
-		site.client.pages[ERROR_REPORT_PAGE].save('<br>'.join(ERRORS))
+		site.save(site.client.pages[ERROR_REPORT_PAGE], text='<br>'.join(ERRORS))
 
 def get_pages_to_make():
 	league_dict = get_league_jsons()
