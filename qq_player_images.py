@@ -64,12 +64,10 @@ def get_images(teams: list = None, season="", low_res=False):
             player_page = _parse_page(player_id, PLAYER)
             player_data = _filter_json(player_page, "msg", "baseInfo")
             player_name = _get_value(player_data, "NickName")
-            print(team_name, player_id, season)
+            print(team_name, player_name, season)
             image550px = _get_value(player_data, "UserPhoto550")
             if low_res:
                 image250px = _get_value(player_data, "UserIcon")
             else:
                 image250px = ""
             _download_images(player_name, team_name, season, image550px, image250px)
-
-# don't ask why this comment is here
