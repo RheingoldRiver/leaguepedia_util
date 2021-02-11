@@ -1,4 +1,6 @@
 import json
+from datetime import datetime, timedelta
+
 import requests
 
 # links
@@ -14,138 +16,17 @@ MATCH = """{{{{MatchSchedule|<!-- Do not change the order of team1 and team2!! -
 |date={date} |time={time} |timezone={timezone} |dst={dst} |pbp= |color= |vodinterview= |with= |stream={stream} |reddit=
 {games}
 }}}}\n"""
-BO1_GAMES = """|game1={{MatchSchedule/Game
-|blue= |red= |winner= |ssel= |ff=
-|mh=
-|recap=
-|vodpb=
-|vodstart=
-|vodpost=
-|vodhl=
-|vodinterview=
-|with=
-|mvp=
-}}"""
-BO2_GAMES = """|game1={{MatchSchedule/Game
-|blue= |red= |winner= |ssel= |ff=
-|mh=
-|recap=
-|vodpb=
-|vodstart=
-|vodpost=
-|vodhl=
-|vodinterview=
-|with=
-|mvp=
-}}
-|game2={{MatchSchedule/Game
-|blue= |red= |winner= |ssel= |ff=
-|mh=
-|recap=
-|vodpb=
-|vodstart=
-|vodpost=
-|vodhl=
-|vodinterview=
-|with=
-|mvp=
-}}"""
-BO3_GAMES = """|game1={{MatchSchedule/Game
-|blue= |red= |winner= |ssel= |ff=
-|mh=
-|recap=
-|vodpb=
-|vodstart=
-|vodpost=
-|vodhl=
-|vodinterview=
-|with=
-|mvp=
-}}
-|game2={{MatchSchedule/Game
-|blue= |red= |winner= |ssel= |ff=
-|mh=
-|recap=
-|vodpb=
-|vodstart=
-|vodpost=
-|vodhl=
-|vodinterview=
-|with=
-|mvp=
-}}
-|game3={{MatchSchedule/Game
-|blue= |red= |winner= |ssel= |ff=
-|mh=
-|recap=
-|vodpb=
-|vodstart=
-|vodpost=
-|vodhl=
-|vodinterview=
-|with=
-|mvp=
-}}"""
-BO5_GAMES = """|game1={{MatchSchedule/Game
-|blue= |red= |winner= |ssel= |ff=
-|mh=
-|recap=
-|vodpb=
-|vodstart=
-|vodpost=
-|vodhl=
-|vodinterview=
-|with=
-|mvp=
-}}
-|game2={{MatchSchedule/Game
-|blue= |red= |winner= |ssel= |ff=
-|mh=
-|recap=
-|vodpb=
-|vodstart=
-|vodpost=
-|vodhl=
-|vodinterview=
-|with=
-|mvp=
-}}
-|game3={{MatchSchedule/Game
-|blue= |red= |winner= |ssel= |ff=
-|mh=
-|recap=
-|vodpb=
-|vodstart=
-|vodpost=
-|vodhl=
-|vodinterview=
-|with=
-|mvp=
-}}
-|game4={{MatchSchedule/Game
-|blue= |red= |winner= |ssel= |ff=
-|mh=
-|recap=
-|vodpb=
-|vodstart=
-|vodpost=
-|vodhl=
-|vodinterview=
-|with=
-|mvp=
-}}
-|game5={{MatchSchedule/Game
-|blue= |red= |winner= |ssel= |ff=
-|mh=
-|recap=
-|vodpb=
-|vodstart=
-|vodpost=
-|vodhl=
-|vodinterview=
-|with=
-|mvp=
-}}"""
+BO1_GAMES = """|game1={{MatchSchedule/Game\n|blue= |red= |winner= |ssel= |ff=\n|mh=\n|recap=\n|vodpb=\n|vodstart=\n|vodpost=\n|vodhl=\n|vodinterview=\n|with=\n|mvp=\n}}"""
+BO2_GAMES = """|game1={{MatchSchedule/Game\n|blue= |red= |winner= |ssel= |ff=\n|mh=\n|recap=\n|vodpb=\n|vodstart=\n|vodpost=\n|vodhl=\n|vodinterview=\n|with=\n|mvp=\n}}
+|game2={{MatchSchedule/Game\n|blue= |red= |winner= |ssel= |ff=\n|mh=\n|recap=\n|vodpb=\n|vodstart=\n|vodpost=\n|vodhl=\n|vodinterview=\n|with=\n|mvp=\n}}"""
+BO3_GAMES = """|game1={{MatchSchedule/Game\n|blue= |red= |winner= |ssel= |ff=\n|mh=\n|recap=\n|vodpb=\n|vodstart=\n|vodpost=\n|vodhl=\n|vodinterview=\n|with=\n|mvp=\n}}
+|game2={{MatchSchedule/Game\n|blue= |red= |winner= |ssel= |ff=\n|mh=\n|recap=\n|vodpb=\n|vodstart=\n|vodpost=\n|vodhl=\n|vodinterview=\n|with=\n|mvp=\n}}
+|game3={{MatchSchedule/Game\n|blue= |red= |winner= |ssel= |ff=\n|mh=\n|recap=\n|vodpb=\n|vodstart=\n|vodpost=\n|vodhl=\n|vodinterview=\n|with=\n|mvp=\n}}"""
+BO5_GAMES = """|game1={{MatchSchedule/Game\n|blue= |red= |winner= |ssel= |ff=\n|mh=\n|recap=\n|vodpb=\n|vodstart=\n|vodpost=\n|vodhl=\n|vodinterview=\n|with=\n|mvp=\n}}
+|game2={{MatchSchedule/Game\n|blue= |red= |winner= |ssel= |ff=\n|mh=\n|recap=\n|vodpb=\n|vodstart=\n|vodpost=\n|vodhl=\n|vodinterview=\n|with=\n|mvp=\n}}
+|game3={{MatchSchedule/Game\n|blue= |red= |winner= |ssel= |ff=\n|mh=\n|recap=\n|vodpb=\n|vodstart=\n|vodpost=\n|vodhl=\n|vodinterview=\n|with=\n|mvp=\n}}
+|game4={{MatchSchedule/Game\n|blue= |red= |winner= |ssel= |ff=\n|mh=\n|recap=\n|vodpb=\n|vodstart=\n|vodpost=\n|vodhl=\n|vodinterview=\n|with=\n|mvp=\n}}
+|game5={{MatchSchedule/Game\n|blue= |red= |winner= |ssel= |ff=\n|mh=\n|recap=\n|vodpb=\n|vodstart=\n|vodpost=\n|vodhl=\n|vodinterview=\n|with=\n|mvp=\n}}"""
 END = "{{MatchSchedule/End}}\n"
 
 
@@ -199,12 +80,16 @@ def parse_schedule(jsons, timezone="CET", dst="no", stream=""):
             date_time = game["startTime"]
             date = date_time[:10]
             time = date_time[11:16]
+            time_obj = datetime.strptime(time, "%H:%M")
+            hour = timedelta(hours=1)
+            time_obj = time_obj + hour
+            time = time_obj.strftime("%H:%M")
             display = game["blockName"]
             team1 = game["match"]["teams"][0]["name"]
             team2 = game["match"]["teams"][1]["name"]
             bestof = game["match"]["strategy"]["count"]
             if display != current_tab:
-                schedule = schedule + START.format(display, bestof)
+                schedule = schedule + END + START.format(display, bestof)
                 current_tab = display
                 initialorder = 1
             if bestof == 1:
@@ -224,6 +109,7 @@ def parse_schedule(jsons, timezone="CET", dst="no", stream=""):
                 schedule = schedule + MATCH.format(initialorder=initialorder, t1=team1, t2=team2, date=date, time=time,
                                                    timezone=timezone, dst=dst, stream=stream, games=BO1_GAMES)
             initialorder += 1
+    schedule = schedule.replace("{{MatchSchedule/End}}\n", "", 1)
     schedule = schedule + END
     return schedule
 
