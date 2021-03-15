@@ -3,15 +3,15 @@ from river_mwclient.auth_credentials import AuthCredentials
 import time
 limit = -1
 credentials = AuthCredentials(user_file="me")
-site = EsportsClient('fortnite', credentials=credentials) # Set wiki
+site = EsportsClient('lol', credentials=credentials) # Set wiki
 
 
 pages = site.pages_using('Infobox Player')
 
 # c = site.client.categories['Pages with script errors']
 
-startat_page = None
-passed_startat = True
+startat_page = 'HauHau'
+passed_startat = False
 
 lmt = 0
 #for p in c:
