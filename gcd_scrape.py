@@ -53,8 +53,12 @@ def get_league_jsons():
 			try:
 				response = requests.get(GCD_URL.format(str(i + 2))).json()
 			except Exception as e:
-				ERRORS.append(str(e))
-				continue
+				time.sleep(30)
+				try:
+					response = requests.get(GCD_URL.format(str(i + 2))).json()
+				except Exception as e:
+					ERRORS.append(str(e))
+					continue
 			league_jsons[get_league_name(response)] = get_league_array(response)
 	return league_jsons
 
