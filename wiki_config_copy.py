@@ -5,11 +5,37 @@ from river_mwclient.wiki_client import WikiClient
 from river_mwclient.auth_credentials import AuthCredentials
 
 credentials = AuthCredentials(user_file="wc")
-site = WikiClient('pcj-testing-ucp.fandom.com', credentials=credentials)
+site = WikiClient('https://pcj.fandom.com', credentials=credentials)
+
+wiki_name_to_id_map = {
+	"apexlegends-esports": 2294647,
+	"cod-esports": 2294030,
+	# "commons-esports": 2342996,
+	"default-loadout-esports": 2293768,
+	"help-esports": 2293305,
+	"fifa-esports": 2294151,
+	# "fortnite-esports": 2294263,
+	"gears-esports": 2293557,
+	"halo-esports": 2294143,
+	"legendsofruneterra-esports": 2295319,
+	"lol": 2293615,
+	"nba2k-esports": 2293897,
+	"paladins-esports": 2293440,
+	"pubg-esports": 2293890,
+	"rl-esports": 2294760,
+	"rollerchampions-esports": 2536304,
+	"siege-esports": 2294358,
+	"smite-esports": 2293467,
+	"splatoon2-esports": 2295280,
+	"teamfighttactics": 2295108,
+	"valorant-esports": 2295329,
+	"vg-esports": 2294444,
+	"wildrift-esports": 2415957,
+}
 
 FROM_WIKI_ID = 2293615
 FROM_WIKI_NAME = 'Leaguepedia'
-TO_WIKI_ID = 2415957
+TO_WIKI_ID = 2295319
 
 SKIP_PARAMS = ['wgSitename', 'wgMetaNamespace', 'wgUploadPath', 'wgUploadDirectory', 'wgLogo',
                'wgLocalInterwiki', 'wgCacheEpoch', 'wgDartCustomKeyValues',
@@ -35,10 +61,9 @@ with open('wc_params_copy.txt') as f:
 
 for param in params:
 	param = param.strip()
-	if param in SKIP_PARAMS or param in ALREADY_PARAMS:
+	if param not in OKAY_PARAMS:
 		continue
-	if param.endswith('Ext') and 'Enable' in param:
-		continue
+	print('Starting param ', param)
 	token=site.client.get_token('csrf')
 	result = site.client.api('variableinfo', wiki_id=str(FROM_WIKI_ID), variable_name=param,
 	                      token=token)
