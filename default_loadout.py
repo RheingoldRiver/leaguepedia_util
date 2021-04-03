@@ -1,12 +1,12 @@
 import time
 
-from river_mwclient.esports_client import EsportsClient
-from river_mwclient.auth_credentials import AuthCredentials
+from mwrogue.esports_client import EsportsClient
+from mwcleric.auth_credentials import AuthCredentials
 from mwclient.errors import AssertUserFailedError
 
 credentials = AuthCredentials(user_file="me")
 loadout = EsportsClient('default-loadout') #  set wiki
-target = EsportsClient('legendsofruneterra-esports', credentials=credentials) #  set wiki
+target = EsportsClient('rl-esports', credentials=credentials) #  set wiki
 summary = 'Default loadout of pages'  # Set summary
 
 startat_namespace = None

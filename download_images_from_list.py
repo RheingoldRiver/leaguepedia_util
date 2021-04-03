@@ -1,5 +1,5 @@
-from river_mwclient.esports_client import EsportsClient
-from river_mwclient.auth_credentials import AuthCredentials
+from mwrogue.esports_client import EsportsClient
+from mwcleric.auth_credentials import AuthCredentials
 import os
 from image_util import *
 

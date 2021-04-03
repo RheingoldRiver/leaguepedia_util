@@ -1,12 +1,12 @@
 from collections import OrderedDict
 
-from river_mwclient.auth_credentials import AuthCredentials
-from river_mwclient.wiki_client import WikiClient
+from mwcleric.auth_credentials import AuthCredentials
+from mwcleric.wiki_client import WikiClient
 
 credentials = AuthCredentials(user_file="wc")
 site = WikiClient('https://pcj.fandom.com', credentials=credentials)
 
-variable_to_copy = 'wgGrantPermissionsLocal'
+variable_to_copy = 'wgCargoPageDataColumns'
 from_wiki = 'lol'
 
 wiki_name_to_id_map = {
@@ -67,6 +67,13 @@ for to_wiki, to_wiki_id in wiki_name_to_id_map.items():
 	if to_wiki == from_wiki:
 		continue
 	print('Setting {} on {}'.format(variable_to_copy, to_wiki))
+	
+	old_result = site.client.api('variableinfo', wiki_id=str(to_wiki_id),
+	                             variable_name=variable_to_copy,
+	                             token=token)
+	old_value = old_result['variable_details']['value']
+	print(to_wiki, ': ', old_value)
+	
 	site.client.api('savewikiconfigvariable', wiki_id=str(to_wiki_id), variable_name=variable_to_copy,
 	                variable_value=value_to_set, reason="Cloning value from {}".format(from_wiki),
 	                token=token)

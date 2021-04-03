@@ -1,8 +1,8 @@
 import time
 from collections import OrderedDict
 
-from river_mwclient.wiki_client import WikiClient
-from river_mwclient.auth_credentials import AuthCredentials
+from mwcleric.wiki_client import WikiClient
+from mwcleric.auth_credentials import AuthCredentials
 
 credentials = AuthCredentials(user_file="wc")
 site = WikiClient('https://pcj.fandom.com', credentials=credentials)

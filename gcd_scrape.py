@@ -1,7 +1,9 @@
-import requests, datetime, pytz, time
-from river_mwclient.esports_client import EsportsClient
-from river_mwclient.gamepedia_client import GamepediaClient
-from river_mwclient.auth_credentials import AuthCredentials
+import datetime
+import pytz
+import requests
+import time
+from mwcleric.auth_credentials import AuthCredentials
+from mwrogue.esports_client import EsportsClient
 
 GCD_URL = "https://spreadsheets.google.com/feeds/cells/1Y7k5kQ2AegbuyiGwEPsa62e883FYVtHqr6UVut9RC4o/{}/public/values?alt=json"
 

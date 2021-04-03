@@ -1,8 +1,6 @@
-from river_mwclient.esports_client import EsportsClient
-from river_mwclient.auth_credentials import AuthCredentials
-from river_mwclient.wiki_client import WikiClient
-from river_mwclient.gamepedia_client import GamepediaClient
-from river_mwclient.template_modifier import TemplateModifierBase
+from mwrogue.esports_client import EsportsClient
+from mwcleric.auth_credentials import AuthCredentials
+from mwcleric.wiki_client import WikiClient
 from mwparserfromhell.nodes import Template
 import mwparserfromhell
 

@@ -1,6 +1,6 @@
 import mwparserfromhell
-from river_mwclient.esports_client import EsportsClient
-from river_mwclient.auth_credentials import AuthCredentials
+from mwrogue.esports_client import EsportsClient
+from mwcleric.auth_credentials import AuthCredentials
 
 summary = 'Semi-automatically migrating MD pages to Data namespace (Python)'
 pagename = 'OPL/2018 Season/Split 1'
