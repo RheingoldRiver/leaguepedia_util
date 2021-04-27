@@ -3,7 +3,7 @@ from mwcleric.auth_credentials import AuthCredentials
 import mwparserfromhell
 
 credentials = AuthCredentials(user_file="me")
-site = EsportsClient('lol', credentials=credentials)  # Set wiki
+site = EsportsClient('rl-esports', credentials=credentials)  # Set wiki
 summary = 'Fixing Formatting from GS5 to MS'  # Set summary
 limit = -1
 startat = -1
@@ -17,6 +17,7 @@ pointstype = 'none' # none, bo3points, bo2, bo3pointsopl
 
 remove_params = ['round','start','end','hide', 'nosemantics']
 tb_names = ['tb', 'tiebreakers', 'tiebreaker']
+gameschedule_template_name = 'GameSchedule5'
 
 max_scores = {
 	'bo3points' : 3,
@@ -46,7 +47,7 @@ for page in pages_var:
 	wikitext = mwparserfromhell.parse(text)
 	template: mwparserfromhell.nodes.Template
 	for template in wikitext.filter_templates():
-		if not template.name.matches('GameSchedule') and not template.name.matches('MatchSchedule'):
+		if not template.name.matches(gameschedule_template_name) and not template.name.matches('MatchSchedule'):
 			continue
 		template.name = 'MatchSchedule'
 		score1 = 0
