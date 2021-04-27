@@ -140,6 +140,9 @@ class PageProcessor(object):
 		
 		elif tl_matches(scoreboard_templates, field='link'):
 			template.add("link", self.new_name)
+			
+		elif tl_matches(scoreboard_templates, field='name'):
+			template.add("name", self.new_name)
 		
 		elif tl_matches(roster_change_templates, field='player'):
 			template.add("player", self.new_name + "{{!}}" + self.original_name)
