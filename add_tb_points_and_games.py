@@ -53,6 +53,10 @@ for page in pages_var:
 	for template in wikitext.filter_templates():
 		if not template.name.matches(gameschedule_template_name) and not template.name.matches('MatchSchedule'):
 			continue
+		for name in rename_params.keys():
+			if template.has(name):
+				param = template.get(name)
+				param.name = rename_params[name]
 		template.name = 'MatchSchedule'
 		score1 = 0
 		score2 = 0
@@ -90,10 +94,6 @@ for page in pages_var:
 		for param in remove_params:
 			if template.has(param):
 				template.remove(param)
-		for name in rename_params.keys():
-			if template.has(name):
-				param = template.get(name)
-				param.name = rename_params[name]
 		for i in range(0, score1 + score2):
 			s = str(i + 1)
 			game = mwparserfromhell.nodes.template.Template('MatchSchedule/Game')
