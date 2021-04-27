@@ -16,6 +16,10 @@ startat = -1
 pointstype = 'none' # none, bo3points, bo2, bo3pointsopl
 
 remove_params = ['round','start','end','hide', 'nosemantics']
+rename_params = {
+	't1score': 'team1score',
+	't2score': 'team2score',
+}
 tb_names = ['tb', 'tiebreakers', 'tiebreaker']
 gameschedule_template_name = 'GameSchedule5'
 
@@ -86,6 +90,10 @@ for page in pages_var:
 		for param in remove_params:
 			if template.has(param):
 				template.remove(param)
+		for name in rename_params.keys():
+			if template.has(name):
+				param = template.get(name)
+				param.name = rename_params[name]
 		for i in range(0, score1 + score2):
 			s = str(i + 1)
 			game = mwparserfromhell.nodes.template.Template('MatchSchedule/Game')
