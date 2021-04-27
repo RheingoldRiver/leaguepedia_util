@@ -232,7 +232,7 @@ if init_move:
 	make_disambig_page()
 for p in SUBPAGES_TO_DELETE:
 	page = site.client.pages[p.format(original_name)]
-	if page.exists():
+	if page.exists:
 		page.delete('Deleting a disambiguation subpage left behind')
 	
 print("Done! If some pages stalled out you may still need to abort manually.")
