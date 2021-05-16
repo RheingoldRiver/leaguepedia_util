@@ -1,26 +1,22 @@
-from mwrogue.esports_client import EsportsClient
 from mwcleric.auth_credentials import AuthCredentials
+from mwrogue.esports_client import EsportsClient
+
 limit = -1
-#startat_page = 'Donut'
+startat_page = 'Gamelord'
 template = 'Infobox Player'
 form = 'Infobox Player'
 
 credentials = AuthCredentials(user_file="me")
-site = EsportsClient('lol', credentials=credentials) # Set wiki
+site = EsportsClient('fortnite-esports', credentials=credentials)  # Set wiki
 
 ########################################
 
-result = site.client.api('query', format='json',
-				  list='embeddedin',
-				  eititle='Template:' + template,
-				  einamespace = '0',
-				  eilimit = 'max'
-				  )
+result = site.pages_using(template, generator=False)
 
 pages = []
 
-for p in result['query']['embeddedin']:
-	pages.append(p['title'])
+for p in result:
+	pages.append(p)
 
 try:
 	startat = pages.index(startat_page)
@@ -41,9 +37,9 @@ for page in pages:
 	else:
 		try:
 			site.client.api('pfautoedit', format='json',
-					 form = form,
-					 target = page
-					 )
+			                form=form,
+			                target=page
+			                )
 		except Exception as e:
 			failures.append(page + "(" + e.args[0] + ")")
 
