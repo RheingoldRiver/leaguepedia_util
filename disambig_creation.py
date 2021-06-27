@@ -148,7 +148,7 @@ class PageProcessor(object):
 			template.add("player", self.new_name + "{{!}}" + self.original_name)
 		
 		elif tl_matches(
-				['TeamRoster/Line', 'RosterLineOld', 'ExtendedRosterLine', 'ResidencyChange'],
+				['TeamRoster/Line', 'RosterLineOld', 'ExtendedRoster/Line', 'ResidencyChange'],
 				field='player'
 		):
 			template.add('player', self.new_name)
