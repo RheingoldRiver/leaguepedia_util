@@ -97,6 +97,8 @@ def scrape(esc: EsportsClient, events, force):
             page_name = event + '/Runes' + suffix
             page = esc.client.pages[page_name]
             text = page.text()
+            if 'RunesQueryTournament' in text:
+                continue
             text_tbl = []
             if text != "" and len(text.split('\n')) > 1:
                 text_tbl = text.split('\n')
@@ -225,6 +227,8 @@ def scrapeLPL(esc: EsportsClient, events, force):
         page_name = event + '/Runes' + suffix
         page = esc.client.pages[page_name]
         text = page.text()
+        if 'RunesQueryTournament' in text:
+            continue
         text_tbl = []
         team_keys = ['left', 'right']
         if text != "" and len(text.split('\n')) > 1:
@@ -365,6 +369,6 @@ if __name__ == '__main__':
     SILENT = False
     credentials = AuthCredentials(user_file="me")
     esc_main = EsportsClient('lol', credentials=credentials)  # Set wiki
-    pages = ['Data:LCS/2021 Season/Mid-Season Showdown']
+    pages = ['Data:LCS/2021 Season/Spring Season/2']
     scrape(esc_main, pages, False)
     # scrapeLPL(esc_main, pages, False)
