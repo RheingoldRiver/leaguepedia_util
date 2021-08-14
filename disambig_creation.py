@@ -34,7 +34,7 @@ credentials = AuthCredentials(user_file="me")
 site = EsportsClient('lol', credentials=credentials) # Set wiki
 
 def savepage(targetpage, savetext):
-	targetpage.save(savetext, summary=summary, tags="bot_disambig")
+	site.save(targetpage, savetext, summary=summary, tags="bot_disambig")
 
 def move_page(from_page):
 	new_page_name = str(from_page.name).replace(orig_name_uc, new_name)
