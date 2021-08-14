@@ -79,7 +79,7 @@ def backoff_handler(details):
     print(details['tries'])
 
 
-@backoff.on_exception(backoff.expo, JSONDecodeError, max_time=60,
+@backoff.on_exception(backoff.expo, JSONDecodeError, max_time=70,
                       on_backoff=backoff_handler,
                       on_giveup=giveup_handler)
 async def get_one_json_retry(i: int):
