@@ -203,7 +203,7 @@ def make_disambig_page():
 	page = site.client.pages[original_name]
 	old_text = page.text()
 	if 'disambigpage' not in old_text.lower():
-		page.save(text, summary=summary)
+		site.save(page, text, summary=summary)
 
 thispage = site.client.pages[original_name]
 
@@ -231,11 +231,11 @@ for page in pages:
 print("Blank editing...")
 if init_move:
 	for page in blank_edit_these:
-		page.touch()
+		site.touch(page)
 	make_disambig_page()
 for p in SUBPAGES_TO_DELETE:
 	page = site.client.pages[p.format(original_name)]
 	if page.exists:
-		page.delete('Deleting a disambiguation subpage left behind')
+		site.delete(page, 'Deleting a disambiguation subpage left behind')
 	
 print("Done! If some pages stalled out you may still need to abort manually.")
