@@ -75,8 +75,8 @@ def giveup_handler(details):
     ERRORS.append('Failed for region with index: ' + str(details['args'][0]))
 
 
-def backoff_handler(details):
-    print(details['tries'])
+def backoff_handler(_details):
+    pass
 
 
 @backoff.on_exception(backoff.expo, JSONDecodeError, max_time=70,
