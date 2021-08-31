@@ -5,7 +5,7 @@ from mwrogue.auth_credentials import AuthCredentials
 from mwrogue.esports_client import EsportsClient
 
 from lol_esports_parser.riot.acs_access import ACS
-
+from requests import HTTPError
 
 METADATA_PATTERN = """{{{{AcsMetadata
 |RiotPlatformId={}
@@ -39,12 +39,25 @@ def get_metadata(row, realmx, game_idx, game_hashx):
         row['OverviewPage']
     )
 
+passed_startat = False
+startat = 'ESPORTSTMNT04 270333'
 
 for game in result:
     re_match = re.match(r'^.*match-details/(.+?)/(.+?)\?gameHash=(.+?)(?:&tab=.*)?$', game['MatchHistory'])
     realm = re_match[1]
     game_id = re_match[2]
     game_hash = re_match[3]
-    site.save_title('Acs:{}_{}'.format(realm, game_id), json.dumps(acs.get_game(realm, game_id, game_hash)))
+    fingerprint = '{} {}'.format(realm, game_id)
+    if fingerprint == startat:
+        passed_startat = True
+    if not passed_startat:
+        continue
+    print('Processing {} now, hash is {}...'.format(fingerprint, game_hash))
+    try:
+        site.save_title('Acs:{}_{}'.format(realm, game_id), json.dumps(acs.get_game(realm, game_id, game_hash)))
+    except HTTPError:
+        with open('acs_errors.txt', 'a') as f:
+            f.write('{} {} {}'.format(realm, game_id, game_hash))
+        continue
     site.save_title('Acs:{}_{}/Timeline'.format(realm, game_id), json.dumps(acs.get_game_timeline(realm, game_id, game_hash)))
     site.save_title('Acs Metadata:{}_{}'.format(realm, game_id), get_metadata(game, realm, game_id, game_hash))
