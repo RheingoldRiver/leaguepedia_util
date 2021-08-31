@@ -5,13 +5,13 @@ from mwcleric.auth_credentials import AuthCredentials
 from mwclient.errors import AssertUserFailedError
 
 credentials = AuthCredentials(user_file="me")
-loadout = EsportsClient('default-loadout') #  set wiki
+loadout = EsportsClient('default-loadout-esports') #  set wiki
 target = EsportsClient('rl-esports', credentials=credentials) #  set wiki
 summary = 'Default loadout of pages'  # Set summary
 
 startat_namespace = None
 print(startat_namespace)
-startat_namespace = 0
+startat_namespace = 828
 
 startat_page = None
 print(startat_page)

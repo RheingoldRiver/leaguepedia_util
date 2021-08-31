@@ -2,12 +2,12 @@ from mwcleric.auth_credentials import AuthCredentials
 from mwrogue.esports_client import EsportsClient
 
 limit = -1
-startat_page = 'Gamelord'
+# startat_page = 'Gamelord'
 template = 'Infobox Player'
 form = 'Infobox Player'
 
-credentials = AuthCredentials(user_file="me")
-site = EsportsClient('fortnite-esports', credentials=credentials)  # Set wiki
+credentials = AuthCredentials(user_file="bot")
+site = EsportsClient('lol', credentials=credentials)  # Set wiki
 
 ########################################
 
