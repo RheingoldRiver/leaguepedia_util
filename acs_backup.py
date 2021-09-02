@@ -40,7 +40,7 @@ def get_metadata(row, realmx, game_idx, game_hashx):
     )
 
 passed_startat = False
-startat = 'ESPORTSTMNT02 1220964'
+startat = 'ESPORTSTMNT02 1271211'
 
 for game in result:
     re_match = re.match(r'^.*match-details/(.+?)/(.+?)\?gameHash=(.+?)(?:&a?m?p?;?tab=.*)?$', game['MatchHistory'])
