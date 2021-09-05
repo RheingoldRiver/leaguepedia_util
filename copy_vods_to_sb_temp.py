@@ -45,7 +45,7 @@ def process_pages(data_page_name, sb_page_name):
 
 result = site.cargo_client.query(
 	tables="MatchScheduleGame=MSG,ScoreboardGame=SG",
-	join_on="MSG.ScoreboardID_Wiki=SG.ScoreboardID_Wiki",
+	join_on="MSG.GameId=SG.GameId",
 	where="SG.VOD IS NULL AND SG._pageName IS NOT NULL AND (MSG.Vod IS NOT NULL OR MSG.VodPostgame IS NOT NULL OR MSG.VodPB IS NOT NULL) AND MSG.MatchHistory IS NOT NULL",
 	fields="SG._pageName=SBPage,MSG._pageName=MSGPage",
 	group_by="SG._pageName",
