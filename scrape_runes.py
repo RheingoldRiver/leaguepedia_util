@@ -83,7 +83,7 @@ def scrape(esc: EsportsClient, events, force):
                                 fields="MSG.OverviewPage,MSG.MatchHistory",
                                 where=(r'MSG._pageName="%s" AND MSG.MatchHistory IS NOT NULL'
                                        r' AND NOT MSG.MatchHistory RLIKE ".*(lpl|lol)\.qq\.com.*"') % page_to_query,
-                                join_on="MSG.UniqueMatch=MS.UniqueMatch",
+                                join_on="MSG.MatchId=MS.MatchId",
                                 order_by="MS.N_Page,MS.N_MatchInPage, MSG.N_GameInMatch"
                                 )
         if result['cargoquery']:
@@ -211,7 +211,7 @@ def scrapeLPL(esc: EsportsClient, events, force):
                                 fields="MSG.OverviewPage,MSG.MatchHistory",
                                 where=(r'MSG._pageName="%s" AND MSG.MatchHistory IS NOT NULL'
                                        r' AND MSG.MatchHistory RLIKE ".*(lpl|lol)\.qq\.com.*"') % page_to_query,
-                                join_on="MSG.UniqueMatch=MS.UniqueMatch",
+                                join_on="MSG.MatchId=MS.MatchId",
                                 order_by="MS.N_Page,MS.N_MatchInPage, MSG.N_GameInMatch",
                                 group_by='MSG.MatchHistory'
                                 )
