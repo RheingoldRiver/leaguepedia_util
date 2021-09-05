@@ -9,7 +9,7 @@ import requests
 from mwrogue.esports_client import EsportsClient
 from mwcleric.auth_credentials import AuthCredentials
 
-from lol_esports_parser.parsers.riot.acs_access import get_id_token
+from lol_esports_parser.riot.acs_access import get_id_token
 
 SILENT = True
 
