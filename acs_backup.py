@@ -23,7 +23,7 @@ def get_metadata(row, realmx, game_idx, game_hashx):
     return METADATA_PATTERN.format(
         realmx,
         game_idx,
-        game_hashx,
+        game_hashx or '',
         row['GameId'].replace('&amp;', '&'),
         row['MatchId'].replace('&amp;', '&'),
         row['N_GameInMatch'],
@@ -40,17 +40,23 @@ def main():
         tables='MatchScheduleGame=MSG,AcsMetadata=ACS',
         join_on='MSG.GameId=ACS.GameId',
         fields='MSG.MatchHistory=MatchHistory, MSG.GameId=GameId, MSG.OverviewPage=OverviewPage, MSG.MatchId=MatchId, MSG.N_GameInMatch=N_GameInMatch, MSG._pageName=Page',
-        where='MatchHistory LIKE "%gameHash%" AND ACS.GameId IS NULL'
+        where='MatchHistory LIKE "%matchhistory%" AND ACS.GameId IS NULL'
     )
 
     passed_startat = True
     startat = 'FRA1TMNT1 210419'
 
     for game in result:
-        re_match = re.match(r'^.*match-details/(.+?)/(.+?)\?gameHash=(.+?)(?:&a?m?p?;?tab=.*)?$', game['MatchHistory'])
-        realm = re_match[1]
-        game_id = re_match[2]
-        game_hash = re_match[3]
+        if 'gameHash' in game['MatchHistory']:
+            re_match = re.match(r'^.*match-details/(.+?)/(.+?)\?gameHash=(.+?)(?:&a?m?p?;?tab=.*)?$', game['MatchHistory'])
+            realm = re_match[1]
+            game_id = re_match[2]
+            game_hash = re_match[3]
+        else:
+            re_match = re.match(r'^.*match-details/(.+?)/([^/]*).*$', game['MatchHistory'])
+            realm = re_match[1]
+            game_id = re_match[2]
+            game_hash = None
         fingerprint = '{} {}'.format(realm, game_id)
         if fingerprint == startat:
             passed_startat = True
