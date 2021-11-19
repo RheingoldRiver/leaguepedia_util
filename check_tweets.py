@@ -25,28 +25,22 @@ def main():
 	)
 	parsed = json.dumps(response)
 	data = json.loads(parsed)
+
 	print("I have the data from the wiki!")
 
-	sourceslist = []
+	exception = False
 
 	for source in data["cargoquery"]:
 		source = source["title"]["Source"].split(";")
 		if source[6] == "twitter.com":
-			sourceslist.append(source[0])
-
-	print("Checking tweets!")
-
-	exception = False
-
-	for status in sourceslist:
-		splitStatus = status.split("/")
-		try:
-			r = api.get_status(splitStatus[5])
-		except tweepy.NotFound as e:
-			print("Tweet not found! {}".format(status))
-			exception = True
-		except tweepy.TooManyRequests:
-			time.sleep(10)
+			splitStatus = source[0].split("/")
+			try:
+				r = api.get_status(splitStatus[5])
+			except tweepy.NotFound as e:
+				print("Tweet not found! {}".format(source[0]))
+				exception = True
+			except tweepy.TooManyRequests:
+				time.sleep(10)
 
 	if exception != True:
 		print("Done! All tweets are available!")
