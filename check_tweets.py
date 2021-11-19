@@ -25,23 +25,27 @@ def main():
 	print("I have the data from the wiki!")
 
 	for source in response["cargoquery"]:
-		source = source["title"]["Source"].split(";")
-		if source[6] == "twitter.com":
-			splitStatus = re.search(r"status/([0-9]+)", source[0])
-			if not splitStatus:
-				print("Error with tweet {}".format(str(source[0])))
-			try:
-				r = client.get_tweet(splitStatus[1])
-			except Exception as e:
-				print("Error with tweet {}".format(str(source[0])))
-				print(e)
+		sourcelist = source["title"]["Source"].split(":::")
+		for source in sourcelist:
+			if not source:
 				continue
-			if not r.errors:
-				continue
-			if r.errors[0]["title"] == "Not Found Error":
-				print("Not found! {}".format(str(source[0])))
-			else:
-				print("Error with tweet! {0} - {1}".format(str(r.errors[0]["title"]), str(source[0])))
+			source = source.split(";;;")
+			if source[2] == "twitter.com":
+				splitStatus = re.search(r"status/([0-9]+)", source[0])
+				if not splitStatus:
+					print("Error with tweet {}".format(str(source[0])))
+				try:
+					r = client.get_tweet(splitStatus[1])
+				except Exception as e:
+					print("Error with tweet {}".format(str(source[0])))
+					print(e)
+					continue
+				if not r.errors:
+					continue
+				if r.errors[0]["title"] == "Not Found Error":
+					print("Not found! {}".format(str(source[0])))
+				else:
+					print("Error with tweet! {0} - {1}".format(str(r.errors[0]["title"]), str(source[0])))
 
 	print("Done!")
 
