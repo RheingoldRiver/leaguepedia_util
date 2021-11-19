@@ -1,6 +1,7 @@
 import mwclient
 import tweepy
 from datetime import date, timedelta
+import time
 from dotenv import load_dotenv
 import os
 import re
@@ -31,18 +32,18 @@ def main():
 				continue
 			source = source.split(";;;")
 			if source[2] == "twitter.com":
-				splitStatus = re.search(r"status/([0-9]+)", source[0])
+				splitStatus = re.search(r"status/([0-9]+)", source[0])[1]
 				if not splitStatus:
 					print("Error with tweet {}".format(str(source[0])))
 				try:
-					r = client.get_tweet(splitStatus[1])
-				except Exception as e:
-					print("Error with tweet {}".format(str(source[0])))
-					print(e)
-					continue
+					r = client.get_tweet(splitStatus)
+				except tweepy.TooManyRequests:
+					print("Ratelimited! Waiting 30 seconds")
+					time.sleep(30)
+					r = client.get_tweet(splitStatus)
 				if not r.errors:
 					continue
-				if r.errors[0]["title"] == "Not Found Error":
+				elif r.errors[0]["title"] == "Not Found Error":
 					print("Not found! {}".format(str(source[0])))
 				else:
 					print("Error with tweet! {0} - {1}".format(str(r.errors[0]["title"]), str(source[0])))
