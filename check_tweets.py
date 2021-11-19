@@ -9,7 +9,7 @@ import re
 load_dotenv()
 bearertoken = os.getenv("bearertoken")
 
-yesterday = date.today() - timedelta(days=4)
+checkfrom = date.today() - timedelta(days=4)
 
 def main():
 	client = tweepy.Client(bearer_token=bearertoken)
@@ -19,7 +19,7 @@ def main():
 		limit = "max",
 		tables = "NewsItems=NI",
 		fields = "NI.Source",
-		where = 'NI.Source IS NOT NULL AND NI.Date_Sort >= "{}"'.format(yesterday),
+		where = 'NI.Source IS NOT NULL AND NI.Date_Sort >= "{}"'.format(checkfrom),
 		order_by = "NI.Date_Sort DESC"
 	)
 
