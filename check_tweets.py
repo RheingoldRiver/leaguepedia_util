@@ -33,23 +33,24 @@ def main():
 			if not source:
 				continue
 			source = source.split(";;;")
+			sourcelink = source[0]
 			if source[2] == "twitter.com":
-				splitStatus = re.search(r"status/([0-9]+)", source[0])[1]
-				if not splitStatus:
-					site.log_error_content("Can't get tweet id", text="Link: {0}".format(source[0]))
+				tweet_id = re.search(r"status/([0-9]+)", sourcelink)[1]
+				if not tweet_id:
+					site.log_error_content("Can't get tweet id", text="Link: {0}".format(sourcelink))
 				try:
-					r = twitter_client.get_tweet(splitStatus)
+					r = twitter_client.get_tweet(tweet_id)
 				except tweepy.TooManyRequests:
 					time.sleep(30)
-					r = twitter_client.get_tweet(splitStatus)
+					r = twitter_client.get_tweet(tweet_id)
 				if not r.errors:
 					continue
-				elif r.errors[0]["title"] == "Not Found Error":
+				if r.errors[0]["title"] == "Not Found Error":
 					site.log_error_content("{0}".format(str(datapage)),
-					text="Tweet not found! Link: {0} - Line {1}".format(str(source[0]), str(lineindate)))
+					text="Tweet not found! Link: {0} - Line {1}".format(str(sourcelink), str(lineindate)))
 				else:
 					site.log_error_content("Failure trying to get tweet",
-					text="Tweet Link: {0}, Status Id: {1}, Error Title: {2}".format(str(source[0]), str(splitStatus), str(r.errors[0]["title"])))
+					text="Tweet Link: {0}, Status Id: {1}, Error Title: {2}".format(str(sourcelink), str(tweet_id), str(r.errors[0]["title"])))
 
 	site.report_all_errors("Deleted Tweets")
 
