@@ -13,10 +13,10 @@ offset = 0
 while finished != True:
     response = site.cargo_client.query(
         limit = "max",
-	    tables = "MatchScheduleGame=MSG, ScoreboardGames=SG",
+	tables = "MatchScheduleGame=MSG, ScoreboardGames=SG",
         offset = offset,
         join_on= "MSG.GameId=SG.GameId",
-	    fields = ["MSG.GameId", "SG.GameId",
+	fields = ["MSG.GameId", "SG.GameId",
         "MSG.MatchHistory", "SG.MatchHistory",
         "MSG._pageName=DataPage", "SG._pageName=SBPage",
         "MSG.N_MatchInTab", "MSG.N_TabInPage", "MSG.N_GameInMatch"],
