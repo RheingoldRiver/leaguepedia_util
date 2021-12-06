@@ -5,54 +5,41 @@ from mwrogue.auth_credentials import AuthCredentials
 credentials = AuthCredentials(user_file="me")
 site = EsportsClient("lol", credentials=credentials)
 
-finished = False
-
-fullresponse = []
-offset = 0
-
-while finished != True:
-    response = site.cargo_client.query(
-        limit = "max",
+response = site.cargo_client.query(
 	tables = "MatchScheduleGame=MSG, ScoreboardGames=SG",
-        offset = offset,
-        join_on= "MSG.GameId=SG.GameId",
-	fields = ["MSG.GameId", "SG.GameId",
-        "MSG.MatchHistory", "SG.MatchHistory",
-        "MSG._pageName=DataPage", "SG._pageName=SBPage",
-        "MSG.N_MatchInTab", "MSG.N_TabInPage", "MSG.N_GameInMatch"],
-        where = "MSG.MatchHistory IS NULL AND SG.MatchHistory IS NOT NULL AND SG._pageName IS NOT NULL AND MSG._pageName IS NOT NULL",
-        order_by = "DataPage"
-    )
-    if len(response) != 500 or not response:
-        finished = True
-    offset += 500
-    fullresponse += response
+    join_on= "MSG.GameId=SG.GameId",
+	fields = "MSG.GameId, SG.GameId, SG.MatchHistory, MSG._pageName=DataPage, MSG.N_MatchInTab, MSG.N_TabInPage, MSG.N_GameInMatch",
+    where = "MSG.MatchHistory IS NULL AND SG.MatchHistory IS NOT NULL AND SG._pageName IS NOT NULL AND MSG._pageName IS NOT NULL AND SG.MatchHistory LIKE '%matchhistory%'",
+    order_by = "DataPage"
+)
     
-for item in fullresponse:
-    if "matchhistory" not in item["MatchHistory"]:
-        continue
-    MatchInTab = item["N MatchInTab"]
-    TabInPage = item["N TabInPage"]
-    GameInMatch = item["N GameInMatch"]
-    data_page = site.client.pages[item["DataPage"]]
+for item in response:
+    match_in_tab = int(item["N MatchInTab"])
+    tab_in_page = int(item["N TabInPage"])
+    game_in_match = item["N GameInMatch"]
+    match_history = item["MatchHistory"].strip()
+    data_page = site.client.pages[item["MatchHistory"]]
     data_text = data_page.text()
     data_wikitext = mwparserfromhell.parse(data_text)
-    timesfoundtab = 0
-    timesfoundmatch = 0
+    tab_counters = 0
+    match_counters = 0
+    print(item["DataPage"])
+    print("Tab {0}, Match {1}, Game {2}".format(str(tab_in_page),str(match_in_tab), str(game_in_match)))
     for template in data_wikitext.filter_templates():
-        if template.name.strip() != "MatchSchedule/Start":
-            if template.name.strip() != "MatchSchedule":
-                continue
-            elif timesfoundtab != TabInPage:
+        if template.name.matches("MatchSchedule/Start"):
+            if tab_counters != tab_in_page:
+                tab_counters += 1
+            else:
+                print("Not Found!")
+        elif template.name.matches("MatchSchedule"):
+            if tab_counters != tab_in_page:
                 continue
             else:
-                timesfoundmatch += 1
-        elif timesfoundtab != TabInPage:
-            timesfoundtab += 1
-            continue
-        if timesfoundmatch == MatchInTab and timesfoundtab == TabInPage:
-            print(template)
-            break
-
-#if str(data_wikitext) != data_text:
-#		data_page.save(str(data_wikitext), summary = "Adding MH")
+                match_counters += 1
+                if match_counters == match_in_tab and tab_counters == tab_in_page:
+                    gametemplate = template.get("game{}".format(str(game_in_match))).value
+                    gametemplate = gametemplate.filter_templates()[0]
+                    gametemplate.add("mh", match_history)
+                    data_page.edit(str(data_wikitext), summary = "Automatically adding MH from Scoreboards")
+                    print("Success with {0}".format(item["GameId"]))
+                    break
