@@ -18,7 +18,7 @@ for item in response:
     tab_in_page = int(item["N TabInPage"])
     game_in_match = item["N GameInMatch"]
     match_history = item["MatchHistory"].strip()
-    data_page = site.client.pages[item["MatchHistory"]]
+    data_page = site.client.pages[item["DataPage"]]
     data_text = data_page.text()
     data_wikitext = mwparserfromhell.parse(data_text)
     tab_counters = 0
