@@ -46,7 +46,7 @@ def main():
             except tweepy.TooManyRequests:
                 time.sleep(30)
                 r = twitter_client.get_tweet(tweet_id)
-            
+
             if not r.errors:
                 continue
             if r.errors[0]["title"] == TWEET_NOT_FOUND_ERROR:
