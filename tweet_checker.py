@@ -7,13 +7,13 @@ import tweepy
 from mwrogue.esports_client import AuthCredentials
 from mwrogue.esports_client import EsportsClient
 
-check_from_date = date.today() - timedelta(days=4)
+check_from_date = date.today() - timedelta(days=7)
 
 TWEET_NOT_FOUND_ERROR = "Not Found Error"
 
 
 def main():
-    twitter_client = tweepy.Client(bearer_token=os.environ.get('TWITTER_API_KEY'))
+    twitter_client = tweepy.Client(bearer_token=os.environ.get('TWITTER_BEARER_TOKEN'))
     credentials = AuthCredentials(user_file="me")
     site = EsportsClient("lol", credentials=credentials)
 
