@@ -4,8 +4,8 @@ from collections import OrderedDict
 from mwcleric.wiki_client import WikiClient
 from mwcleric.auth_credentials import AuthCredentials
 
-credentials = AuthCredentials(user_file="wc")
-site = WikiClient('https://pcj.fandom.com', credentials=credentials)
+credentials = AuthCredentials(user_file="WikiConfig")
+site = WikiClient('https://river-sandbox.fandom.com', credentials=credentials)
 
 wiki_name_to_id_map = {
 	"apexlegends-esports": 2294647,
@@ -44,17 +44,19 @@ SKIP_PARAMS = ['wgSitename', 'wgMetaNamespace', 'wgUploadPath', 'wgUploadDirecto
                'wgUCPMigrationDate', 'wgAdDriverPagesWithoutAds', 'wgEnableAudioButton', 'wgWidgetsCompileDir',
                'dsSiteKey']
 ALREADY_PARAMS = ['wgEnableUserEmail', 'wgLanguageCode', 'wgRestrictionLevels']
-OKAY_PARAMS = ['wgEnableUserEmail', 'wgRestrictionLevels', 'wgNamespacesToBeSearchedDefault',
-               'wgExtraNamespacesLocal', 'wgRightsText', 'wgRightsIcon', 'wgContentNamespaces',
-               'wgGroupPermissionsLocal', 'wgWikiaEnableDPLExt', 'wgEnableGadgetsExt',
-               'wgEnableLoopsExt', 'wgAddGroupsLocal', 'wgRemoveGroupsLocal', 'wgRestrictDisplayTitle',
-               'wgEnableAbuseFilterExtension', 'wgEnableArrayExt', 'wgCargoPageDataColumns',
-               'wgClaimWikiEnabled', 'wgCustomLogsLogs', 'wgFlaggedRevsNamespaces',
-               'wgFlaggedRevsHandleIncludes', 'wgFlaggedRevsAutopromote', 'wgHighlightLinksInCategory',
-               'wgCascadingRestrictionLevels', 'wgRegexFunctionsPerPage', 'wgtoNamespacesWithTooltips',
-               'wgtoEnableInNamespaces', 'wgVisualEditorDisableForAnons', 'wgSkipSkins', 'wgUseEsportsCommons',
-               'wgGrantPermissionsLocal'
-               ]
+# OKAY_PARAMS = ['wgEnableUserEmail', 'wgRestrictionLevels', 'wgNamespacesToBeSearchedDefault',
+#                'wgExtraNamespacesLocal', 'wgRightsText', 'wgRightsIcon', 'wgContentNamespaces',
+#                'wgGroupPermissionsLocal', 'wgWikiaEnableDPLExt', 'wgEnableGadgetsExt',
+#                'wgEnableLoopsExt', 'wgAddGroupsLocal', 'wgRemoveGroupsLocal', 'wgRestrictDisplayTitle',
+#                'wgEnableAbuseFilterExtension', 'wgEnableArrayExt', 'wgCargoPageDataColumns',
+#                'wgClaimWikiEnabled', 'wgCustomLogsLogs', 'wgFlaggedRevsNamespaces',
+#                'wgFlaggedRevsHandleIncludes', 'wgFlaggedRevsAutopromote', 'wgHighlightLinksInCategory',
+#                'wgCascadingRestrictionLevels', 'wgRegexFunctionsPerPage', 'wgtoNamespacesWithTooltips',
+#                'wgtoEnableInNamespaces', 'wgVisualEditorDisableForAnons', 'wgSkipSkins', 'wgUseEsportsCommons',
+#                'wgGrantPermissionsLocal'
+#                ]
+
+OKAY_PARAMS = ['wgAddGroupsLocal', 'wgRemoveGroupsLocal']
 
 with open('wc_params_copy.txt') as f:
 	params = f.readlines()
@@ -76,7 +78,13 @@ for param in params:
 			for k, v in val.items():
 				if type(v) == str:
 					t.append('  "{}": "{}"'.format(k, v))
-					
+
+				# wgAddGroupsLocal, wgRemoveGroupsLocal
+				elif type(v) == list:
+					t2 = []
+					for k2, v2 in enumerate(v):
+						t2.append(f'    "{v2}"')
+					t.append('  ' + '"{}": '.format(k) + '[\n' + ',\n'.join(t2) + '\n  ]')
 				# wgGrantPermissionsLocal has nested ordered dicts
 				elif type(v) == OrderedDict:
 					t2 = []

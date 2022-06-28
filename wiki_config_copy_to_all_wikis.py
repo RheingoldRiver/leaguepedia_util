@@ -3,10 +3,10 @@ from collections import OrderedDict
 from mwcleric.auth_credentials import AuthCredentials
 from mwcleric.wiki_client import WikiClient
 
-credentials = AuthCredentials(user_file="wc")
-site = WikiClient('https://pcj.fandom.com', credentials=credentials)
+credentials = AuthCredentials(user_file="WikiConfig")
+site = WikiClient('https://river-sandbox.fandom.com', credentials=credentials)
 
-variable_to_copy = 'wgCargoPageDataColumns'
+variable_to_copy = 'wgRemoveGroupsLocal'
 from_wiki = 'lol'
 
 wiki_name_to_id_map = {
@@ -43,6 +43,7 @@ result = site.client.api('variableinfo', wiki_id=str(wiki_name_to_id_map[from_wi
                          token=token)
 
 value_to_set = result['variable_details']['value']
+print(f"Original: {value_to_set}")
 if value_to_set is not None:
 	if type(value_to_set) == list:
 		value_to_set = '[' + ', '.join(['"{}"'.format(_) for _ in value_to_set]) + ']'
@@ -51,7 +52,14 @@ if value_to_set is not None:
 		for k, v in value_to_set.items():
 			if type(v) == str:
 				t.append('  "{}": "{}"'.format(k, v))
-			
+
+			# wgAddGroupsLocal, wgRemoveGroupsLocal
+			elif type(v) == list:
+				t2 = []
+				for k2, v2 in enumerate(v):
+					t2.append(f'    "{v2}"')
+				t.append('  ' + '"{}": '.format(k) + '[\n' + ',\n'.join(t2) + '\n  ]')
+
 			# wgGrantPermissionsLocal has nested ordered dicts
 			elif type(v) == OrderedDict:
 				t2 = []
@@ -61,19 +69,19 @@ if value_to_set is not None:
 				t.append('  ' + '"{}": '.format(k) + '{\n' + ',\n'.join(t2) + '\n  }')
 		value_to_set = '{\n' + ',\n'.join(t) + '\n}'
 
-print('Calculated value: {}'.format(value_to_set))
+print(f'Calculated value: {value_to_set}')
 
 for to_wiki, to_wiki_id in wiki_name_to_id_map.items():
 	if to_wiki == from_wiki:
 		continue
 	print('Setting {} on {}'.format(variable_to_copy, to_wiki))
-	
+
 	old_result = site.client.api('variableinfo', wiki_id=str(to_wiki_id),
 	                             variable_name=variable_to_copy,
 	                             token=token)
 	old_value = old_result['variable_details']['value']
 	print(to_wiki, ': ', old_value)
-	
+
 	site.client.api('savewikiconfigvariable', wiki_id=str(to_wiki_id), variable_name=variable_to_copy,
 	                variable_value=value_to_set, reason="Cloning value from {}".format(from_wiki),
 	                token=token)

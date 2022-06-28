@@ -15,6 +15,7 @@ METADATA_PATTERN = """{{{{AcsMetadata
 |MatchId={}
 |N_GameInMatch={}
 |OverviewPage={}
+|DataPage={}
 }}}}"""
 
 
@@ -27,7 +28,8 @@ def get_metadata(row, realmx, game_idx, game_hashx):
         row['GameId'].replace('&amp;', '&'),
         row['MatchId'].replace('&amp;', '&'),
         row['N_GameInMatch'],
-        row['OverviewPage']
+        row['OverviewPage'],
+        row['Page']
     )
 
 def main():
@@ -53,7 +55,7 @@ def main():
             game_id = re_match[2]
             game_hash = re_match[3]
         else:
-            re_match = re.match(r'^.*match-details/(.+?)/([^/]*).*$', game['MatchHistory'])
+            re_match = re.match(r'^.*match-details/(.+?)/([^/?]*).*$', game['MatchHistory'])
             realm = re_match[1]
             game_id = re_match[2]
             game_hash = None
